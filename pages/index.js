@@ -11,9 +11,9 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
 	const [data, setData] = useState([]);
 
-	useEffect(() => {
-		fetchData();
-	}, []);
+	// useEffect(() => {
+	// 	fetchData();
+	// }, []);
 
 	async function fetchData() {
 		const data = await getData();
@@ -34,9 +34,9 @@ export default function Home() {
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 			<main className={styles.main}>
-				{data.map((item, idx) => {
+				{/* {data.map((item, idx) => {
 					return <h1 key={idx}>{item.greet}</h1>;
-				})}
+				})} */}
 				<button onClick={handleAddUser}>add new data</button>
 			</main>
 		</>
