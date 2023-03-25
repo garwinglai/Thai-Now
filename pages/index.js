@@ -8,12 +8,12 @@ import { addData } from "@/firebase/db/addData";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function Home() {
+export default function Home({ dataObject }) {
 	const [data, setData] = useState([]);
 
-	// useEffect(() => {
-	// 	fetchData();
-	// }, []);
+	useEffect(() => {
+		fetchData();
+	}, []);
 
 	async function fetchData() {
 		const data = await getData();
@@ -34,22 +34,22 @@ export default function Home() {
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 			<main className={styles.main}>
-				{/* {data.map((item, idx) => {
+				{dataObject.map((item, idx) => {
 					return <h1 key={idx}>{item.greet}</h1>;
-				})} */}
+				})}
 				<button onClick={handleAddUser}>add new data</button>
 			</main>
 		</>
 	);
 }
 
-// export async function getServerSideProps(context) {
-// 	const data = await getData();
-// 	const dataObject = JSON.parse(JSON.stringify(data));
+export async function getServerSideProps(context) {
+	const data = await getData();
+	const dataObject = JSON.parse(JSON.stringify(data));
 
-// 	console.log("SSR data:", dataObject);
+	console.log("SSR data:", dataObject);
 
-// 	return {
-// 		props: { dataObject },
-// 	};
-// }
+	return {
+		props: { dataObject },
+	};
+}
