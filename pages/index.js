@@ -1,17 +1,21 @@
 import Head from "next/head";
-import Image from "next/image";
 import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
 import { getData } from "@/firebase/db/getData";
 import { useEffect, useState } from "react";
 import { addData } from "@/firebase/db/addData";
+import { useRouter } from "next/router";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home({ dataObject }) {
 	const [data, setData] = useState([]);
 
+	const router = useRouter();
+
 	useEffect(() => {
+		// if (location.pathname === "/") router.push("/home");
+		// else router.push(location.pathname);
 		fetchData();
 	}, []);
 
