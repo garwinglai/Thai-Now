@@ -8,7 +8,6 @@ export async function getData() {
 
 	querySnap.forEach((doc) => {
 		const data = doc.data();
-		console.log("getData", data);
 		dataArr.push(data);
 	});
 
