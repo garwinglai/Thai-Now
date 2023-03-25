@@ -8,7 +8,7 @@ import { addData } from "@/firebase/db/addData";
 
 const inter = Inter({ subsets: ["latin"] });
 
-// export default function Home({ dataObject }) {
+export default function Home() {
 	const [data, setData] = useState([]);
 
 	useEffect(() => {
