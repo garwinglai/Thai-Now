@@ -8,7 +8,7 @@ import { addData } from "@/firebase/db/addData";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function Home({ dataObject }) {
+// export default function Home({ dataObject }) {
 	const [data, setData] = useState([]);
 
 	useEffect(() => {
@@ -34,7 +34,7 @@ export default function Home({ dataObject }) {
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 			<main className={styles.main}>
-				{dataObject.map((item, idx) => {
+				{data.map((item, idx) => {
 					return <h1 key={idx}>{item.greet}</h1>;
 				})}
 				<button onClick={handleAddUser}>add new data</button>
@@ -43,13 +43,13 @@ export default function Home({ dataObject }) {
 	);
 }
 
-export async function getServerSideProps(context) {
-	const data = await getData();
-	const dataObject = JSON.parse(JSON.stringify(data));
+// export async function getServerSideProps(context) {
+// 	const data = await getData();
+// 	const dataObject = JSON.parse(JSON.stringify(data));
 
-	console.log("SSR data:", dataObject);
+// 	console.log("SSR data:", dataObject);
 
-	return {
-		props: { dataObject },
-	};
-}
+// 	return {
+// 		props: { dataObject },
+// 	};
+// }
