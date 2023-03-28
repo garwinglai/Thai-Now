@@ -1,20 +1,53 @@
 :root {
+	/* ? Color theme */
 	--black: #000000;
 	--white: #ffffff;
-	--primary-light-soft: #eae0fe;
-	--primary-light: #d8c5ff;
-	--primary-light-med: #c4a9ff;
-	--primary: #8952ff;
-	--primary-dark-med: #5b37aa;
-	--primary-dark: #2e1b55;
-	--secondary-light: #c3d9ff;
-	--secondary-light-med: #a5c7ff;
-	--secondary: #4a8eff;
-	--secondary-dark-med: #315faa;
-	--secondary-dark: #192f55;
-	--gray: #666666;
-	--error: rgb(254, 78, 78);
-	--success: rgb(75, 255, 126);
+
+	/* ? Primary Colors */
+
+	/* * deals */
+	--deals-primary: ##093869;
+	--deals-primary-light: #ebf2ff;
+	--deals-primary-med: #0c529c;
+	--deals-primary-dark: #05223f;
+
+	/* * jobs */
+	--jobs-primary: #006b44;
+	--jobs-primary-light: #c9f6e6;
+
+	/* * housing */
+	--housing-primary: #ca4b02;
+	--housing-primary-light: #f4dbcc;
+
+	/* * marketplace */
+	--marketplace-primary: #a62b4c;
+	--marketplace-primary-light: #f1d5d5;
+
+	/* * business */
+	--business-primary: #ef830f;
+	--business-primary-light: #f1d5d5;
+
+	/* ? Secondary Colors */
+	/* * Secondary  */
+	--secondary: #e94833;
+	--secondary-light: #fbdad6;
+
+	/* ? Text colors */
+	--paragraph-color: #333333;
+	--label-color: #717171;
+	--title_link_primary: #002e60;
+
+	/* ? Input and elements */
+	--input-bg-primary: #d9dbe9;
+	--input-bg-secondary: #f7f7fc;
+	--element-color: #d9dbe9;
+
+	/* ? Gradient colors */
+	--gradient-primary: #1c3d99;
+	--gradient-secondary: #e94833;
+
+	/* ? Button */
+	--login-button-color: #003ca7;
 }
 
 html,
@@ -26,4 +59,51 @@ body {
 * {
 	padding: 0;
 	margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+p {
+	font-family: var(--kanit-font), sans-serif;
+	margin: 0;
+	padding: 0;
+}
+
+h2,
+h3,
+h4 {
+	font-weight: 500;
+}
+
+h1 {
+	font-size: 2.25rem;
+	font-weight: 600;
+}
+
+h2 {
+	font-size: 1.75rem;
+}
+
+h3 {
+	font-size: 1.375rem;
+}
+
+h4 {
+	font-size: 1.25rem;
+}
+
+p {
+	color: var(--paragraph-color);
+}
+
+button {
+	border: transparent;
+}
+
+@media (hover: hover) {
+	button {
+		cursor: pointer;
+	}
 }
