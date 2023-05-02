@@ -11,14 +11,14 @@ function MainLayout({ children }) {
 
 	return (
 		<React.Fragment>
-			{/* <div className={`${directory && styles.layout_nav_mobile}`}>
+			<div className={`${directory && styles.layout_nav_mobile}`}>
 				<NavMobile />
 			</div>
 			<div className={`${directory && styles.layout_nav_desktop}`}>
 				<NavDesktop />
-			</div> */}
+			</div>
 			<main>{children}</main>
-			{/* <Footer /> */}
+			<Footer />
 		</React.Fragment>
 	);
 }

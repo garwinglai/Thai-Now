@@ -29,20 +29,20 @@ export default function Home() {
 	const offersRef = useRef();
 	const offersMobileRef = useRef();
 
-	// useEffect(() => {
-	// 	if (typeof window !== "undefined") {
-	// 		if (offersRef !== "undefined") {
-	// 			const offersYPosition = offersRef.current.offsetTop;
-	// 			const offersYPositionMobile = offersMobileRef.current.offsetTop;
-	// 			localStorage.setItem("offersYPosition", offersYPosition);
-	// 			localStorage.setItem("offersYPositionMobile", offersYPositionMobile);
-	// 		}
-	// 	}
-	// }, [lastScrollY, lastScrollYMobile]);
+	useEffect(() => {
+		if (typeof window !== "undefined") {
+			if (offersRef !== "undefined") {
+				const offersYPosition = offersRef.current.offsetTop;
+				const offersYPositionMobile = offersMobileRef.current.offsetTop;
+				localStorage.setItem("offersYPosition", offersYPosition);
+				localStorage.setItem("offersYPositionMobile", offersYPositionMobile);
+			}
+		}
+	}, [lastScrollY, lastScrollYMobile]);
 
-	// useEffect(() => {
-	// 	detectScroll();
-	// }, [lastScrollY, lastScrollYMobile]);
+	useEffect(() => {
+		detectScroll();
+	}, [lastScrollY, lastScrollYMobile]);
 
 	function detectScroll() {
 		if (typeof window !== "undefined") {
@@ -93,24 +93,24 @@ export default function Home() {
 			</Head>
 			<main className={styles.main}>
 				<section className={`${styles.banner_section}`}>
-					{/* <Image
+					<Image
 						src={bannerImageMobile}
 						alt="banner image"
 						className={`${styles.banner_image_mobile}`}
 						priority={true}
-					/> */}
+					/>
 
-					{/* <Image
+					<Image
 						src={bannerImageDesktop}
 						alt="banner image"
 						className={`${styles.banner_image_desktop}`}
 						priority={true}
-					/> */}
+					/>
 
-					{/* <SearchBarGeo /> */}
-					{/* <SearchBarMobile /> */}
+					<SearchBarGeo />
+					<SearchBarMobile />
 				</section>
-				{/* <section className={`${styles.navigation_options_section}`}>
+				<section className={`${styles.navigation_options_section}`}>
 					<div className={`${styles.navgation_options_container}`}>
 						<h3>Feast Like Never Before</h3>
 						<p className={`${gStyles.p_small}`}>
@@ -120,12 +120,12 @@ export default function Home() {
 						</p>
 						<NavOptions source="home" />
 					</div>
-				</section> */}
-				{/* <section className={`${styles.offers_section}`}>
+				</section>
+				<section className={`${styles.offers_section}`}>
 					{offersSectionMobile(offersMobileRef)}
 					{offersSectionDesktop(offersRef)}
-				</section> */}
-				{/* <section className={`${styles.news_section}`}>
+				</section>
+				<section className={`${styles.news_section}`}>
 					<div className={`${styles.flexRow} ${styles.news_header}`}>
 						<h3>Hot News</h3>
 						<LandingPagePagination />
@@ -140,11 +140,11 @@ export default function Home() {
 							return <NewsCard key={idx} newsContent={newsContent} />;
 						})}
 					</div>
-				</section> */}
+				</section>
 				<section className={`${styles.ad_section}`}>
 					<AdsBanner />
 				</section>
-				{/* <section className={`${styles.guide_book_section}`}>
+				<section className={`${styles.guide_book_section}`}>
 					<div className={`${styles.flexRow} ${styles.guide_book_header}`}>
 						<h3>Guide Book</h3>
 						<LandingPagePagination />
@@ -155,11 +155,11 @@ export default function Home() {
 						</div>
 					</div>
 					<GuideBookSection />
-				</section> */}
-				{/* <section className={`${styles.ad_section}`}>
+				</section>
+				<section className={`${styles.ad_section}`}>
 					<AdsBanner />
-				</section> */}
-				{/* <section className={`${styles.trips_section}`}>
+				</section>
+				<section className={`${styles.trips_section}`}>
 					<div className={`${styles.flexRow} ${styles.trips_header}`}>
 						<h3>Trips</h3>
 						<LandingPagePagination />
@@ -174,7 +174,7 @@ export default function Home() {
 							return <TripsCard key={idx} trip={trip} />;
 						})}
 					</div>
-				</section> */}
+				</section>
 			</main>
 		</>
 	);
