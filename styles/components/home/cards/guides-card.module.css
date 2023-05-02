@@ -1,0 +1,28 @@
+.guides_card {
+	padding-bottom: 30px;
+}
+
+.guides_card h5 {
+	width: 300px;
+	font-size: 16px;
+}
+
+.guide_image {
+	width: 100%;
+	height: auto;
+	padding-bottom: 10px;
+	border-radius: 5px;
+}
+
+@media screen and (min-width: 769px) {
+	.guides_card {
+		width: 45%;
+		font-size: 12px;
+		word-wrap: normal;
+    padding-bottom: 10px;
+	}
+
+	.guides_card h5 {
+		width: unset;
+	}
+}

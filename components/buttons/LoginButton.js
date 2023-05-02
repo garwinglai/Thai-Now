@@ -1,12 +1,12 @@
 import React from "react";
 import styles from "../../styles/components/buttons/login-button.module.css";
 import gStyles from "../../styles/global.module.css";
-import account_icon from "../../public/images/header/account-icon-white.png";
+import account_icon from "../../public/images/icons/icon_account_circle.svg";
 import Image from "next/image";
 
 function LoginButton() {
 	function handleLogin() {
-		window.alert("login clicked.")
+		window.alert("login clicked.");
 	}
 
 	return (

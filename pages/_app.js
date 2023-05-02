@@ -17,9 +17,9 @@ export default function App({ Component, pageProps }) {
 					}
 				`}
 			</style>
-			<MainLayout>
+			{/* <MainLayout> */}
 				<Component {...pageProps} />
-			</MainLayout>
+			{/* </MainLayout> */}
 		</>
 	);
 }

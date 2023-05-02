@@ -2,40 +2,94 @@
 	display: flex;
 }
 
-.visible {
-	opacity: 100;
-	transition: opacity 200ms linear;
+.search_input:focus,
+.search_location:focus {
+	outline: transparent;
 }
 
-.invisible {
-	opacity: 0;
-	transition: opacity 200ms linear;
+/* * Nav absolute */
+.nav_absolute_container {
+	width: 100%;
+	position: absolute;
+	bottom: -20px;
+	/* top: 380px; */
 }
 
-.search_bar_geo {
-	align-items: center;
-	box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
-	width: 40%;
+.nav_absolute {
+	width: 50%;
+	margin: 0 auto;
+	justify-content: space-between;
 	background-color: var(--white);
-	/* justify-content: space-between; */
+	border-radius: 5px;
+	padding: 10px 30px;
+	box-shadow: 0px 5px 50px rgba(0, 0, 0, 0.1);
 }
 
-.search_input {
-	/* padding: 1rem; */
+.search {
 	border: transparent;
 	width: 100%;
-	text-indent: 1rem;
-	padding: 1rem 0;
 }
 
-.search_bar_geo p {
-	padding-left: 1rem;
-	padding-right: 2rem;
-	min-width: fit-content;
-	border-left: 1px solid black;
+.search_location {
+	border-left: 1px solid var(--black);
+	text-indent: 2rem;
 }
 
 .search_button {
-	border-top-left-radius: 0 !important;
-	border-bottom-left-radius: 0 !important;
+	align-items: center;
+	gap: 10px;
+}
+
+.search_button > p {
+	color: var(--white);
+}
+
+.search_icon {
+	object-fit: contain;
+}
+
+/* *Scroll search bar */
+.search_bar_geo_hidden {
+	visibility: hidden;
+	opacity: 0;
+	/* transition: visibility 0s, opacity 1s linear; */
+	width: 0;
+	height: 0;
+}
+
+.search_bar_geo_show {
+	opacity: 1;
+	visibility: visible;
+	box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+	width: 40%;
+	height: auto;
+	align-items: center;
+	margin: 0 2%;
+	border-radius: 5px;
+}
+
+.search_input_scroll {
+	margin-left: 20px;
+	width: 100%;
+	flex-grow: 1;
+}
+
+.search_input_scroll:focus {
+	outline: none;
+}
+
+.search_input_scroll::placeholder {
+	width: fit-content;
+}
+
+.search_location_scroll {
+	border-left: 1px solid var(--black);
+	padding-left: 5px;
+	max-width: fit-content;
+}
+
+@media screen and (max-width: 768px) {
+	.nav_absolute_container {
+		display: none;
+	}
 }

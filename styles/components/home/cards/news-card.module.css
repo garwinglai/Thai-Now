@@ -1,0 +1,39 @@
+.news_card {
+	box-shadow: 10px 12px 20px -1px rgba(88, 103, 145, 0.2);
+	background-color: var(--white);
+	border-radius: 5px;
+	/* width: 250px; */
+}
+
+.card_image {
+	object-fit: cover;
+	width: 100%;
+	height: auto;
+}
+
+.card_bottom {
+	padding: 5px 15px 20px 15px;
+}
+
+.card_bottom h5 {
+	width: 300px;
+	font-size: 1rem;
+	margin: 15px 0;
+}
+
+.date_posted {
+	display: flex;
+	align-items: flex-end;
+	gap: 8px;
+}
+
+.date_posted p {
+	font-size: 12px;
+	color: var(--label-color);
+}
+
+@media screen and (min-width: 769px) {
+	.card_bottom h5 {
+		width: 170px;
+	}
+}

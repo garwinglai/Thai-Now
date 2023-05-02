@@ -1,0 +1,144 @@
+.flex {
+	display: flex;
+}
+
+.flexCol {
+	display: flex;
+	flex-direction: column;
+}
+
+.jobs_card_container {
+	padding: 20px 0;
+	border-bottom: 1px solid #f6f4f0;
+	gap: 12px;
+}
+
+.image_box {
+	width: 33%;
+}
+
+.card_image {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+}
+
+.jobs_card_container p {
+	font-size: 12px;
+}
+
+.review_box {
+	align-items: center;
+	gap: 4px;
+	margin-bottom: 4px;
+}
+
+.card_context_box {
+	width: 60%;
+	justify-content: space-between;
+}
+
+.card_context_box h4 {
+	font-size: 16px;
+	font-weight: 400;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	width: 100%;
+}
+
+.business_location_p,
+.days_ago_p {
+	opacity: 50%;
+}
+
+.days_ago_p,
+.review_count_p {
+	color: #717171;
+}
+
+.days_ago_p {
+	/* margin-bottom: 8px; */
+}
+
+.amenities_desktop_p {
+	align-items: center;
+	gap: 4px;
+	display: flex;
+	margin-top: 4px;
+}
+
+.amenities_desktop_p span {
+	color: #e94833;
+	font-weight: 700;
+	font-size: 18px;
+}
+
+.amenities_desktop_p p {
+	opacity: 80%;
+}
+
+@media screen and (min-width: 769px) {
+	.jobs_card_container {
+		background-color: var(--white);
+		border-radius: 8px;
+		padding: unset;
+		margin-bottom: 16px;
+		box-sizing: border-box;
+	}
+
+	.jobs_card_container p {
+		font-size: 14px;
+	}
+
+	.image_box {
+		width: 12rem;
+	}
+
+	.card_image {
+		border-radius: 8px 0 0 8px;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+
+	.card_context_box {
+		padding: 16px 8px 16px 8px;
+	}
+
+	.card_context_box h4 {
+		font-size: 18px;
+		font-weight: 400;
+	}
+
+	.context_box_top > p {
+		margin-bottom: 8px;
+		font-size: 12px;
+	}
+
+	.context_box_bottom > p {
+		font-size: 12px;
+	}
+
+	.amenities_desktop_p {
+		align-items: center;
+		gap: 4px;
+		display: flex;
+	}
+
+	.amenities_desktop_p span {
+		color: #e94833;
+		font-size: 14px;
+	}
+
+	.amenities_desktop_p p {
+		color: #717171;
+		font-size: 12px;
+		opacity: 80%;
+	}
+
+	.days_ago_p {
+		margin-bottom: unset;
+	}
+}

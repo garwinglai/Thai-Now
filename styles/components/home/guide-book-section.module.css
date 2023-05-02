@@ -1,0 +1,42 @@
+.guide_book {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.guide_video_image {
+	object-fit: contain;
+	width: 100%;
+	height: auto;
+	border-radius: 5px;
+}
+
+.guide_items_container {
+	padding: 20px 0 0 20px;
+	display: flex;
+	overflow: scroll;
+	gap: 1rem;
+	width: 100%;
+}
+
+@media screen and (min-width: 769px) {
+	.guide_book {
+		align-items: flex-start;
+		flex-direction: row;
+		gap: 0;
+		padding: 0 10%;
+	}
+
+	.guide_video_image {
+		width: 50%;
+		height: auto;
+	}
+
+	.guide_items_container {
+		width: 50%;
+		overflow: unset;
+		flex-wrap: wrap;
+		padding: unset;
+		justify-content: flex-end;
+	}
+}

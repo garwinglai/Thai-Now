@@ -1,0 +1,90 @@
+/* *Static Nav Options Home*/
+.flex {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.flexCol {
+	display: flex;
+	flex-direction: column;
+}
+
+.options_container {
+	margin: 2rem 0;
+	gap: 1rem;
+	justify-content: center;
+}
+
+.link_group {
+	text-decoration: none;
+	align-items: center;
+	width: 20%;
+	gap: 10px;
+}
+
+.image_style {
+	width: 45px;
+	height: auto;
+}
+
+.link_group p {
+	word-wrap: normal;
+	font-size: 12px;
+}
+
+/* *Nav on Scoll Home */
+.options_container_scroll {
+	gap: .25rem;
+	padding: 10px 5px;
+	background-color: var(--white);
+	overflow: scroll;
+	flex-wrap: nowrap;
+	justify-content: space-between;
+}
+
+.link_group_scroll {
+	text-decoration: none;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 5px;
+	width: max-content;
+}
+
+.image_style_scroll {
+	width: 35px;
+	height: auto;
+}
+
+.link_group_scroll p {
+	width: max-content;
+	width: 80px;
+	font-size: 10px;
+	text-align: center;
+}
+
+@media screen and (min-width: 769px) {
+	/* *Static Nav Options Home*/
+	.options_container {
+		gap: 1rem;
+	}
+
+	.link_group {
+		width: unset;
+	}
+
+	.link_group {
+		/* width: 75px; */
+		width: 8%;
+	}
+
+	/* *Scroll Nav Options Home */
+	.options_container_scroll {
+		gap: unset;
+		padding: 15px 15%;
+	}
+
+	.image_style_scroll {
+		width: 40px;
+		height: auto;
+	}
+}

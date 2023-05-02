@@ -1,0 +1,17 @@
+.layout_nav_mobile {
+	height: 55px;
+}
+
+.layout_nav_desktop {
+	height: 0;
+}
+
+@media screen and (min-width: 769px) {
+	.layout_nav_mobile {
+		height: 0;
+	}
+
+	.layout_nav_desktop {
+		height: 180px;
+	}
+}

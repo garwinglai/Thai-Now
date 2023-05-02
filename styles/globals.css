@@ -6,7 +6,7 @@
 	/* ? Primary Colors */
 
 	/* * deals */
-	--deals-primary: ##093869;
+	--deals-primary: #093869;
 	--deals-primary-light: #ebf2ff;
 	--deals-primary-med: #0c529c;
 	--deals-primary-dark: #05223f;
@@ -48,6 +48,24 @@
 
 	/* ? Button */
 	--login-button-color: #003ca7;
+
+	--placeholder-color: #aeaeae;
+	--text-body-color: #666666;
+}
+
+* {
+	padding: 0;
+	margin: 0;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: inherit;
+}
+
+html {
+	box-sizing: border-box;
 }
 
 html,
@@ -56,16 +74,12 @@ body {
 	margin: 0;
 }
 
-* {
-	padding: 0;
-	margin: 0;
-}
-
 h1,
 h2,
 h3,
 h4,
-p {
+p,
+a {
 	font-family: var(--kanit-font), sans-serif;
 	margin: 0;
 	padding: 0;

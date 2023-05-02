@@ -1,0 +1,15 @@
+.ads_banner {
+	padding: 20px;
+}
+
+.banner_image {
+	object-fit: contain;
+	width: 100%;
+	height: auto;
+}
+
+@media screen and (min-width: 769px) {
+	.ads_banner {
+		padding: 20px 10%;
+	}
+}
