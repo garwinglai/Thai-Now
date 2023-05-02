@@ -11,6 +11,7 @@
 	padding: 20px 0;
 	border-bottom: 1px solid #f6f4f0;
 	gap: 12px;
+	align-items: flex-start;
 }
 
 .image_box {
@@ -20,6 +21,7 @@
 .card_image {
 	width: 100%;
 	height: 100%;
+	border-radius: 8px;
 	object-fit: contain;
 }
 
@@ -34,17 +36,13 @@
 }
 
 .card_context_box {
-	width: 60%;
+	width: 55%;
 	justify-content: space-between;
 }
 
 .card_context_box h4 {
 	font-size: 16px;
 	font-weight: 400;
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	width: 100%;
 }
 
 .business_location_p,
@@ -55,10 +53,6 @@
 .days_ago_p,
 .review_count_p {
 	color: #717171;
-}
-
-.days_ago_p {
-	/* margin-bottom: 8px; */
 }
 
 .housing_deal {

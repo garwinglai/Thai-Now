@@ -1,0 +1,49 @@
+.flex {
+	display: flex;
+}
+
+.flexCol {
+	display: flex;
+	flex-direction: column;
+}
+
+.filter_box {
+	padding: 20px;
+}
+
+.salary_range_box {
+	gap: 8px;
+}
+
+.input_group_both {
+	gap: 2rem;
+	flex-grow: 1;
+	width: 100%;
+}
+
+.input_box {
+	flex-grow: 1;
+}
+
+.input_group_both input {
+	padding: 8px;
+	background-color: #f7f7fc;
+	width: 100%;
+	border: transparent;
+	font-size: 14px;
+}
+
+.input_group_both input::placeholder {
+	color: #093869;
+	font-size: 14px;
+	font-weight: 500;
+}
+
+.input_group_both label {
+	font-size: 12px;
+}
+
+.input_group_both input:focus {
+	/* border: 1px solid #093869; */
+	outline: transparent;
+}

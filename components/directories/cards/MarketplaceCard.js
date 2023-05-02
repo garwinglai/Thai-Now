@@ -22,7 +22,7 @@ function MarketplaceCard() {
 						<p>4.69</p>
 						<p className={`${styles.review_count_p}`}>{`(20 Reviews)`}</p>
 					</div>
-					<h4>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</h4>
+					<h4>Lorem Ipsum is simply dummy</h4>
 					<p className={`${styles.business_location_p}`}>Los Angeles</p>
 					<div className={`${styles.business_type} ${styles.flex}`}>
 						<span>•</span>

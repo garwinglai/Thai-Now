@@ -4,7 +4,6 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
 import CloseIcon from "@mui/icons-material/Close";
 
 export default function SortSearchResults({ closeDrawer }) {
@@ -13,14 +12,14 @@ export default function SortSearchResults({ closeDrawer }) {
 			<div className={`${styles.title_box}`}>
 				<h1>Sort by</h1>
 				<div className={`${styles.close_sort_box}`}>
-					<CloseIcon onClick={closeDrawer} fontSize="medium" />
+					<CloseIcon onClick={closeDrawer(false)} fontSize="medium" />
 				</div>
 			</div>
 			<div className={`${styles.sort_selection_box}`}>
 				<FormControl sx={{ width: "100%", padding: "30px 30px 30px 10px" }}>
 					<RadioGroup
 						aria-labelledby="demo-radio-buttons-group-label"
-						defaultValue="female"
+						defaultValue="posted date"
 						name="radio-buttons-group"
 					>
 						<FormControlLabel

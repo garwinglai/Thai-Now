@@ -22,7 +22,7 @@ function HousingCard() {
 						<p>4.69</p>
 						<p className={`${styles.review_count_p}`}>{`(20 Reviews)`}</p>
 					</div>
-					<h4>บ้านแบ่งห้องเช่า 1 ห้องนอน เฉพาะผู้หญิง (ใกล้ little Toyo)</h4>
+					<h4>ใกล้ little Toyo</h4>
 					<p className={`${styles.business_location_p}`}>Los Angeles</p>
 					<div className={`${styles.amenities_desktop_p} ${styles.flex}`}>
 						<span>•</span>

@@ -24,7 +24,7 @@ function NavMobile() {
 
 	useEffect(() => {
 		detectScroll();
-	}, [lastScrollY]);
+	}, [lastScrollY, detectScroll]);
 
 	useEffect(() => {
 		console.log("directory", directory);

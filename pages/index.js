@@ -42,7 +42,7 @@ export default function Home() {
 
 	useEffect(() => {
 		detectScroll();
-	}, [lastScrollY, lastScrollYMobile]);
+	}, [lastScrollY, lastScrollYMobile, detectScroll]);
 
 	function detectScroll() {
 		if (typeof window !== "undefined") {

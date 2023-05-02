@@ -21,6 +21,7 @@
 .card_image {
 	width: 100%;
 	height: 100%;
+	border-radius: 8px;
 	object-fit: contain;
 }
 
@@ -45,7 +46,6 @@
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
-	/* width: 100%; */
 }
 
 .business_location_p,
@@ -56,10 +56,6 @@
 .days_ago_p,
 .review_count_p {
 	color: #717171;
-}
-
-.days_ago_p {
-	/* margin-bottom: 8px; */
 }
 
 .verified_user {

@@ -12,10 +12,7 @@ import BusinessCard from "@/components/directories/cards/BusinessCard";
 
 const tempCount = [1, 2, 3, 4, 5];
 
-function Directory() {
-	const router = useRouter();
-	const { directory } = router.query;
-
+function Directory({ directory }) {
 	function cardType(directory) {
 		if (directory == "jobs") {
 			return tempCount.map((item) => <JobsCard key={item} />);
@@ -64,3 +61,29 @@ function Directory() {
 }
 
 export default Directory;
+
+export async function getStaticPaths() {
+	const paths = [
+		{ params: { directory: "thai-help" } },
+		{ params: { directory: "jobs" } },
+		{ params: { directory: "housing" } },
+		{ params: { directory: "deals" } },
+		{ params: { directory: "marketplace" } },
+		{ params: { directory: "businesses" } },
+		{ params: { directory: "guides" } },
+		{ params: { directory: "thai-talks" } },
+	];
+
+	return {
+		paths,
+		fallback: false, // can also be true or 'blocking'
+	};
+}
+
+export async function getStaticProps(context) {
+	const { directory } = context.params;
+	return {
+		props: { directory }, // will be passed to the page component as props
+		revalidate: 10,
+	};
+}

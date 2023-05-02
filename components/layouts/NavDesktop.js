@@ -23,7 +23,7 @@ function NavDesktop() {
 
 	useEffect(() => {
 		detectScroll();
-	}, [lastScrollY]);
+	}, [lastScrollY, detectScroll]);
 
 	function detectScroll() {
 		if (typeof window !== "undefined") {
