@@ -42,27 +42,27 @@ export default function Home() {
 	}, [lastScrollY, lastScrollYMobile]);
 
 	useEffect(() => {
+		const detectScroll = () => {
+			if (typeof window !== "undefined") {
+				window.addEventListener("scroll", controlNavbar);
+			} else {
+				return () => {
+					window.removeEventListener("scroll", controlNavbar);
+				};
+			}
+		};
+
+		const controlNavbar = () => {
+			if (typeof window !== "undefined") {
+				const scrollPosition = window.scrollY;
+
+				setLastScrollY(scrollPosition);
+				setLastScrollYMobile(scrollPosition);
+			}
+		};
+
 		detectScroll();
-	}, [lastScrollY, lastScrollYMobile, detectScroll]);
-
-	function detectScroll() {
-		if (typeof window !== "undefined") {
-			window.addEventListener("scroll", controlNavbar);
-		} else {
-			return () => {
-				window.removeEventListener("scroll", controlNavbar);
-			};
-		}
-	}
-
-	function controlNavbar() {
-		if (typeof window !== "undefined") {
-			const scrollPosition = window.scrollY;
-
-			setLastScrollY(scrollPosition);
-			setLastScrollYMobile(scrollPosition);
-		}
-	}
+	}, [lastScrollY, lastScrollYMobile]);
 
 	function offersSectionDesktop(offersRef) {
 		return <DealsComponentDesktop offersRef={offersRef} />;
@@ -81,7 +81,7 @@ export default function Home() {
 					<DealsComponentMobile key={idx} title={title} />
 				))}
 			</div>
-	)
+		);
 	}
 
 	return (

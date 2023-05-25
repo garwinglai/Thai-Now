@@ -40,38 +40,38 @@ function NavMobile({ auth, route }) {
 			}
 		}
 
+		const controlNavbar = () => {
+			if (typeof window !== "undefined") {
+				const scrollPosition = window.scrollY;
+				const offerSectionYPosition = localStorage.getItem("offersYPosition");
+				let scrollDirection = "down";
+
+				if (scrollPosition < lastScrollY) {
+					scrollDirection = "up";
+				}
+
+				if (scrollDirection === "down") {
+					if (scrollPosition > offerSectionYPosition) {
+						setNavScroll(true);
+					}
+				}
+
+				if (scrollDirection === "up") {
+					if (scrollPosition <= offerSectionYPosition) {
+						setNavScroll(false);
+					}
+				}
+
+				setLastScrollY(scrollPosition);
+			}
+		};
+
 		detectScroll();
 	}, [lastScrollY, route]);
 
 
 
-	function controlNavbar() {
-		if (typeof window !== "undefined") {
-			const scrollPosition = window.scrollY;
-			const offerSectionYPosition = localStorage.getItem(
-				"offersYPositionMobile"
-			);
-			let scrollDirection = "down";
 
-			if (scrollPosition < lastScrollY) {
-				scrollDirection = "up";
-			}
-
-			if (scrollDirection === "up") {
-				if (scrollPosition <= offerSectionYPosition) {
-					setNavScroll(false);
-				}
-			}
-
-			if (scrollDirection === "down") {
-				if (scrollPosition > offerSectionYPosition) {
-					setNavScroll(true);
-				}
-			}
-
-			setLastScrollY(window.scrollY);
-		}
-	}
 
 	const toggleDrawer = (anchor, open) => (event) => {
 		if (

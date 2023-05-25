@@ -32,34 +32,34 @@ function NavDesktop() {
 			}
 		};
 
+		const controlNavbar = () => {
+			if (typeof window !== "undefined") {
+				const scrollPosition = window.scrollY;
+				const offerSectionYPosition = localStorage.getItem("offersYPosition");
+				let scrollDirection = "down";
+
+				if (scrollPosition < lastScrollY) {
+					scrollDirection = "up";
+				}
+
+				if (scrollDirection === "down") {
+					if (scrollPosition > offerSectionYPosition) {
+						setNavScroll(true);
+					}
+				}
+
+				if (scrollDirection === "up") {
+					if (scrollPosition <= offerSectionYPosition) {
+						setNavScroll(false);
+					}
+				}
+
+				setLastScrollY(scrollPosition);
+			}
+		};
+
 		detectScroll();
 	}, [lastScrollY]);
-
-	function controlNavbar() {
-		if (typeof window !== "undefined") {
-			const scrollPosition = window.scrollY;
-			const offerSectionYPosition = localStorage.getItem("offersYPosition");
-			let scrollDirection = "down";
-
-			if (scrollPosition < lastScrollY) {
-				scrollDirection = "up";
-			}
-
-			if (scrollDirection === "down") {
-				if (scrollPosition > offerSectionYPosition) {
-					setNavScroll(true);
-				}
-			}
-
-			if (scrollDirection === "up") {
-				if (scrollPosition <= offerSectionYPosition) {
-					setNavScroll(false);
-				}
-			}
-
-			setLastScrollY(scrollPosition);
-		}
-	}
 
 	return (
 		<nav
