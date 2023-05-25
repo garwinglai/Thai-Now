@@ -7,15 +7,24 @@ import AccountSwitchComponent from "@/components/profile/AccountSwitchComponent"
 import marketing_image from "@/public/static/images/switch_account_image.png";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 function SwitchAccount() {
+	const { back } = useRouter();
+
+	const handleBack = () => {
+		back();
+	};
 	return (
 		<div className={`${styles.switch_account_box}`}>
 			<div className={`${styles.header_box}`}>
-				<Link href="/" className={`${styles.flex} ${styles.back_btn}`}>
+				<button
+					onClick={handleBack}
+					className={`${styles.flex} ${styles.back_btn}`}
+				>
 					<ChevronLeftIcon />
 					<p>Back</p>
-				</Link>
+				</button>
 				<h2>Switch Account</h2>
 			</div>
 			<div className={`${styles.flexCol} ${styles.profiles}`}>

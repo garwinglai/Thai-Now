@@ -12,16 +12,19 @@ import Link from "next/link";
 function Profile() {
 	const { back } = useRouter();
 
-	const navigateBack = () => {
+	const handleBack = () => {
 		back();
 	};
 
 	return (
 		<div className={`${styles.profile_box}`}>
-			<Link href="/" className={`${styles.flex} ${styles.back_btn}`}>
+			<button
+				onClick={handleBack}
+				className={`${styles.flex} ${styles.back_btn}`}
+			>
 				<ChevronLeftIcon />
 				<p>Back</p>
-			</Link>
+			</button>
 			<h2>Personal info</h2>
 			<div className={`${styles.image_group}`}>
 				<Image

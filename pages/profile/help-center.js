@@ -19,19 +19,28 @@ import HelpCenterPanels from "@/components/profile/HelpCenterCustomer";
 import GetInTouchLayoutMobile from "@/components/layouts/GetInTouchLayoutMobile";
 import HelpCenterCustomer from "@/components/profile/HelpCenterCustomer";
 import HelpCenterBusiness from "@/components/profile/HelpCenterBusiness";
+import { useRouter } from "next/router";
 
 function HelpCenter() {
 	const [value, setValue] = React.useState(0);
+	const { back } = useRouter();
+
+	const handleBack = () => {
+		back();
+	};
 
 	const handleChange = (event, newValue) => {
 		setValue(newValue);
 	};
 	return (
 		<div className={`${styles.help_box}`}>
-			<Link href="/" className={`${styles.flex} ${styles.back_btn}`}>
+			<button
+				onClick={handleBack}
+				className={`${styles.flex} ${styles.back_btn}`}
+			>
 				<ChevronLeftIcon />
 				<p>Back</p>
-			</Link>
+			</button>
 			<h2>How can we help?</h2>
 			<div className={`${styles.search_box}`}>
 				<FormControl fullWidth>

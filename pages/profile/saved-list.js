@@ -6,17 +6,26 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import no_saved_list_image from "@/public/static/images/saved_list_none.png";
 import Image from "next/image";
 import SavedListSection from "@/components/profile/SavedListSection";
+import { useRouter } from "next/router";
 
 function SavedList() {
 	const menuList = ["All", "Jobs", "Housing", "Deals", "Marketplace"];
+	const { back } = useRouter();
+
+	const handleBack = () => {
+		back();
+	};
 
 	return (
 		<div className={`${styles.saved_list_box}`}>
 			<div className={`${styles.header_box}`}>
-				<Link href="/" className={`${styles.flex} ${styles.back_btn}`}>
+				<button
+					onClick={handleBack}
+					className={`${styles.flex} ${styles.back_btn}`}
+				>
 					<ChevronLeftIcon />
 					<p>Back</p>
-				</Link>
+				</button>
 				<h2>Saved List</h2>
 				<div className={`${styles.flex} ${styles.list_filter_box}`}>
 					{menuList.map((menu, idx) => (

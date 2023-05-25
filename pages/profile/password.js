@@ -7,19 +7,23 @@ import Link from "next/link";
 import { TextField } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
+import { useRouter } from "next/router";
 
 function ProfilePassword() {
 	const { back } = useRouter();
 
-	const navigateBack = () => {
+	const handleBack = () => {
 		back();
 	};
 	return (
 		<div className={`${styles.password_box}`}>
-			<Link href="/" className={`${styles.flex} ${styles.back_btn}`}>
+			<button
+				onClick={handleBack}
+				className={`${styles.flex} ${styles.back_btn}`}
+			>
 				<ChevronLeftIcon />
 				<p>Back</p>
-			</Link>
+			</button>
 			<h2>Personal info</h2>
 			<p>
 				You haven&apos;t set a password for ThaiNow yet. Set a password so that

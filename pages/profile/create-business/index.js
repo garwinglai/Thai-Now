@@ -15,7 +15,7 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 function CreateBusiness() {
 	const [step, setStep] = useState(1);
 
-	const { push } = useRouter();
+	const { push, back } = useRouter();
 
 	const handleNext = () => {
 		setStep((prev) => prev + 1);
@@ -23,7 +23,7 @@ function CreateBusiness() {
 
 	const handleBack = () => {
 		if (step === 1) {
-			push("/");
+			back();
 		}
 
 		if (step === 2) {

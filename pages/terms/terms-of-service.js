@@ -3,14 +3,24 @@ import MainLayout from "@/components/layouts/MainLayout";
 import styles from "@/styles/pages/terms/terms-of-use.module.css";
 import Link from "next/link";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import { useRouter } from "next/router";
 
 function TermsOfService() {
+	const { back } = useRouter();
+
+	const handleBack = () => {
+		back();
+	};
+
 	return (
 		<div className={`${styles.terms_box}`}>
-			<Link href="/" className={`${styles.flex} ${styles.back_btn}`}>
+			<button
+				onClick={handleBack}
+				className={`${styles.flex} ${styles.back_btn}`}
+			>
 				<ChevronLeftIcon />
 				<p>Back</p>
-			</Link>
+			</button>
 			<h2>
 				PROJECT THAIHUB a.k.a <br /> &quot;THAINOW&quot; <br />
 				TERMS OF USE
