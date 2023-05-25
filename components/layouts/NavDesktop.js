@@ -22,18 +22,18 @@ function NavDesktop() {
 	const { directory } = router.query;
 
 	useEffect(() => {
-		detectScroll();
-	}, [lastScrollY, detectScroll]);
+		const detectScroll = () => {
+			if (typeof window !== "undefined") {
+				window.addEventListener("scroll", controlNavbar);
+			} else {
+				return () => {
+					window.removeEventListener("scroll", controlNavbar);
+				};
+			}
+		};
 
-	function detectScroll() {
-		if (typeof window !== "undefined") {
-			window.addEventListener("scroll", controlNavbar);
-		} else {
-			return () => {
-				window.removeEventListener("scroll", controlNavbar);
-			};
-		}
-	}
+		detectScroll();
+	}, [lastScrollY]);
 
 	function controlNavbar() {
 		if (typeof window !== "undefined") {

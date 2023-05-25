@@ -12,7 +12,7 @@ function TermsOfService() {
 				<p>Back</p>
 			</Link>
 			<h2>
-				PROJECT THAIHUB a.k.a <br /> "THAINOW" <br />
+				PROJECT THAIHUB a.k.a <br /> &quot;THAINOW&quot; <br />
 				TERMS OF USE
 			</h2>
 			<section>

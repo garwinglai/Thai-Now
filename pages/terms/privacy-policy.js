@@ -12,36 +12,37 @@ function PrivacyPolicy() {
 				<p>Back</p>
 			</Link>
 			<h2>
-				PROJECT THAIHUB a.k.a <br /> "THAINOW" <br />
+				PROJECT THAIHUB a.k.a <br /> &quot;THAINOW&quot; <br />
 				TERMS OF USE
 			</h2>
 			<section>
 				<p>
-					Project Thaihub aka THAINOW (hereinafter "we", "us", "our") is
-					committed to maintaining privacy protections for its users
-					(hereinafter "you", "user" and/or "users"). Our Privacy Policy
-					(hereinafter "Privacy Policy" and/or "Policy") is designed to help you
-					understand how we collect, use, communicate, disclose, make use of
-					your personal information and protect the data and information you
-					provide to us when you use our service by accessing either our online
-					website or via our mobile application. "Service" as used in this
-					Policy shall refer to our services accessed via either through our
-					online website and/or through our mobile application. Your privacy is
-					very important to us. We reserve the right to change this policy at
-					any given time, of which you will be promptly updated. If you want to
-					make sure that you are up to date with the latest changes, we advise
-					you to frequently visit this page. By accessing and using our Service,
-					you accept our Policy and Terms of Use (which can be found
-					athttps://terms.thainowapp.com/ ), and you express consent to our
-					collection, storage, use and disclosure of your personal information
-					as described in this Policy.
+					Project Thaihub aka THAINOW (hereinafter &quot;we&quot;,
+					&quot;us&quot;, &quot;our&quot;) is committed to maintaining privacy
+					protections for its users (hereinafter &quot;you&quot;,
+					&quot;user&quot; and/or &quot;users&quot;). Our Privacy Policy
+					(hereinafter &quot;Privacy Policy&quot; and/or &quot;Policy&quot;) is
+					designed to help you understand how we collect, use, communicate,
+					disclose, make use of your personal information and protect the data
+					and information you provide to us when you use our service by
+					accessing either our online website or via our mobile application.
+					&quot;Service&quot; as used in this Policy shall refer to our services
+					accessed via either through our online website and/or through our
+					mobile application. Your privacy is very important to us. We reserve
+					the right to change this policy at any given time, of which you will
+					be promptly updated. If you want to make sure that you are up to date
+					with the latest changes, we advise you to frequently visit this page.
+					By accessing and using our Service, you accept our Policy and Terms of
+					Use (which can be found athttps://terms.thainowapp.com/ ), and you
+					express consent to our collection, storage, use and disclosure of your
+					personal information as described in this Policy.
 				</p>
 				<br />
 				<h3>What User Data We Collect</h3>
 				<br />
 				<p>
-					When you use our service, we may collect "Non-Personal Information"
-					and "Personal Information."
+					When you use our service, we may collect &quot;Non-Personal
+					Information&quot; and &quot;Personal Information.&quot;
 				</p>
 				<br />
 				<p>

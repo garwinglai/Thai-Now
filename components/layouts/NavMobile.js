@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect useCallback } from "react";
 import styles from "../../styles/components/layouts/nav-mobile.module.css";
 import logo_black from "../../public/static/images/logos/logo_black.svg";
 import Image from "next/image";
@@ -27,22 +27,23 @@ function NavMobile({ auth, route }) {
 
 	const router = useRouter();
 	const { directory } = router.query;
-	console.log(route, navScroll);
+	
 
 	useEffect(() => {
-		detectScroll();
-		console.log(route != "terms" || route != "profile");
-	}, [lastScrollY, detectScroll]);
-
-	function detectScroll() {
-		if (typeof window !== "undefined") {
-			window.addEventListener("scroll", controlNavbar);
-		} else {
-			return () => {
-				window.removeEventListener("scroll", controlNavbar);
-			};
+		const detectScroll = () => {
+			if (typeof window !== "undefined") {
+				window.addEventListener("scroll", controlNavbar);
+			} else {
+				return () => {
+					window.removeEventListener("scroll", controlNavbar);
+				};
+			}
 		}
-	}
+
+		detectScroll();
+	}, [lastScrollY, route]);
+
+
 
 	function controlNavbar() {
 		if (typeof window !== "undefined") {
