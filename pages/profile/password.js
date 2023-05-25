@@ -7,7 +7,6 @@ import Link from "next/link";
 import { TextField } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { useRouter } from "next/router";
 
 function ProfilePassword() {
 	const { back } = useRouter();
