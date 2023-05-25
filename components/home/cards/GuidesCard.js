@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "../../../styles/components/home/cards/guides-card.module.css";
-import guideImage from "../../../public/images/home/guide-temp-image.png";
+import guideImage from "../../../public/static/images/home/guide-temp-image.png";
 import Image from "next/image";
 
 function GuidesCard() {

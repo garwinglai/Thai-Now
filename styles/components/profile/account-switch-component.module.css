@@ -1,0 +1,50 @@
+.flex {
+	display: flex;
+}
+
+.flexCol {
+	display: flex;
+	flex-direction: column;
+}
+
+.account_box {
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 1rem;
+}
+
+.account_right_box {
+	gap: 1rem;
+}
+
+.profile_image {
+	width: 60px;
+	height: 60px;
+	object-fit: contain;
+}
+
+.signin_link {
+	gap: 1rem;
+}
+
+.no_profile_image {
+	justify-content: center;
+	align-items: center;
+	padding: 1.1rem;
+	border-radius: 50%;
+	background-color: rgba(217, 217, 217, 1);
+}
+
+.account_right_box p {
+	font-weight: 300;
+}
+
+.text_group {
+	width: 80%;
+}
+
+@media (hover: hover) {
+	.signin_link:hover {
+		text-decoration: underline;
+	}
+}

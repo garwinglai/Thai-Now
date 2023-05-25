@@ -1,0 +1,16 @@
+.flex {
+	display: flex;
+}
+
+.flexCol {
+	display: flex;
+	flex-direction: column;
+}
+
+.experience_filter_box {
+	padding: 1rem;
+}
+
+.experience_filter_box h4 {
+	margin-bottom: 0.5rem;
+}

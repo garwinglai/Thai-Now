@@ -1,0 +1,38 @@
+.flexCol {
+	display: flex;
+	flex-direction: column;
+}
+
+.get_in_touch_box {
+	padding: 1rem 1rem 2rem;
+	background-color: rgba(243, 246, 250, 1);
+}
+
+.get_in_touch_box h3 {
+	color: rgba(0, 46, 96, 1);
+}
+
+.get_in_touch_box p {
+	font-weight: 300;
+	font-size: 13px;
+}
+
+.form_box {
+	gap: 2rem;
+}
+
+.textarea_box p {
+	color: rgba(51, 51, 51, 0.5);
+}
+
+.submit_btn {
+	color: var(--white);
+	background-color: rgba(233, 72, 51, 1);
+	padding: 12px 24px;
+	font-size: 20px;
+	border-radius: 4px;
+}
+
+.footer_paragraph {
+	color: rgba(51, 51, 51, 0.5);
+}

@@ -6,8 +6,8 @@ import { useRef, useEffect, useState } from "react";
 import { addData } from "@/firebase/db/addData";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import bannerImageDesktop from "../public/images/home/banner-picture-desktop.svg";
-import bannerImageMobile from "../public/images/home/banner-picture-mobile.svg";
+import bannerImageDesktop from "../public/static/images/home/banner-picture-desktop.svg";
+import bannerImageMobile from "../public/static/images/home/banner-picture-mobile.svg";
 import SearchBarGeo from "@/components/search/SearchBarGeo";
 import SearchBarMobile from "@/components/search/SearchBarMobile";
 import NavOptions from "@/components/home/NavOptions";
@@ -22,6 +22,7 @@ import TripsCard from "@/components/home/cards/TripsCard";
 import DealsComponentMobile from "@/components/home/mobile/DealsComponentMobile";
 import DealsComponentDesktop from "@/components/home/desktop/DealsComponentDesktop";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import MainLayout from "@/components/layouts/MainLayout";
 
 export default function Home() {
 	const [lastScrollY, setLastScrollY] = useState(0);
@@ -80,7 +81,7 @@ export default function Home() {
 					<DealsComponentMobile key={idx} title={title} />
 				))}
 			</div>
-		);
+	)
 	}
 
 	return (
@@ -190,3 +191,7 @@ export default function Home() {
 // 		props: { dataObject },
 // 	};
 // }
+
+Home.getLayout = function getLayout(page) {
+	return <MainLayout route="home">{page}</MainLayout>;
+};

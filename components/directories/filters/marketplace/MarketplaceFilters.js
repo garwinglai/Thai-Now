@@ -1,6 +1,10 @@
 import React from "react";
-import styles from "../../../../styles/components/directory/filters/jobs/job-filters.module.css";
+import styles from "../../../../styles/components/directory/filters/filter-title.module.css";
 import CloseIcon from "@mui/icons-material/Close";
+import { IconButton } from "@mui/material";
+import MarketTypeFilter from "./MarketTypeFilter";
+import MarketPriceFilter from "./MarketPriceFilter";
+import FilterSortButtonGroup from "../FilterSortButtonGroup";
 
 function MarketplaceFilters({ directory, closeDrawer }) {
 	return (
@@ -8,24 +12,18 @@ function MarketplaceFilters({ directory, closeDrawer }) {
 			<div className={`${styles.title_box}`}>
 				<h1>Filter</h1>
 				<div className={`${styles.close_sort_box}`}>
-					<CloseIcon
-						onClick={closeDrawer(directory, false)}
-						fontSize="medium"
-					/>
+					<IconButton onClick={closeDrawer(directory, false)}>
+						<CloseIcon fontSize="medium" />
+					</IconButton>
 				</div>
 			</div>
-			{/* <div className={`${styles.filter_section_box}`}>
-				<SalaryFilter />
+			<div className={`${styles.filter_section_box}`}>
+				<MarketTypeFilter />
 			</div>
 			<div className={`${styles.filter_section_box}`}>
-				<JobTypeFilter />
+				<MarketPriceFilter />
 			</div>
-			<div className={`${styles.filter_section_box}`}>
-				<DatePostedFilter />
-			</div>
-			<div className={`${styles.filter_section_box}`}>
-				<ExperienceFilter />
-			</div> */}
+			<FilterSortButtonGroup />
 		</div>
 	);
 }

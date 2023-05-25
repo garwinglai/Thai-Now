@@ -1,10 +1,12 @@
 import React from "react";
-import styles from "../../../../styles/components/directory/filters/jobs/job-filters.module.css";
+import styles from "../../../../styles/components/directory/filters/filter-title.module.css";
 import CloseIcon from "@mui/icons-material/Close";
 import SalaryFilter from "./SalaryFilter";
 import JobTypeFilter from "./JobTypeFilter";
 import DatePostedFilter from "./DatePostedFilter";
 import ExperienceFilter from "./ExperienceFilter";
+import { IconButton } from "@mui/material";
+import FilterSortButtonGroup from "../FilterSortButtonGroup";
 
 function JobFilters({ directory, closeDrawer }) {
 	return (
@@ -12,10 +14,9 @@ function JobFilters({ directory, closeDrawer }) {
 			<div className={`${styles.title_box}`}>
 				<h1>Filter</h1>
 				<div className={`${styles.close_sort_box}`}>
-					<CloseIcon
-						onClick={closeDrawer(directory, false)}
-						fontSize="medium"
-					/>
+					<IconButton onClick={closeDrawer(directory, false)}>
+						<CloseIcon fontSize="medium" />
+					</IconButton>
 				</div>
 			</div>
 			<div className={`${styles.filter_section_box}`}>
@@ -30,6 +31,7 @@ function JobFilters({ directory, closeDrawer }) {
 			<div className={`${styles.filter_section_box}`}>
 				<ExperienceFilter />
 			</div>
+			<FilterSortButtonGroup />
 		</div>
 	);
 }

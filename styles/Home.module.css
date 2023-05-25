@@ -128,9 +128,8 @@
 
 @media screen and (max-width: 768px) {
 	.main {
-		margin-top: 55px;
+		margin: unset;
 	}
-
 	.right_arrow_button {
 		padding-right: 10px;
 		display: block;
@@ -145,7 +144,7 @@
 	}
 
 	.banner_image_mobile {
-		display: unset;
+		display: block;
 		width: 100%;
 		height: fit-content;
 		object-fit: contain;

@@ -2,10 +2,6 @@
 	display: flex;
 }
 
-.directory {
-	margin-top: 80px;
-}
-
 .results_box {
 	flex-grow: 1;
 }
@@ -40,7 +36,7 @@
 	}
 
 	.directory {
-		margin-top: 0;
+		margin-top: -57px;
 		background-color: #f5f5f5;
 	}
 

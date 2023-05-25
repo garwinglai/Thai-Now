@@ -1,34 +1,38 @@
 import React, { useState, useEffect } from "react";
 import styles from "../../styles/components/layouts/nav-mobile.module.css";
-import logo_black from "../../public/images/logos/logo_black.svg";
-import thai_royal_logo from "../../public/images/logos/royal_thai_logo.svg";
-import icon_bell_notif_black from "../../public/images/icons/icon_bell_notif_black.svg";
-import icon_account_black from "../../public/images/icons/icon_account_black.svg";
-import icon_search_black from "../../public/images/icons/icon_search_black.svg";
+import logo_black from "../../public/static/images/logos/logo_black.svg";
 import Image from "next/image";
 import SearchIcon from "@mui/icons-material/Search";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
-import { IconButton } from "@mui/material";
+import { Avatar, IconButton } from "@mui/material";
 import NavOptions from "../home/NavOptions";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import SwipeableDrawer from "@mui/material/SwipeableDrawer";
+import AccountMenuMobile from "./AccountMenuMobile";
 
-function NavMobile() {
+function NavMobile({ auth, route }) {
+	const [isLoggedIn, setIsLoggedIn] = useState(true);
+
 	const [navScroll, setNavScroll] = useState(false);
 	const [lastScrollY, setLastScrollY] = useState(0);
 	const [currDirectory, setCurrDirectory] = useState("");
+	const [state, setState] = React.useState({
+		top: false,
+		left: false,
+		bottom: false,
+		right: false,
+	});
 
 	const router = useRouter();
 	const { directory } = router.query;
+	console.log(route, navScroll);
 
 	useEffect(() => {
 		detectScroll();
+		console.log(route != "terms" || route != "profile");
 	}, [lastScrollY, detectScroll]);
-
-	useEffect(() => {
-		console.log("directory", directory);
-	}, [directory]);
 
 	function detectScroll() {
 		if (typeof window !== "undefined") {
@@ -68,8 +72,20 @@ function NavMobile() {
 		}
 	}
 
+	const toggleDrawer = (anchor, open) => (event) => {
+		if (
+			event &&
+			event.type === "keydown" &&
+			(event.key === "Tab" || event.key === "Shift")
+		) {
+			return;
+		}
+
+		setState({ ...state, [anchor]: open });
+	};
+
 	return (
-		<div className={`${styles.nav}`}>
+		<nav className={`${styles.nav}`}>
 			<div className={`${styles.nav_top}`}>
 				<div className={`${styles.nav_right} ${styles.flex}`}>
 					<Link href="/">
@@ -81,14 +97,6 @@ function NavMobile() {
 							className={`${styles.thai_now_logo}`}
 						/>
 					</Link>
-					<Image
-						alt="Royal thai logo"
-						src={thai_royal_logo}
-						width="auto"
-						height={35}
-						styles={{ color: "var(--white)" }}
-						className={`${styles.royal_thai_logo}`}
-					/>
 				</div>
 
 				<div className={`${styles.nav_left} ${styles.flex}`}>
@@ -98,19 +106,40 @@ function NavMobile() {
 					<IconButton>
 						<NotificationsNoneIcon color="action" />
 					</IconButton>
-					<IconButton>
-						<PersonOutlineOutlinedIcon color="action" />
-					</IconButton>
+					{isLoggedIn ? (
+						<React.Fragment>
+							<IconButton onClick={toggleDrawer("right", true)}>
+								<Avatar sx={{ width: 25, height: 25 }} color="action" />
+							</IconButton>
+							<SwipeableDrawer
+								anchor={"right"}
+								open={state["right"]}
+								onClose={toggleDrawer("right", false)}
+								onOpen={toggleDrawer("right", true)}
+							>
+								<AccountMenuMobile onClose={toggleDrawer} />
+							</SwipeableDrawer>
+						</React.Fragment>
+					) : (
+						<Link href="/auth/signin">
+							<IconButton>
+								<PersonOutlineOutlinedIcon color="action" />
+							</IconButton>
+						</Link>
+					)}
 				</div>
 			</div>
+
 			<div
 				className={`${styles.nav_options_scroll_hide} ${
-					(navScroll || directory) && styles.nav_options_scroll_show
+					((navScroll && route != "terms" && route != "profile") ||
+						route === "directory") &&
+					styles.nav_options_scroll_show
 				}`}
 			>
 				<NavOptions isScroll={navScroll} isMobile={true} />
 			</div>
-		</div>
+		</nav>
 	);
 }
 

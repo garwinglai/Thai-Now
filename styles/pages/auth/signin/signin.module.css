@@ -1,0 +1,86 @@
+.flex {
+	display: flex;
+}
+
+.flexCol {
+	display: flex;
+	flex-direction: column;
+}
+
+.signin_box {
+	margin: 55px 1.5rem 0;
+	text-align: center;
+	padding-top: 4rem;
+}
+
+.signin_box h2 {
+	color: #093869;
+	font-size: 24px;
+	font-weight: 600;
+}
+
+.signin_box h4 {
+	font-weight: 400;
+	font-size: 18px;
+	padding: 0.25rem 0 0 0;
+}
+
+.signup_link_group,
+.oauth_box {
+	justify-content: center;
+}
+
+.signup_link_group,
+.oauth_box,
+.divider_group {
+	padding: 1.25rem 0;
+}
+
+.signup_link_group {
+	gap: 8px;
+}
+
+.signup_link_group p,
+.signup_link_group a {
+	font-weight: 300;
+}
+
+.signup_link_group a {
+	color: #e94833;
+}
+
+.oauth_box {
+	padding-left: 1rem;
+	padding-right: 1rem;
+	justify-content: space-between;
+}
+
+.email_login_link {
+	text-decoration: none;
+	margin: 1rem 0 4rem;
+	width: 100%;
+	border: 1px solid #09386980;
+	border-radius: 5px;
+	background-color: transparent;
+	padding: 0.75rem;
+	justify-content: center;
+	align-items: center;
+	gap: 8px;
+	color: var(--black);
+}
+
+.email_login_link p {
+	color: var(--deals-primary);
+	font-size: 1rem;
+	color: #093869;
+}
+
+.footer_message {
+	color: #717171;
+	font-weight: 300;
+	font-size: 14px;
+}
+
+.footer_message a {
+	color: #093869;
+}

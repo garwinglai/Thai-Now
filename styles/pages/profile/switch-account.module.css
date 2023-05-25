@@ -1,0 +1,97 @@
+.flex {
+	display: flex;
+}
+
+.flexCol {
+	display: flex;
+	flex-direction: column;
+}
+
+.switch_account_box {
+	padding-bottom: 5rem;
+}
+
+.header_box {
+	padding: 1rem;
+}
+
+.switch_account_box a {
+	text-decoration: none;
+	color: var(--black);
+}
+
+.switch_account_box a:focus {
+	color: var(--black);
+	outline: none;
+}
+
+.back_btn {
+	align-items: center;
+	gap: 4px;
+	background-color: transparent;
+}
+
+.back_btn p {
+	font-size: 16px;
+	color: rgba(9, 56, 105, 1);
+}
+
+.header_box > h2 {
+	text-align: center;
+	margin: 1rem 0 2rem;
+}
+
+.profiles {
+	gap: 1rem;
+}
+
+.marketing_box {
+	background-color: rgba(219, 235, 250, 1);
+	border-radius: 8px;
+	margin: 3rem 1rem 0;
+	padding: 1rem;
+}
+
+.marketing_image {
+	margin: 0 auto;
+	width: 150px;
+	height: 150px;
+}
+
+.marketing_box h3,
+.marketing_box h4,
+.marketing_box p {
+	color: rgba(49, 58, 162, 1);
+}
+
+.marketing_box p {
+	font-weight: 300;
+	font-size: 14px;
+}
+
+.marketing_box h3 {
+	margin: 0.5rem 0 1rem;
+}
+
+.benefits_group > h4 {
+	margin-bottom: 0.5rem;
+}
+
+.context_group {
+	gap: 1rem;
+}
+
+.marketing_box a {
+	color: var(--white);
+}
+
+.signup_link {
+	width: 100%;
+	margin-top: 1rem;
+	border-radius: 5px;
+	background-color: #e94833;
+	padding: 0.75rem;
+	height: 48px;
+	font-size: 16px;
+	text-align: center;
+}

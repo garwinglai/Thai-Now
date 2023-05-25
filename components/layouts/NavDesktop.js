@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import styles from "../../styles/components/layouts/nav-desktop.module.css";
 import gStyles from "../../styles/global.module.css";
-import logo_white from "../../public/images/logos/logo_white.svg";
-import logo_black from "../../public/images/logos/logo_black.svg";
-import thai_royal_logo from "../../public/images/logos/royal_thai_logo.svg";
+import logo_white from "../../public/static/images/logos/logo_white.svg";
+import logo_black from "../../public/static/images/logos/logo_black.svg";
+import thai_royal_logo from "../../public/static/images/logos/royal_thai_logo.svg";
 import LoginButton from "../buttons/LoginButton";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
@@ -62,37 +62,20 @@ function NavDesktop() {
 	}
 
 	return (
-		<div
+		<nav
 			className={`${styles.nav} ${styles.flexCol} ${
 				(navScroll || directory) && styles.nav_scroll
 			} `}
 		>
 			<div className={`${styles.flex} ${styles.nav_top} `}>
 				<div className={`${styles.nav_left} ${styles.flex}`}>
-					{navScroll || directory ? (
-						<Link href="/">
-							<Image
-								alt="Logo"
-								src={logo_black}
-								className={`${styles.thai_now_logo_image}`}
-							/>
-						</Link>
-					) : (
-						<Link href="/">
-							<Image
-								alt="Logo"
-								src={logo_white}
-								className={`${styles.thai_now_logo_image}`}
-							/>
-						</Link>
-					)}
-					<Image
-						alt="Royal thai logo"
-						src={thai_royal_logo}
-						width={45}
-						height="auto"
-						styles={{ color: "var(--white)" }}
-					/>
+					<Link href="/">
+						<Image
+							alt="Logo"
+							src={navScroll || directory ? logo_black : logo_white}
+							className={`${styles.thai_now_logo_image}`}
+						/>
+					</Link>
 				</div>
 				<SearchBarGeo
 					navScrollAppear={navScroll || (directory && true)}
@@ -132,7 +115,7 @@ function NavDesktop() {
 			>
 				<NavOptions isScroll={true} isDesktop={true} />
 			</div>
-		</div>
+		</nav>
 	);
 }
 

@@ -5,20 +5,20 @@ import styles from "../../styles/components/layouts/main-layout.module.css";
 import Footer from "./Footer";
 import { useRouter } from "next/router";
 
-function MainLayout({ children }) {
+function MainLayout({ children, route }) {
 	const router = useRouter();
 	const { directory } = router.query;
 
 	return (
 		<React.Fragment>
 			<div className={`${directory && styles.layout_nav_mobile}`}>
-				<NavMobile />
+				<NavMobile auth={false} route={route} />
 			</div>
 			<div className={`${directory && styles.layout_nav_desktop}`}>
 				<NavDesktop />
 			</div>
-			<main>{children}</main>
-			<Footer />
+			<main className={`${styles.layout_main}`}>{children}</main>
+			{route !== "create-business" && <Footer />}
 		</React.Fragment>
 	);
 }

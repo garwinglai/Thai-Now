@@ -9,6 +9,8 @@ import HousingCard from "@/components/directories/cards/HousingCard";
 import DealCard from "@/components/directories/cards/DealCard";
 import MarketplaceCard from "@/components/directories/cards/MarketplaceCard";
 import BusinessCard from "@/components/directories/cards/BusinessCard";
+import MainLayout from "@/components/layouts/MainLayout";
+import { PagesSharp } from "@mui/icons-material";
 
 const tempCount = [1, 2, 3, 4, 5];
 
@@ -87,3 +89,7 @@ export async function getStaticProps(context) {
 		revalidate: 10,
 	};
 }
+
+Directory.getLayout = function getLayout(page) {
+	return <MainLayout route="directory">{page}</MainLayout>;
+};

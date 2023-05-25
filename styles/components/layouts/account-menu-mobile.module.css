@@ -1,0 +1,43 @@
+.flex {
+	display: flex;
+}
+
+.flexCol {
+	display: flex;
+	flex-direction: column;
+}
+
+.account_menu_box {
+	width: 100vw;
+	padding-bottom: 2rem;
+}
+
+.close_button {
+	text-align: right;
+	padding: 0.5rem 1rem 0;
+}
+
+.header {
+	padding: 0 2rem;
+	align-items: center;
+	gap: 1rem;
+}
+
+.header {
+	font-weight: 300;
+	margin-bottom: 1rem;
+}
+
+.section_box > a {
+	text-decoration: none;
+	color: var(--gray);
+}
+
+.section_box {
+	padding-bottom: 0.5rem;
+}
+
+.section_box p {
+	font-weight: 300;
+	padding: 1rem 2rem 0.5rem;
+}

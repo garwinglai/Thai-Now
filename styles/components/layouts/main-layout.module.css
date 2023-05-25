@@ -6,6 +6,10 @@
 	height: 0;
 }
 
+.layout_main {
+	margin-top: 55px;
+}
+
 @media screen and (min-width: 769px) {
 	.layout_nav_mobile {
 		height: 0;
@@ -13,5 +17,9 @@
 
 	.layout_nav_desktop {
 		height: 180px;
+	}
+
+	.layout_main {
+		margin-top: 0;
 	}
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "../../styles/components/search/search-bar-mobile.module.css";
 
-import icon_search from "../../public/images/icons/icon_search_gray.svg";
+import icon_search from "../../public/static/images/icons/icon_search_gray.svg";
 import Image from "next/image";
 
 function SearchBarMobile() {

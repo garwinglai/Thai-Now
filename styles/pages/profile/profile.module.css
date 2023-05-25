@@ -1,0 +1,75 @@
+.flex {
+	display: flex;
+}
+
+.flexCol {
+	display: flex;
+	flex-direction: column;
+}
+
+.profile_box {
+	padding: 1rem;
+	padding-bottom: 5rem;
+}
+
+.profile_box a {
+	text-decoration: none;
+	color: var(--black);
+}
+
+.profile_box a:focus {
+	color: var(--black);
+	outline: none;
+}
+
+.back_btn {
+	align-items: center;
+	gap: 4px;
+	background-color: transparent;
+}
+
+.profile_box p {
+	font-size: 16px;
+	color: rgba(9, 56, 105, 1);
+}
+
+.profile_box > h2 {
+	text-align: center;
+	margin: 1rem 0 2rem;
+}
+
+.image_group {
+	position: relative;
+	text-align: center;
+	margin-bottom: 3rem;
+}
+
+.profile_image {
+	width: 42vw;
+	height: 42vw;
+}
+
+.edit_btn {
+	position: absolute;
+	left: 50%;
+	bottom: -5px;
+	transform: translate(-50%);
+	align-items: center;
+	background-color: var(--white);
+	box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.1),
+		0px 4px 20px -2px rgba(0, 0, 0, 0.1);
+	padding: 4px 12px;
+	border-radius: 50px;
+}
+
+.form_box {
+	gap: 2rem;
+}
+
+.submit_btn {
+	color: var(--white);
+	background-color: rgba(233, 72, 51, 1);
+	padding: 12px 24px;
+	font-size: 20px;
+	border-radius: 4px;
+}

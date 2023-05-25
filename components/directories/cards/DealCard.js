@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "../../../styles/components/directory/cards/deal-card.module.css";
-import massageImage from "../../../public/images/directory/massage_large.png";
+import massageImage from "../../../public/static/images/directory/massage_large.png";
 import Image from "next/image";
 import StarIcon from "@mui/icons-material/Star";
 import { yellow } from "@mui/material/colors";

@@ -5,6 +5,8 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import CloseIcon from "@mui/icons-material/Close";
+import { IconButton } from "@mui/material";
+import FilterSortButtonGroup from "./FilterSortButtonGroup";
 
 export default function SortSearchResults({ closeDrawer }) {
 	return (
@@ -12,7 +14,9 @@ export default function SortSearchResults({ closeDrawer }) {
 			<div className={`${styles.title_box}`}>
 				<h1>Sort by</h1>
 				<div className={`${styles.close_sort_box}`}>
-					<CloseIcon onClick={closeDrawer(false)} fontSize="medium" />
+					<IconButton onClick={closeDrawer(false)}>
+						<CloseIcon fontSize="medium" />
+					</IconButton>
 				</div>
 			</div>
 			<div className={`${styles.sort_selection_box}`}>
@@ -61,12 +65,7 @@ export default function SortSearchResults({ closeDrawer }) {
 					</RadioGroup>
 				</FormControl>
 			</div>
-			<div className={`${styles.sort_button_box}`}>
-				<button className={`${styles.btn} ${styles.clear_btn}`}>
-					Clear all
-				</button>
-				<button className={`${styles.btn} ${styles.apply_btn}`}>Apply</button>
-			</div>
+			<FilterSortButtonGroup />
 		</div>
 	);
 }

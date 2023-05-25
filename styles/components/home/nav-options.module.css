@@ -34,8 +34,8 @@
 
 /* *Nav on Scoll Home */
 .options_container_scroll {
-	gap: .25rem;
-	padding: 10px 5px;
+	gap: 0.25rem;
+	padding: 0.5rem 4rem;
 	background-color: var(--white);
 	overflow: scroll;
 	flex-wrap: nowrap;

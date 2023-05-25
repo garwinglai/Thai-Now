@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "../../styles/components/search/search-bar-geo.module.css";
 import gStyles from "../../styles/global.module.css";
-import icon_search from "../../public/images/icons/search_icon.svg";
+import icon_search from "../../public/static/images/icons/search_icon.svg";
 import Image from "next/image";
 
 function SearchBarGeo({ navScrollAppear, scrollSearchBar }) {

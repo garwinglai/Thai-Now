@@ -1,17 +1,14 @@
 import React from "react";
 import styles from "../../styles/components/buttons/login-button.module.css";
 import gStyles from "../../styles/global.module.css";
-import account_icon from "../../public/images/icons/icon_account_circle.svg";
+import account_icon from "../../public/static/images/icons/icon_account_circle.svg";
 import Image from "next/image";
+import Link from "next/link";
 
 function LoginButton() {
-	function handleLogin() {
-		window.alert("login clicked.");
-	}
-
 	return (
-		<button
-			onClick={handleLogin}
+		<Link
+			href={"/auth/signin"}
 			className={`${styles.button_login} ${styles.flex}`}
 		>
 			<>
@@ -20,7 +17,7 @@ function LoginButton() {
 				<p className={`${gStyles.p_small}`}>|</p>
 				<p className={`${gStyles.p_small}`}>Sign up</p>
 			</>
-		</button>
+		</Link>
 	);
 }
 

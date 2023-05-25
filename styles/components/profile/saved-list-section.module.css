@@ -1,0 +1,8 @@
+.saved_list_box {
+	padding: 0 1rem;
+}
+
+.saved_list_box h3 {
+	padding-top: 1rem;
+	color: rgba(9, 56, 105, 1);
+}

@@ -1,6 +1,5 @@
 import "@/styles/globals.css";
 import { Kanit } from "next/font/google";
-import MainLayout from "@/components/layouts/MainLayout";
 
 const kanit = Kanit({
 	subsets: ["latin"],
@@ -8,6 +7,8 @@ const kanit = Kanit({
 });
 
 export default function App({ Component, pageProps }) {
+	const getLayout = Component.getLayout || ((page) => page);
+
 	return (
 		<>
 			<style jsx global>
@@ -17,9 +18,7 @@ export default function App({ Component, pageProps }) {
 					}
 				`}
 			</style>
-			<MainLayout>
-				<Component {...pageProps} />
-			</MainLayout>
+			{getLayout(<Component {...pageProps} />)}
 		</>
 	);
 }

@@ -1,15 +1,15 @@
 import React from "react";
 import styles from "../../styles/components/layouts/footer.module.css";
 import Image from "next/image";
-import logo from "../../public/images/logos/logo_white.svg";
+import logo from "../../public/static/images/logos/logo_white.svg";
 import Link from "next/link";
 import gStyles from "../../styles/global.module.css";
-import twitter_logo from "../../public/images/logos/twitter_logo.svg";
-import facebook_logo from "../../public/images/logos/facebook_logo.svg";
-import youtube_logo from "../../public/images/logos/youtube_logo.svg";
-import instagram_logo from "../../public/images/logos/instagram_logo.svg";
-import playButton from "../../public/images/buttons/playstore_download_button.svg";
-import appleDownloadButton from "../../public/images/buttons/apple_download_button.svg";
+import twitter_logo from "../../public/static/images/logos/twitter_logo.svg";
+import facebook_logo from "../../public/static/images/logos/facebook_logo.svg";
+import youtube_logo from "../../public/static/images/logos/youtube_logo.svg";
+import instagram_logo from "../../public/static/images/logos/instagram_logo.svg";
+import playButton from "../../public/static/images/buttons/playstore_download_button.svg";
+import appleDownloadButton from "../../public/static/images/buttons/apple_download_button.svg";
 
 function Footer() {
 	return (

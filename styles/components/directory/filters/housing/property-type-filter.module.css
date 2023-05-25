@@ -1,0 +1,36 @@
+.flex {
+	display: flex;
+}
+
+.flexCol {
+	display: flex;
+	flex-direction: column;
+}
+
+.filter_box {
+	padding: 1rem;
+}
+
+.filter_box h4 {
+	margin-bottom: 1rem;
+}
+
+.filter_group {
+	width: 100%;
+	flex-wrap: wrap;
+	gap: 1rem;
+}
+
+.property_btn {
+	width: max-content;
+	color: rgba(51, 51, 51, 1);
+	background-color: var(--white);
+	border: 1px solid rgba(235, 235, 235, 1);
+	border-radius: 50px;
+	padding: 6px 12px;
+}
+
+.property_btn:focus {
+	background-color: rgba(2, 68, 155, 1);
+	color: var(--white);
+}

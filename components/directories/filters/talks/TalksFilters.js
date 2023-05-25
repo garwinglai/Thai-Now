@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../../../../styles/components/directory/filters/jobs/job-filters.module.css";
+import styles from "../../../../styles/components/directory/filters/filter-title.module.css";
 import CloseIcon from "@mui/icons-material/Close";
 
 function TalksFilters({ directory, closeDrawer }) {

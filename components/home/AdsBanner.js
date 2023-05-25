@@ -1,5 +1,5 @@
 import React from "react";
-import bannerImage from "../../public/images/home/banner.png";
+import bannerImage from "../../public/static/images/home/banner.png";
 import styles from "../../styles/components/home/ads-banner.module.css";
 import Image from "next/image";
 

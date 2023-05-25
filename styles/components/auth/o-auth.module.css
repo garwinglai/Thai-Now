@@ -1,0 +1,15 @@
+.flexCol {
+	display: flex;
+	flex-direction: column;
+}
+
+.oauth_group {
+	align-items: center;
+	gap: 4px;
+	background-color: transparent;
+}
+
+.oauth_group p {
+	font-size: 12px;
+	font-weight: 300;
+}

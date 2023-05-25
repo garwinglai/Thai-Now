@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import logo from "../public/images/logos/logo_white.svg";
+import logo from "../public/static/images/logos/logo_white.svg";
 
 function test() {
 	return (

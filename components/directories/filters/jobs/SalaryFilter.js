@@ -31,7 +31,7 @@ function SalaryFilter() {
 						<FormControlLabel
 							value="hourly"
 							control={<Radio />}
-							label="hourly"
+							label="Hourly"
 							labelPlacement="start"
 							sx={{
 								display: "flex",

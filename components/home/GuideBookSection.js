@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "../../styles/components/home/guide-book-section.module.css";
-import guideVideo from "../../public/images/home/guide-temp-video.png";
+import guideVideo from "../../public/static/images/home/guide-temp-video.png";
 import Image from "next/image";
 import GuidesCard from "./cards/GuidesCard";
 

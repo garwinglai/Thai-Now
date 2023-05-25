@@ -1,0 +1,100 @@
+.flex {
+	display: flex;
+}
+
+.flexCol {
+	display: flex;
+	flex-direction: column;
+}
+
+.email_signup_box {
+	margin: 55px 1.5rem 0;
+	text-align: center;
+	padding-top: 2rem;
+}
+
+.email_signup_box h2 {
+	color: #093869;
+	font-size: 24px;
+	font-weight: 600;
+}
+
+.email_signup_box h4 {
+	font-weight: 400;
+	font-size: 18px;
+	padding: 0.25rem 0 0 0;
+}
+
+.credentials_box {
+	padding: 2rem 0 1.5rem;
+	gap: 1rem;
+}
+
+.password_check_group_empty {
+	gap: 4px;
+	align-items: center;
+	font-size: 13px;
+	font-weight: 300;
+	color: #717171;
+}
+
+.login_btn {
+	width: 100%;
+	border: 1px solid #09386980;
+	border-radius: 5px;
+	background-color: #e94833;
+	padding: 0.75rem;
+	color: var(--white);
+	height: 48px;
+	font-size: 16px;
+  margin-top: 2rem;
+}
+
+.forgot_password_link {
+	text-align: right;
+}
+
+.forgot_password_link > a {
+	color: #093869;
+	font-weight: 300;
+}
+
+.signup_link_group,
+.oauth_box {
+	justify-content: center;
+}
+
+.signup_link_group,
+.oauth_box,
+.divider_group {
+	padding: 1.25rem 0;
+}
+
+.signup_link_group {
+	gap: 8px;
+}
+
+.signup_link_group p,
+.signup_link_group > a {
+	font-weight: 300;
+}
+
+.signup_link_group > a {
+	color: #e94833;
+}
+
+.oauth_box {
+	padding-left: 1rem;
+	padding-right: 1rem;
+	justify-content: space-between;
+}
+
+.footer_message {
+	color: #717171;
+	font-weight: 300;
+	font-size: 14px;
+}
+
+.footer_message a {
+	color: #093869;
+}
