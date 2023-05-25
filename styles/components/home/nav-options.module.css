@@ -35,11 +35,12 @@
 /* *Nav on Scoll Home */
 .options_container_scroll {
 	gap: 0.25rem;
-	padding: 0.5rem 4rem;
+	padding: 0.5rem 1rem;
+	/* padding: 0.5rem 4rem; */
 	background-color: var(--white);
 	overflow: scroll;
 	flex-wrap: nowrap;
-	justify-content: space-between;
+	justify-content: space-around;
 }
 
 .link_group_scroll {
@@ -80,7 +81,10 @@
 	/* *Scroll Nav Options Home */
 	.options_container_scroll {
 		gap: unset;
-		padding: 15px 15%;
+		padding: 1rem 0;
+		gap: 2rem;
+		width: 50%;
+		margin: 0 auto;
 	}
 
 	.image_style_scroll {
