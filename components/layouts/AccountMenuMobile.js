@@ -93,13 +93,15 @@ function AccountMenuMobile({ onClose }) {
 				<Divider sx={{ width: "90%", margin: "0 auto" }} />
 				<div className={`${styles.section_box}`}>
 					<p>Your Business</p>
-					<MenuItem sx={{ padding: "0 2rem" }}>
-						<ListItemIcon>
-							<StoreOutlinedIcon fontSize="small" />
-						</ListItemIcon>
-						<ListItemText>Business on ThaiNow</ListItemText>
-						<ArrowForwardIosIcon fontSize="small" />
-					</MenuItem>
+					<Link href="/business-center">
+						<MenuItem sx={{ padding: "0 2rem" }}>
+							<ListItemIcon>
+								<StoreOutlinedIcon fontSize="small" />
+							</ListItemIcon>
+							<ListItemText>Business on ThaiNow</ListItemText>
+							<ArrowForwardIosIcon fontSize="small" />
+						</MenuItem>
+					</Link>
 				</div>
 				<Divider sx={{ width: "90%", margin: "0 auto" }} />
 				<div className={`${styles.section_box}`}>

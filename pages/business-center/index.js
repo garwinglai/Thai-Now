@@ -1,0 +1,127 @@
+import React from "react";
+import MainLayout from "@/components/layouts/MainLayout";
+import BusinessCenterPageHeader from "@/components/business-center/BusinessCenterPageHeader";
+import BusinessCenterBodyHeader from "@/components/business-center/BusinessCenterBodyHeader";
+import { styled } from "@mui/material/styles";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Box from "@mui/material/Box";
+import marketplace_gray_icon from "@/public/static/images/icons/marketplace_gray_icon.png";
+import Image from "next/image";
+import HousingCard from "@/components/directories/cards/HousingCard";
+import MarketplaceCard from "@/components/directories/cards/MarketplaceCard";
+import Review from "@/components/business-center/Review";
+
+function BusinessCenter() {
+	const [value, setValue] = React.useState(0);
+
+	const handleChange = (event, newValue) => {
+		setValue(newValue);
+	};
+	return (
+		<div className="flex flex-col gap-2 h-screen">
+			<BusinessCenterPageHeader />
+			<div className="bg-white border-t-4 border-gray-100">
+				<BusinessCenterBodyHeader />
+				<div className="bg-gray-100">
+					<StyledTabs
+						value={value}
+						onChange={handleChange}
+						aria-label="styled tabs example"
+					>
+						<StyledTab label="Housing" />
+						<StyledTab label="Marketplace" />
+						<StyledTab label="Drafts" />
+						<StyledTab label="Review" />
+					</StyledTabs>
+				</div>
+				{/* <div className="p-4 flex flex-col items-center justify-center">
+					<div className="flex flex-col items-center justify-center w-1/2 gap-2 pt-8">
+						<Image src={marketplace_gray_icon} alt="no post icon" />
+						<p className="text-center text-gray-300 text-xs font-light">
+							There are no posted Housing available at the moment
+						</p>
+					</div>
+				</div> */}
+				<div className="px-4 mb-16 pb-8">
+					<TabPanel value={value} index={0}>
+						<HousingCard isBusinessCenter={true} />
+						<HousingCard isBusinessCenter={true} />
+						<HousingCard isBusinessCenter={true} />
+					</TabPanel>
+					<TabPanel value={value} index={1}>
+						<MarketplaceCard isBusinessCenter={true} />
+					</TabPanel>
+					<TabPanel value={value} index={2}>
+						<MarketplaceCard isBusinessCenter={true} />
+						<HousingCard isBusinessCenter={true} />
+					</TabPanel>
+					<TabPanel value={value} index={3}>
+						<Review />
+						<Review />
+					</TabPanel>
+				</div>
+				<div className="py-5 px-4 bg-white border-t border-gray-100 fixed w-full bottom-0">
+					<button className="bg-orange-600 text-white text-sm rounded-md py-3 px-4 w-full">
+						Create your post
+					</button>
+				</div>
+			</div>
+		</div>
+	);
+}
+
+export default BusinessCenter;
+
+BusinessCenter.getLayout = function getLayout(page) {
+	return <MainLayout route="business-center">{page}</MainLayout>;
+};
+
+function TabPanel(props) {
+	const { children, value, index, ...other } = props;
+
+	return (
+		<div
+			role="tabpanel"
+			hidden={value !== index}
+			id={`simple-tabpanel-${index}`}
+			aria-labelledby={`simple-tab-${index}`}
+			{...other}
+		>
+			{value === index && <div>{children}</div>}
+		</div>
+	);
+}
+
+const StyledTabs = styled((props) => (
+	<Tabs
+		{...props}
+		TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
+	/>
+))({
+	"& .MuiTabs-indicator": {
+		display: "flex",
+		justifyContent: "center",
+		backgroundColor: "transparent",
+	},
+	"& .MuiTabs-indicatorSpan": {
+		width: "100%",
+		backgroundColor: "rgba(2, 68, 155, 1)",
+	},
+});
+
+const StyledTab = styled((props) => <Tab disableRipple {...props} />)(
+	({ theme }) => ({
+		textTransform: "none",
+		fontWeight: theme.typography.fontWeightRegular,
+		fontSize: theme.typography.pxToRem(15),
+		marginRight: theme.spacing(1),
+		color: "rgba(51, 51, 51, 1)",
+		"&.Mui-selected": {
+			color: "rgba(2, 68, 155, 1)",
+		},
+		"&.Mui-focusVisible": {
+			backgroundColor: "rgba(100, 95, 228, 0.32)",
+		},
+	})
+);
