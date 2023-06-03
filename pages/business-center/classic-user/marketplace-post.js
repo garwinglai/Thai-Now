@@ -15,7 +15,7 @@ function MarketPlacePost() {
 	const [step, setStep] = useState(1);
 	const [marketPostType, setMarketPostType] = useState("Product");
 	const [productDetails, setProductDetails] = useState({
-		title: "tet",
+		title: "",
 		productType: "Food",
 		description: "",
 		location: "",
