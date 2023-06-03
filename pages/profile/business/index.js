@@ -192,7 +192,7 @@ function BusinessProfile() {
 					{uploadedBusinessPhotos.length !== 0 && (
 						<div className="flex w-full gap-4 pt-4">
 							{uploadedBusinessPhotos.map((file, idx) => (
-								<div className=" w-14 h-14 relative">
+								<div className=" w-14 h-14 relative" key={idx}>
 									<Image
 										src={file.imgUrl}
 										alt={file.fileName}
@@ -300,7 +300,7 @@ function BusinessProfile() {
 					{/* {uploadedPhotos.length !== 0 && (
 					<div className="flex w-full gap-4 pt-4">
 						{uploadedPhotos.map((file, idx) => (
-							<div className=" w-14 h-14 relative">
+							<div key={idx} className=" w-14 h-14 relative">
 								<Image
 									src={file.imgUrl}
 									alt={file.fileName}

@@ -11,7 +11,7 @@ function PostAmenities({ amenities }) {
 			<ul className="ml-4 my-4">
 				{amenitiesKeysArray.map((item, key) => {
 					if (amenities[item])
-						return <li className="list-disc font-extralight">{item}</li>;
+						return <li key={key} className="list-disc font-extralight">{item}</li>;
 				})}
 			</ul>
 			<PostLastUpdated />
