@@ -28,7 +28,7 @@ function Profile() {
 			<h2>Personal info</h2>
 			<div className={`${styles.image_group}`}>
 				<Image
-					className={`${styles.profile_image}`}
+					className="mx-auto"
 					src={avatar_image}
 					alt="profile image"
 				/>

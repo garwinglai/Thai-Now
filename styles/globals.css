@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+	input[type="number"]::-webkit-inner-spin-button,
+	input[type="number"]::-webkit-outer-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+}
+
 :root {
 	/* ? Color theme */
 	--black: #000000;
@@ -44,7 +52,7 @@
 	/* ? Input and elements */
 	--input-bg-primary: #d9dbe9;
 	--input-bg-secondary: #f7f7fc;
-	--element-color: #d9dbe9;
+	--element-color: rgba(249, 249, 249, 1);
 
 	/* ? Gradient colors */
 	--gradient-primary: #1c3d99;
@@ -55,6 +63,7 @@
 
 	--placeholder-color: #aeaeae;
 	--text-body-color: #666666;
+	--border: rgba(246, 244, 240, 1);
 }
 
 * {
@@ -119,10 +128,6 @@ h4 {
 
 p {
 	color: var(--paragraph-color);
-}
-
-button {
-	border: transparent;
 }
 
 @media (hover: hover) {

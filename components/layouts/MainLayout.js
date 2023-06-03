@@ -18,7 +18,9 @@ function MainLayout({ children, route }) {
 				<NavDesktop />
 			</div>
 			<main className={`${styles.layout_main}`}>{children}</main>
-			{route !== "create-business" && route !== "business-center" && <Footer />}
+			{route !== "create-business" &&
+				route !== "business-center" &&
+				route !== "business-profile" && <Footer />}
 		</React.Fragment>
 	);
 }

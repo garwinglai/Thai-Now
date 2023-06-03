@@ -23,7 +23,7 @@ function ProfilePassword() {
 				<ChevronLeftIcon />
 				<p>Back</p>
 			</button>
-			<h2>Personal info</h2>
+			<h2>Password</h2>
 			<p>
 				You haven&apos;t set a password for ThaiNow yet. Set a password so that
 				you can login to ThaiNow with just your email address.

@@ -52,7 +52,7 @@
 .edit_btn {
 	position: absolute;
 	left: 50%;
-	bottom: -5px;
+	bottom: -15px;
 	transform: translate(-50%);
 	align-items: center;
 	background-color: var(--white);

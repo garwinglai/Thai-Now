@@ -54,7 +54,7 @@ function SwitchAccount() {
 					</div>
 				</div>
 				<Link
-					href="/profile/create-business"
+					href="/profile/create-business-account"
 					className={`${styles.signup_link}`}
 				>
 					Create

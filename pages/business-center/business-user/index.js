@@ -11,30 +11,58 @@ import Image from "next/image";
 import HousingCard from "@/components/directories/cards/HousingCard";
 import MarketplaceCard from "@/components/directories/cards/MarketplaceCard";
 import Review from "@/components/business-center/Review";
+import Drawer from "@mui/material/Drawer";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import { IconButton } from "@mui/material";
+import Link from "next/link";
 
-function BusinessCenter() {
+function BusinessCenterBusiness() {
 	const [value, setValue] = React.useState(0);
+	const [state, setState] = React.useState({
+		top: false,
+		left: false,
+		bottom: false,
+		right: false,
+	});
 
 	const handleChange = (event, newValue) => {
 		setValue(newValue);
 	};
+
+	const toggleDrawer = (anchor, open) => (event) => {
+		if (
+			event.type === "keydown" &&
+			(event.key === "Tab" || event.key === "Shift")
+		) {
+			return;
+		}
+
+		setState({ ...state, [anchor]: open });
+	};
+
+	const handleCreatePost = () => {
+		toggleDrawer("bottom", true);
+	};
+
 	return (
 		<div className="flex flex-col gap-2 h-screen">
 			<BusinessCenterPageHeader />
 			<div className="bg-white border-t-4 border-gray-100">
-				<BusinessCenterBodyHeader />
+				<BusinessCenterBodyHeader route="business" />
 				<div className="bg-gray-100">
 					<StyledTabs
 						value={value}
 						onChange={handleChange}
 						aria-label="styled tabs example"
 					>
+						<StyledTab label="Jobs" />
 						<StyledTab label="Housing" />
 						<StyledTab label="Marketplace" />
 						<StyledTab label="Drafts" />
 						<StyledTab label="Review" />
 					</StyledTabs>
 				</div>
+				{/* //* No posts */}
 				{/* <div className="p-4 flex flex-col items-center justify-center">
 					<div className="flex flex-col items-center justify-center w-1/2 gap-2 pt-8">
 						<Image src={marketplace_gray_icon} alt="no post icon" />
@@ -54,26 +82,68 @@ function BusinessCenter() {
 					</TabPanel>
 					<TabPanel value={value} index={2}>
 						<MarketplaceCard isBusinessCenter={true} />
-						<HousingCard isBusinessCenter={true} />
 					</TabPanel>
 					<TabPanel value={value} index={3}>
+						<MarketplaceCard isBusinessCenter={true} />
+						<HousingCard isBusinessCenter={true} />
+					</TabPanel>
+					<TabPanel value={value} index={4}>
 						<Review />
 						<Review />
 					</TabPanel>
 				</div>
 				<div className="py-5 px-4 bg-white border-t border-gray-100 fixed w-full bottom-0">
-					<button className="bg-orange-600 text-white text-sm rounded-md py-3 px-4 w-full">
+					<button
+						className="bg-orange-600 text-white text-sm rounded-md py-3 px-4 w-full"
+						onClick={toggleDrawer("bottom", true)}
+					>
 						Create your post
 					</button>
+					<Drawer
+						anchor={"bottom"}
+						open={state["bottom"]}
+						onClose={toggleDrawer("bottom", false)}
+					>
+						<div className="relative">
+							<div className="p-4 border-b border-gray-100">
+								<h4 className="text-center">Type of Post</h4>
+								<div className="absolute right-3 top-3">
+									<IconButton onClick={toggleDrawer("bottom", false)}>
+										<CloseOutlinedIcon />
+									</IconButton>
+								</div>
+							</div>
+							<div className="flex flex-col gap-4 p-8">
+								<Link
+									href="/business-center/classic-user/housing-post"
+									className="text-center w-full py-2 border border-[color:var(--deals-primary-med)] border-opacity-50 text-[color:var(--deals-primary)] rounded hover:text-white hover:bg-[color:var(--deals-primary-med)] active:text-white active:bg-[color:var(--deals-primary-med)]"
+								>
+									Jobs
+								</Link>
+								<Link
+									href="/business-center/classic-user/housing-post"
+									className="text-center w-full py-2 border border-[color:var(--deals-primary-med)] border-opacity-50 text-[color:var(--deals-primary)] rounded hover:text-white hover:bg-[color:var(--deals-primary-med)] active:text-white active:bg-[color:var(--deals-primary-med)]"
+								>
+									Housing
+								</Link>
+								<Link
+									href="/business-center/classic-user/marketplace-post"
+									className="text-center w-full text-[color:var(--deals-primary)]  py-2 border border-[color:var(--deals-primary-med)] border-opacity-50 rounded hover:text-white hover:bg-[color:var(--deals-primary-med)] active:text-white active:bg-[color:var(--deals-primary-med)]"
+								>
+									Marketplace
+								</Link>
+							</div>
+						</div>
+					</Drawer>
 				</div>
 			</div>
 		</div>
 	);
 }
 
-export default BusinessCenter;
+export default BusinessCenterBusiness;
 
-BusinessCenter.getLayout = function getLayout(page) {
+BusinessCenterBusiness.getLayout = function getLayout(page) {
 	return <MainLayout route="business-center">{page}</MainLayout>;
 };
 
