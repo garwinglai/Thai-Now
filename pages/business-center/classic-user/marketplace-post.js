@@ -15,17 +15,17 @@ function MarketPlacePost() {
 	const [step, setStep] = useState(1);
 	const [marketPostType, setMarketPostType] = useState("Product");
 	const [productDetails, setProductDetails] = useState({
-		title: "test",
+		title: "tet",
 		productType: "Food",
-		description: "test",
-		location: "test",
+		description: "",
+		location: "",
 	});
 	const [isProductPhysical, setIsProductPhysical] = useState("Yes");
 	const [productCondition, setProductCondition] = useState("Used");
 	const [uploadedPhotos, setUploadedPhotos] = useState([]);
 	const [priceOption, setPriceOption] = useState("exact");
 	const [offerPrice, setOfferPrice] = useState({
-		exactPrice: { price: "2131", interval: "week" },
+		exactPrice: { price: "", interval: "week" },
 		priceRange: { minPrice: "", maxPrice: "", interval: "week" },
 	});
 	const [offerIncludesTax, setOfferIncludesTax] = useState("Yes");

@@ -15,18 +15,18 @@ function HousingPost() {
 	const [housingType, setHousingType] = useState("Apartment");
 	const [uploadedPhotos, setUploadedPhotos] = useState([]);
 	const [housingPostValues, setHousingPostValues] = useState({
-		title: "test",
-		description: "test",
-		location: "test",
+		title: "",
+		description: "",
+		location: "",
 	});
-	const [guestCount, setGuestCount] = useState(1);
-	const [bedroomCount, setBedroomCount] = useState(1);
+	const [guestCount, setGuestCount] = useState(0);
+	const [bedroomCount, setBedroomCount] = useState(0);
 	const [parkingCount, setParkingCount] = useState(0);
 	const [bathroomCount, setBathroomCount] = useState(0);
 	const [amenities, setAmenities] = useState({
 		kitchen: false,
-		wifi: true,
-		tv: true,
+		wifi: false,
+		tv: false,
 		washer: false,
 		hairDryer: false,
 		refridgerator: false,
@@ -37,7 +37,7 @@ function HousingPost() {
 		cookingBasics: false,
 	});
 	const [housingPrice, setHousingPrice] = useState({
-		exactPrice: { price: "2131", interval: "week" },
+		exactPrice: { price: "", interval: "week" },
 		priceRange: { minPrice: "", maxPrice: "", interval: "week" },
 	});
 	const [priceOption, setPriceOption] = useState("exact");
