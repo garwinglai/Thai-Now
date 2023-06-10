@@ -6,7 +6,7 @@ import Image from "next/image";
 import StarIcon from "@mui/icons-material/Star";
 import Link from "next/link";
 
-function BusinessCenterPageHeader() {
+function BusinessCenterPageHeader({ isBusinessUser }) {
 	const { back } = useRouter();
 
 	const handleBack = () => {
@@ -32,7 +32,11 @@ function BusinessCenterPageHeader() {
 					</div>
 				</div>
 				<Link
-					href="/business-center/business/public-page"
+					href={`${
+						isBusinessUser
+							? `/business-center/business/public-page`
+							: `/business-center/classic`
+					}`}
 					className=" bg-orange-600 text-white px-1 py-2 text-xs h-full rounded-md "
 				>
 					View public page

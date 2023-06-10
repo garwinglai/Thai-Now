@@ -47,7 +47,7 @@ function BusinessCenterBusiness() {
 
 	return (
 		<div className="flex flex-col gap-2 h-screen">
-			<BusinessCenterPageHeader />
+			<BusinessCenterPageHeader isBusinessUser={true} />
 			<div className="bg-white border-t-4 border-gray-100">
 				<BusinessCenterBodyHeader route="business" />
 				<div className="bg-gray-100">
