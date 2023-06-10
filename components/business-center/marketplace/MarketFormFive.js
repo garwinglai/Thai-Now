@@ -12,6 +12,7 @@ import Link from "next/link";
 import CustomModal from "@/components/layouts/CustomModal";
 
 function MarketFormFive({
+	isBusinessUser,
 	marketPostType,
 	productDetails,
 	isProductPhysical,
@@ -69,7 +70,11 @@ function MarketFormFive({
 					</p>
 					<PrimaryButton name="View your Post" />
 					<Link
-						href="/business-center/classic-user"
+						href={` ${
+							isBusinessUser
+								? "/business-center/business"
+								: "/business-center/classic"
+						} `}
 						className="underline font-light text-[color:var(--deals-primary)] "
 					>
 						Go to Business Center

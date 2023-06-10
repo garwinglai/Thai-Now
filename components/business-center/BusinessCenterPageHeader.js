@@ -4,6 +4,7 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import avatar_image from "@/public/static/images/temp_avatar.png";
 import Image from "next/image";
 import StarIcon from "@mui/icons-material/Star";
+import Link from "next/link";
 
 function BusinessCenterPageHeader() {
 	const { back } = useRouter();
@@ -30,9 +31,12 @@ function BusinessCenterPageHeader() {
 						<h4>Lolar Ramsey</h4>
 					</div>
 				</div>
-				<button className=" bg-orange-600 text-white px-1 py-2 text-xs h-full rounded-md ">
+				<Link
+					href="/business-center/business/public-page"
+					className=" bg-orange-600 text-white px-1 py-2 text-xs h-full rounded-md "
+				>
 					View public page
-				</button>
+				</Link>
 			</div>
 			<div className="flex items-center gap-2">
 				<StarIcon fontSize="small" sx={{ color: "orange" }} />

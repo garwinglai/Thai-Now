@@ -3,10 +3,10 @@ import MainLayout from "@/components/layouts/MainLayout";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { useRouter } from "next/router";
 import Snackbar from "@mui/material/Snackbar";
-import HousingFormOne from "@/components/business-center/classic-user/housing/HousingFormOne";
-import HousingFormTwo from "@/components/business-center/classic-user/housing/HousingFormTwo";
-import HousingFormThree from "@/components/business-center/classic-user/housing/HousingFormThree";
-import HousingFormFour from "@/components/business-center/classic-user/housing/HousingFormFour";
+import HousingFormOne from "@/components/business-center/housing/HousingFormOne";
+import HousingFormTwo from "@/components/business-center/housing/HousingFormTwo";
+import HousingFormThree from "@/components/business-center/housing/HousingFormThree";
+import HousingFormFour from "@/components/business-center/housing/HousingFormFour";
 import { Alert, IconButton } from "@mui/material";
 
 function HousingPost() {

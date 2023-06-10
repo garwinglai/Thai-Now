@@ -1,6 +1,6 @@
 import React from "react";
 
-function PostLocation({ location }) {
+function PostLocation({ location, isPublicPage }) {
 	return (
 		<div className="p-4 bg-white">
 			<h5>Location</h5>

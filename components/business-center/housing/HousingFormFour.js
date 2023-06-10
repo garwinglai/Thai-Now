@@ -12,6 +12,7 @@ import PrimaryButton from "@/components/buttons/PrimaryButton";
 import Link from "next/link";
 
 function HousingFormFour({
+	isBusinessUser,
 	housingPostValues,
 	housingType,
 	uploadedPhotos,
@@ -75,7 +76,11 @@ function HousingFormFour({
 					</p>
 					<PrimaryButton name="View your Post" />
 					<Link
-						href="/business-center/classic-user"
+						href={` ${
+							isBusinessUser
+								? "/business-center/business"
+								: "/business-center/classic"
+						} `}
 						className="underline font-light text-[color:var(--deals-primary)] "
 					>
 						Go to Business Center

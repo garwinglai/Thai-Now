@@ -2,15 +2,16 @@ import React, { useState } from "react";
 import MainLayout from "@/components/layouts/MainLayout";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { useRouter } from "next/router";
-import MarketFormOne from "@/components/business-center/classic-user/marketplace/MarketFormOne";
-import MarketFormTwo from "@/components/business-center/classic-user/marketplace/MarketFormTwo";
-import MarketFormThree from "@/components/business-center/classic-user/marketplace/MarketFormThree";
-import MarketFormFour from "@/components/business-center/classic-user/marketplace/MarketFormFour";
-import MarketFormFive from "@/components/business-center/classic-user/marketplace/MarketFormFive";
+import MarketFormOne from "@/components/business-center/marketplace/MarketFormOne";
+import MarketFormTwo from "@/components/business-center/marketplace/MarketFormTwo";
+import MarketFormThree from "@/components/business-center/marketplace/MarketFormThree";
+import MarketFormFour from "@/components/business-center/marketplace/MarketFormFour";
+import MarketFormFive from "@/components/business-center/marketplace/MarketFormFive";
 import Snackbar from "@mui/material/Snackbar";
 import { Alert, IconButton } from "@mui/material";
 
-function MarketPlacePost() {
+function EditMarketplace({ pid }) {
+	console.log(pid);
 	const [isPublish, setIsPublish] = useState(false);
 	const [step, setStep] = useState(1);
 	const [marketPostType, setMarketPostType] = useState("Product");
@@ -216,6 +217,7 @@ function MarketPlacePost() {
 		if (step === 5)
 			return (
 				<MarketFormFive
+					isBusinessUser={true}
 					marketPostType={marketPostType}
 					productDetails={productDetails}
 					isProductPhysical={isProductPhysical}
@@ -307,8 +309,20 @@ function MarketPlacePost() {
 	);
 }
 
-export default MarketPlacePost;
+export default EditMarketplace;
 
-MarketPlacePost.getLayout = function getLayout(page) {
+EditMarketplace.getLayout = function getLayout(page) {
 	return <MainLayout route="business-center">{page}</MainLayout>;
 };
+
+export async function getServerSideProps(ctx) {
+	console.log(ctx);
+	const { pid } = ctx.query;
+	console.log(pid);
+
+	return {
+		props: {
+			pid,
+		},
+	};
+}

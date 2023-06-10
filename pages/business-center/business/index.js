@@ -15,8 +15,9 @@ import Drawer from "@mui/material/Drawer";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { IconButton } from "@mui/material";
 import Link from "next/link";
+import JobsCard from "@/components/directories/cards/JobsCard";
 
-function BusinessCenter() {
+function BusinessCenterBusiness() {
 	const [value, setValue] = React.useState(0);
 	const [state, setState] = React.useState({
 		top: false,
@@ -48,13 +49,14 @@ function BusinessCenter() {
 		<div className="flex flex-col gap-2 h-screen">
 			<BusinessCenterPageHeader />
 			<div className="bg-white border-t-4 border-gray-100">
-				<BusinessCenterBodyHeader route="classic" />
+				<BusinessCenterBodyHeader route="business" />
 				<div className="bg-gray-100">
 					<StyledTabs
 						value={value}
 						onChange={handleChange}
 						aria-label="styled tabs example"
 					>
+						<StyledTab label="Jobs" />
 						<StyledTab label="Housing" />
 						<StyledTab label="Marketplace" />
 						<StyledTab label="Drafts" />
@@ -72,18 +74,20 @@ function BusinessCenter() {
 				</div> */}
 				<div className="px-4 mb-16 pb-8">
 					<TabPanel value={value} index={0}>
-						<HousingCard isBusinessCenter={true} />
-						<HousingCard isBusinessCenter={true} />
-						<HousingCard isBusinessCenter={true} />
+						<JobsCard isBusinessCenter={true} isBusinessUser={true} />
 					</TabPanel>
 					<TabPanel value={value} index={1}>
-						<MarketplaceCard isBusinessCenter={true} />
+						<HousingCard isBusinessCenter={true} isBusinessUser={true} />
 					</TabPanel>
 					<TabPanel value={value} index={2}>
-						<MarketplaceCard isBusinessCenter={true} />
-						<HousingCard isBusinessCenter={true} />
+						<MarketplaceCard isBusinessCenter={true} isBusinessUser={true} />
 					</TabPanel>
 					<TabPanel value={value} index={3}>
+						<HousingCard isBusinessCenter={true} isBusinessUser={true} />
+						<JobsCard isBusinessCenter={true} isBusinessUser={true} />
+						<MarketplaceCard isBusinessCenter={true} isBusinessUser={true} />
+					</TabPanel>
+					<TabPanel value={value} index={4}>
 						<Review />
 						<Review />
 					</TabPanel>
@@ -111,13 +115,19 @@ function BusinessCenter() {
 							</div>
 							<div className="flex flex-col gap-4 p-8">
 								<Link
-									href="/business-center/classic-user/housing-post"
+									href="/business-center/business/create/jobs"
+									className="text-center w-full py-2 border border-[color:var(--deals-primary-med)] border-opacity-50 text-[color:var(--deals-primary)] rounded hover:text-white hover:bg-[color:var(--deals-primary-med)] active:text-white active:bg-[color:var(--deals-primary-med)]"
+								>
+									Jobs
+								</Link>
+								<Link
+									href="/business-center/business/create/housing"
 									className="text-center w-full py-2 border border-[color:var(--deals-primary-med)] border-opacity-50 text-[color:var(--deals-primary)] rounded hover:text-white hover:bg-[color:var(--deals-primary-med)] active:text-white active:bg-[color:var(--deals-primary-med)]"
 								>
 									Housing
 								</Link>
 								<Link
-									href="/business-center/classic-user/marketplace-post"
+									href="/business-center/business/create/marketplace"
 									className="text-center w-full text-[color:var(--deals-primary)]  py-2 border border-[color:var(--deals-primary-med)] border-opacity-50 rounded hover:text-white hover:bg-[color:var(--deals-primary-med)] active:text-white active:bg-[color:var(--deals-primary-med)]"
 								>
 									Marketplace
@@ -131,9 +141,9 @@ function BusinessCenter() {
 	);
 }
 
-export default BusinessCenter;
+export default BusinessCenterBusiness;
 
-BusinessCenter.getLayout = function getLayout(page) {
+BusinessCenterBusiness.getLayout = function getLayout(page) {
 	return <MainLayout route="business-center">{page}</MainLayout>;
 };
 

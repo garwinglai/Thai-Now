@@ -93,7 +93,7 @@ function AccountMenuMobile({ onClose }) {
 				<Divider sx={{ width: "90%", margin: "0 auto" }} />
 				<div className={`${styles.section_box}`}>
 					<p>Your Business</p>
-					<Link href="/business-center/classic-user">
+					<Link href="/business-center/classic">
 						<MenuItem sx={{ padding: "0 2rem" }}>
 							<ListItemIcon>
 								<StoreOutlinedIcon fontSize="small" />

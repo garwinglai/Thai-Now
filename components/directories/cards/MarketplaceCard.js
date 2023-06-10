@@ -10,7 +10,9 @@ import Drawer from "@mui/material/Drawer";
 import CloseIcon from "@mui/icons-material/Close";
 import Link from "next/link";
 
-function MarketplaceCard({ isBusinessCenter }) {
+const pid = "test-marketplace";
+
+function MarketplaceCard({ isBusinessCenter, isBusinessUser }) {
 	const [state, setState] = React.useState({
 		top: false,
 		left: false,
@@ -41,13 +43,18 @@ function MarketplaceCard({ isBusinessCenter }) {
 						onClose={toggleDrawer("bottom", false)}
 					>
 						<div className="flex flex-col p-4 pb-8 rounded-t">
-							<div className=" text-right border-b border-gray-50 pb-4 mb-4">
+							<div className="flex justify-between items-center text-right border-b border-gray-50 pb-4 mb-4">
+								<h4>Post Actions</h4>
 								<IconButton onClick={toggleDrawer("bottom", false)}>
 									<CloseIcon className="text-black" />
 								</IconButton>
 							</div>
 							<Link
-								href="/"
+								href={`${
+									isBusinessUser
+										? `/business-center/business/edit/marketplace/${pid}`
+										: `/business-center/classic/edit/marketplace/${pid}`
+								}`}
 								className="font-light text-base text-gray-700 mb-4"
 							>
 								Edit post

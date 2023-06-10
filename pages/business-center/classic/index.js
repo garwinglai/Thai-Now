@@ -16,7 +16,7 @@ import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { IconButton } from "@mui/material";
 import Link from "next/link";
 
-function BusinessCenterBusiness() {
+function BusinessCenter() {
 	const [value, setValue] = React.useState(0);
 	const [state, setState] = React.useState({
 		top: false,
@@ -48,14 +48,13 @@ function BusinessCenterBusiness() {
 		<div className="flex flex-col gap-2 h-screen">
 			<BusinessCenterPageHeader />
 			<div className="bg-white border-t-4 border-gray-100">
-				<BusinessCenterBodyHeader route="business" />
+				<BusinessCenterBodyHeader route="classic" />
 				<div className="bg-gray-100">
 					<StyledTabs
 						value={value}
 						onChange={handleChange}
 						aria-label="styled tabs example"
 					>
-						<StyledTab label="Jobs" />
 						<StyledTab label="Housing" />
 						<StyledTab label="Marketplace" />
 						<StyledTab label="Drafts" />
@@ -74,20 +73,15 @@ function BusinessCenterBusiness() {
 				<div className="px-4 mb-16 pb-8">
 					<TabPanel value={value} index={0}>
 						<HousingCard isBusinessCenter={true} />
-						<HousingCard isBusinessCenter={true} />
-						<HousingCard isBusinessCenter={true} />
 					</TabPanel>
 					<TabPanel value={value} index={1}>
 						<MarketplaceCard isBusinessCenter={true} />
 					</TabPanel>
 					<TabPanel value={value} index={2}>
 						<MarketplaceCard isBusinessCenter={true} />
-					</TabPanel>
-					<TabPanel value={value} index={3}>
-						<MarketplaceCard isBusinessCenter={true} />
 						<HousingCard isBusinessCenter={true} />
 					</TabPanel>
-					<TabPanel value={value} index={4}>
+					<TabPanel value={value} index={3}>
 						<Review />
 						<Review />
 					</TabPanel>
@@ -115,19 +109,13 @@ function BusinessCenterBusiness() {
 							</div>
 							<div className="flex flex-col gap-4 p-8">
 								<Link
-									href="/business-center/classic-user/housing-post"
-									className="text-center w-full py-2 border border-[color:var(--deals-primary-med)] border-opacity-50 text-[color:var(--deals-primary)] rounded hover:text-white hover:bg-[color:var(--deals-primary-med)] active:text-white active:bg-[color:var(--deals-primary-med)]"
-								>
-									Jobs
-								</Link>
-								<Link
-									href="/business-center/classic-user/housing-post"
+									href="/business-center/classic/create/housing"
 									className="text-center w-full py-2 border border-[color:var(--deals-primary-med)] border-opacity-50 text-[color:var(--deals-primary)] rounded hover:text-white hover:bg-[color:var(--deals-primary-med)] active:text-white active:bg-[color:var(--deals-primary-med)]"
 								>
 									Housing
 								</Link>
 								<Link
-									href="/business-center/classic-user/marketplace-post"
+									href="/business-center/classic/create/marketplace"
 									className="text-center w-full text-[color:var(--deals-primary)]  py-2 border border-[color:var(--deals-primary-med)] border-opacity-50 rounded hover:text-white hover:bg-[color:var(--deals-primary-med)] active:text-white active:bg-[color:var(--deals-primary-med)]"
 								>
 									Marketplace
@@ -141,9 +129,9 @@ function BusinessCenterBusiness() {
 	);
 }
 
-export default BusinessCenterBusiness;
+export default BusinessCenter;
 
-BusinessCenterBusiness.getLayout = function getLayout(page) {
+BusinessCenter.getLayout = function getLayout(page) {
 	return <MainLayout route="business-center">{page}</MainLayout>;
 };
 

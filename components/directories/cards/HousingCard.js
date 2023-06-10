@@ -10,7 +10,9 @@ import Drawer from "@mui/material/Drawer";
 import CloseIcon from "@mui/icons-material/Close";
 import Link from "next/link";
 
-function HousingCard({ isBusinessCenter }) {
+const pid = "test-housing-post";
+
+function HousingCard({ isBusinessCenter, isBusinessUser }) {
 	const [state, setState] = React.useState({
 		top: false,
 		left: false,
@@ -28,7 +30,7 @@ function HousingCard({ isBusinessCenter }) {
 
 		setState({ ...state, [anchor]: open });
 	};
-
+	console.log(isBusinessUser);
 	return (
 		<div className={`${styles.jobs_card_container} ${styles.flex}`}>
 			{isBusinessCenter && (
@@ -42,13 +44,18 @@ function HousingCard({ isBusinessCenter }) {
 						onClose={toggleDrawer("bottom", false)}
 					>
 						<div className="flex flex-col p-4 pb-8 rounded-t">
-							<div className=" text-right border-b border-gray-50 pb-4 mb-4">
+							<div className="flex justify-between items-center text-right border-b border-gray-50 pb-4 mb-4">
+								<h4>Post Actions</h4>
 								<IconButton onClick={toggleDrawer("bottom", false)}>
 									<CloseIcon className="text-black" />
 								</IconButton>
 							</div>
 							<Link
-								href="/"
+								href={`${
+									isBusinessUser
+										? `/business-center/business/edit/housing/${pid}`
+										: `/business-center/classic/edit/housing/${pid}`
+								}`}
 								className="font-light text-base text-gray-700 mb-4"
 							>
 								Edit post

@@ -353,7 +353,7 @@ function BusinessProfile() {
 					</p>
 					<PrimaryButton name="Create your Post" />
 					<Link
-						href="/business-center/business-user"
+						href="/business-center/business"
 						className="underline font-light text-[color:var(--deals-primary)] "
 					>
 						Go to Business Center

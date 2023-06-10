@@ -4,10 +4,69 @@ import massageImage from "../../../public/static/images/directory/massage_large.
 import Image from "next/image";
 import StarIcon from "@mui/icons-material/Star";
 import { yellow } from "@mui/material/colors";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { IconButton } from "@mui/material";
+import Drawer from "@mui/material/Drawer";
+import CloseIcon from "@mui/icons-material/Close";
+import Link from "next/link";
 
-function JobsCard() {
+const pid = "test-job-post";
+
+function JobsCard({ isBusinessCenter, isBusinessUser }) {
+	const [state, setState] = React.useState({
+		top: false,
+		left: false,
+		bottom: false,
+		right: false,
+	});
+
+	const toggleDrawer = (anchor, open) => (event) => {
+		if (
+			event.type === "keydown" &&
+			(event.key === "Tab" || event.key === "Shift")
+		) {
+			return;
+		}
+
+		setState({ ...state, [anchor]: open });
+	};
+
 	return (
 		<div className={`${styles.jobs_card_container} ${styles.flex}`}>
+			{isBusinessCenter && (
+				<div className="absolute right-0 mr-4">
+					<IconButton onClick={toggleDrawer("bottom", true)}>
+						<MoreVertIcon />
+					</IconButton>
+					<Drawer
+						anchor={"bottom"}
+						open={state["bottom"]}
+						onClose={toggleDrawer("bottom", false)}
+					>
+						<div className="flex flex-col p-4 pb-8 rounded-t">
+							<div className="flex justify-between items-center text-right border-b border-gray-50 pb-4 mb-4">
+								<h4>Post Actions</h4>
+								<IconButton onClick={toggleDrawer("bottom", false)}>
+									<CloseIcon className="text-black" />
+								</IconButton>
+							</div>
+							<Link
+								href={`${
+									isBusinessUser
+										? `/business-center/business/edit/jobs/${pid}`
+										: `/business-center/classic/edit/jobs/${pid}`
+								}`}
+								className="font-light text-base text-gray-700 mb-4"
+							>
+								Edit post
+							</Link>
+							<button className="font-light w-fit text-base text-gray-700">
+								Delete post
+							</button>
+						</div>
+					</Drawer>
+				</div>
+			)}
 			<div className={`${styles.image_box}`}>
 				<Image
 					src={massageImage}

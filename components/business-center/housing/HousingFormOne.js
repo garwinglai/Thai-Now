@@ -20,7 +20,7 @@ function HousingFormOne({
 		<form className="p-4">
 			<h4 className="pt-4">Tell us about your place.</h4>
 			<label
-				htmlFor="post-title"
+				htmlFor="title"
 				className="block text-[color:var(--deals-primary)] pt-4 pb-2 "
 			>
 				Title <span className="text-[color:var(--secondary)] ">* </span>
@@ -36,7 +36,7 @@ function HousingFormOne({
 
 			<div className="mt-4">
 				<label
-					htmlFor="demo-controlled-radio-buttons-group"
+					htmlFor="housingType"
 					className=" text-[color:var(--deals-primary)] pt-6 pb-2 "
 				>
 					What kind of place will you host?{" "}
@@ -44,8 +44,8 @@ function HousingFormOne({
 				</label>
 
 				<RadioGroup
-					aria-labelledby="demo-controlled-radio-buttons-group"
-					name="controlled-radio-buttons-group"
+					aria-labelledby="housing-type-radio-group"
+					name="housingType"
 					value={housingType}
 					onChange={handleHousingTypeChange}
 				>

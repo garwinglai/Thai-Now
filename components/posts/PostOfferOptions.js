@@ -5,8 +5,20 @@ import BedIcon from "@mui/icons-material/Bed";
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import ShowerIcon from "@mui/icons-material/Shower";
 
-function PostOfferOptions({ postType, values }) {
+function PostOfferOptions({ postType, values, isPublicPage }) {
 	function displayPostOfferings(postType) {
+		if (isPublicPage) {
+			return (
+				<React.Fragment>
+					<span className="flex items-center gap-3">
+						<MapsHomeWorkIcon sx={{ color: "var(--secondary)" }} />
+						<h6>Business type :</h6>
+						<p className="font-extralight">Restaurant</p>
+					</span>
+				</React.Fragment>
+			);
+		}
+
 		if (postType === "housing") {
 			const {
 				housingType,
@@ -68,7 +80,7 @@ function PostOfferOptions({ postType, values }) {
 			);
 		}
 
-		if ((postType = "marketplace")) {
+		if (postType === "marketplace") {
 			const {
 				marketPostType,
 				isProductPhysical,
@@ -117,6 +129,49 @@ function PostOfferOptions({ postType, values }) {
 					<p className="font-extralight">
 						{offerIncludesTax === "Yes" ? "Includes tax" : "Tax not included"}
 					</p>
+				</React.Fragment>
+			);
+		}
+
+		if (postType === "jobs") {
+			const { jobValues, salaryRange, hasJobVisa } = values;
+			const { title, jobLocation, experience, skills } = jobValues;
+			const { minPrice, maxPrice, interval } = salaryRange;
+			return (
+				<React.Fragment>
+					<span className="flex items-center gap-3">
+						<MapsHomeWorkIcon sx={{ color: "var(--secondary)" }} />
+						<h6>Job Position :</h6>
+						<p className="font-extralight">{title}</p>
+					</span>
+					<span className="flex items-center gap-3">
+						<PersonIcon sx={{ color: "var(--secondary)" }} />
+						<h6>Job location :</h6>
+						<p className="font-extralight">{jobLocation}</p>
+					</span>
+					<span className="flex items-center gap-3">
+						<BedIcon sx={{ color: "var(--secondary)" }} />
+						<h6>Experience :</h6>
+						<p className="font-extralight">{experience}</p>
+					</span>
+					<span className="flex items-center gap-3">
+						<BedIcon sx={{ color: "var(--secondary)" }} />
+						<h6>Skills :</h6>
+						<p className="font-extralight">{skills}</p>
+					</span>
+					<span className="flex items-center gap-3">
+						<BedIcon sx={{ color: "var(--secondary)" }} />
+						<h6>Visa (US only) :</h6>
+						<p className="font-extralight">{hasJobVisa}</p>
+					</span>
+
+					<span className="flex mt-4">
+						<h4 className="text-[color:var(--jobs-primary)] ">
+							${minPrice}
+							<span className="font-extralight"> - </span>${maxPrice}
+							<span className="font-extralight">/{interval}</span>
+						</h4>
+					</span>
 				</React.Fragment>
 			);
 		}

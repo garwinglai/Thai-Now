@@ -32,7 +32,7 @@ function MarketFormTwo({
 			/>{" "}
 			<div className="mt-4">
 				<label
-					htmlFor="demo-controlled-radio-buttons-group"
+					htmlFor="productType"
 					className=" text-[color:var(--deals-primary)] pt-6 pb-2 "
 				>
 					Select the product type
@@ -40,8 +40,8 @@ function MarketFormTwo({
 				</label>
 
 				<RadioGroup
-					aria-labelledby="demo-controlled-radio-buttons-group"
-					name="controlled-radio-buttons-group"
+					aria-labelledby="product-type-radio-group"
+					name="productType"
 					value={productType}
 					onChange={handleProductValueChange}
 				>
@@ -134,7 +134,7 @@ function MarketFormTwo({
 						}}
 					/>
 				</RadioGroup>
-			</div>{" "}
+			</div>
 			<h5 className=" text-[color:var(--deals-primary)] pt-4 pb-2 ">
 				Upload your photo{" "}
 				<span className="text-[color:var(--secondary)] ">* </span>
