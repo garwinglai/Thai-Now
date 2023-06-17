@@ -10,7 +10,7 @@ import marketplace_gray_icon from "@/public/static/images/icons/marketplace_gray
 import Image from "next/image";
 import HousingCard from "@/components/directories/cards/HousingCard";
 import MarketplaceCard from "@/components/directories/cards/MarketplaceCard";
-import Review from "@/components/business-center/Review";
+import BusinessCenterReview from "@/components/business-center/BusinessCenterReview";
 import Drawer from "@mui/material/Drawer";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { IconButton } from "@mui/material";
@@ -88,8 +88,8 @@ function BusinessCenterBusiness() {
 						<MarketplaceCard isBusinessCenter={true} isBusinessUser={true} />
 					</TabPanel>
 					<TabPanel value={value} index={4}>
-						<Review />
-						<Review />
+						<BusinessCenterReview />
+						<BusinessCenterReview />
 					</TabPanel>
 				</div>
 				<div className="py-5 px-4 bg-white border-t border-gray-100 fixed w-full bottom-0">

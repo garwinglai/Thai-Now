@@ -17,7 +17,9 @@ function MainLayout({ children, route }) {
 			<div className={`${directory && styles.layout_nav_desktop}`}>
 				<NavDesktop />
 			</div>
-			<main className={`${styles.layout_main}`}>{children}</main>
+			<main className={`${route !== "post-detail" && styles.layout_main}`}>
+				{children}
+			</main>
 			{route !== "create-business" &&
 				route !== "business-center" &&
 				route !== "business-profile" && <Footer />}

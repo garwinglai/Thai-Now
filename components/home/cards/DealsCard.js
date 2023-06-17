@@ -64,12 +64,12 @@ function DealsCard({ deal, title }) {
 				className={`${styles.card_image}`}
 			/>
 			<div className={`${styles.card_bottom}`}>
-				<div className={`${styles.card_review}`}>
-					<StarIcon sx={{ color: yellow[700] }} />
-					<p className={`${gStyles.p_xs}`}>{reviewScore}</p>
-					<p className={`${gStyles.p_xs} ${styles.review_count}`}>
-						({reviewCount} Reviews)
-					</p>
+				<div className="flex gap-2 items-end">
+					<StarIcon sx={{ color: yellow[700] }} fontSize="small" />
+					<span className="flex gap-1 items-center">
+						<p className="text-sm font-light">{reviewScore}</p>
+						<p className="text-xs font-light">({reviewCount} Reviews)</p>
+					</span>
 				</div>
 				<h5>{description}</h5>
 				<p className={`${styles.biz_name_location}`}>

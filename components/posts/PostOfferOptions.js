@@ -12,8 +12,8 @@ function PostOfferOptions({ postType, values, isPublicPage }) {
 				<React.Fragment>
 					<span className="flex items-center gap-3">
 						<MapsHomeWorkIcon sx={{ color: "var(--secondary)" }} />
-						<h6>Business type :</h6>
-						<p className="font-extralight">Restaurant</p>
+						<h6 className="text-sm">Business type :</h6>
+						<p className="font-extralight text-sm">Restaurant</p>
 					</span>
 				</React.Fragment>
 			);
@@ -32,31 +32,31 @@ function PostOfferOptions({ postType, values, isPublicPage }) {
 			const { exactPrice, priceRange } = housingPrice;
 
 			return (
-				<React.Fragment>
-					<span className="flex items-center gap-3">
+				<div className="flex flex-col gap-2">
+					<span className="flex items-center gap-2">
 						<MapsHomeWorkIcon sx={{ color: "var(--secondary)" }} />
-						<h6>Property type :</h6>
-						<p className="font-extralight">{housingType}</p>
+						<h6 className="text-sm">Property type :</h6>
+						<p className="font-extralight text-sm">{housingType}</p>
 					</span>
-					<span className="flex items-center gap-3">
+					<span className="flex items-center gap-2">
 						<PersonIcon sx={{ color: "var(--secondary)" }} />
-						<h6>Guest(s) :</h6>
-						<p className="font-extralight">{guestCount}</p>
+						<h6 className="text-sm">Guest(s) :</h6>
+						<p className="font-extralight text-sm">{guestCount}</p>
 					</span>
-					<span className="flex items-center gap-3">
+					<span className="flex items-center gap-2">
 						<BedIcon sx={{ color: "var(--secondary)" }} />
-						<h6>Bedrooms :</h6>
-						<p className="font-extralight">{bedroomCount}</p>
+						<h6 className="text-sm">Bedrooms :</h6>
+						<p className="font-extralight text-sm">{bedroomCount}</p>
 					</span>
-					<span className="flex items-center gap-3">
+					<span className="flex items-center gap-2">
 						<DirectionsCarIcon sx={{ color: "var(--secondary)" }} />
-						<h6>Parking :</h6>
-						<p className="font-extralight">{parkingCount}</p>
+						<h6 className="text-sm">Parking :</h6>
+						<p className="font-extralight text-sm">{parkingCount}</p>
 					</span>
-					<span className="flex items-center gap-3">
+					<span className="flex items-center gap-2">
 						<ShowerIcon sx={{ color: "var(--secondary)" }} />
-						<h6>Bathrooms :</h6>
-						<p className="font-extralight">{bathroomCount}</p>
+						<h6 className="text-sm">Bathrooms :</h6>
+						<p className="font-extralight text-sm">{bathroomCount}</p>
 					</span>
 					{priceOption === "exact" && (
 						<span className="flex mt-4">
@@ -76,7 +76,7 @@ function PostOfferOptions({ postType, values, isPublicPage }) {
 							</h4>
 						</span>
 					)}
-				</React.Fragment>
+				</div>
 			);
 		}
 
@@ -92,21 +92,21 @@ function PostOfferOptions({ postType, values, isPublicPage }) {
 			const { exactPrice, priceRange } = offerPrice;
 
 			return (
-				<React.Fragment>
-					<span className="flex items-center gap-3">
+				<div className="flex flex-col gap-2">
+					<span className="flex items-center gap-2">
 						<MapsHomeWorkIcon sx={{ color: "var(--secondary)" }} />
-						<h6>Type :</h6>
-						<p className="font-extralight">{marketPostType}</p>
+						<h6 className="text-sm">Type :</h6>
+						<p className="font-extralight text-sm">{marketPostType}</p>
 					</span>
-					<span className="flex items-center gap-3">
+					<span className="flex items-center gap-2">
 						<PersonIcon sx={{ color: "var(--secondary)" }} />
-						<h6>Condition :</h6>
-						<p className="font-extralight">{productCondition}</p>
+						<h6 className="text-sm">Condition :</h6>
+						<p className="font-extralight text-sm">{productCondition}</p>
 					</span>
-					<span className="flex items-center gap-3">
+					<span className="flex items-center gap-2">
 						<BedIcon sx={{ color: "var(--secondary)" }} />
-						<h6>Physical Product :</h6>
-						<p className="font-extralight">{isProductPhysical}</p>
+						<h6 className="text-sm">Physical Product :</h6>
+						<p className="font-extralight text-sm">{isProductPhysical}</p>
 					</span>
 					{priceOption === "exact" && (
 						<span className="flex mt-4">
@@ -126,10 +126,10 @@ function PostOfferOptions({ postType, values, isPublicPage }) {
 							</h4>
 						</span>
 					)}
-					<p className="font-extralight">
+					<p className="font-extralight text-xs">
 						{offerIncludesTax === "Yes" ? "Includes tax" : "Tax not included"}
 					</p>
-				</React.Fragment>
+				</div>
 			);
 		}
 
@@ -138,41 +138,41 @@ function PostOfferOptions({ postType, values, isPublicPage }) {
 			const { title, jobLocation, experience, skills } = jobValues;
 			const { minPrice, maxPrice, interval } = salaryRange;
 			return (
-				<React.Fragment>
-					<span className="flex items-center gap-3">
+				<div className="flex flex-col gap-2">
+					<span className="flex items-center gap-2">
 						<MapsHomeWorkIcon sx={{ color: "var(--secondary)" }} />
-						<h6>Job Position :</h6>
-						<p className="font-extralight">{title}</p>
+						<h6 className="text-sm">Job Position :</h6>
+						<p className="font-extralight text-sm">{title}</p>
 					</span>
-					<span className="flex items-center gap-3">
+					<span className="flex items-center gap-2">
 						<PersonIcon sx={{ color: "var(--secondary)" }} />
-						<h6>Job location :</h6>
-						<p className="font-extralight">{jobLocation}</p>
+						<h6 className="text-sm">Job location :</h6>
+						<p className="font-extralight text-sm">{jobLocation}</p>
 					</span>
-					<span className="flex items-center gap-3">
+					<span className="flex items-center gap-2">
 						<BedIcon sx={{ color: "var(--secondary)" }} />
-						<h6>Experience :</h6>
-						<p className="font-extralight">{experience}</p>
+						<h6 className="text-sm">Experience :</h6>
+						<p className="font-extralight text-sm">{experience}</p>
 					</span>
-					<span className="flex items-center gap-3">
+					<span className="flex items-center gap-2">
 						<BedIcon sx={{ color: "var(--secondary)" }} />
-						<h6>Skills :</h6>
-						<p className="font-extralight">{skills}</p>
+						<h6 className="text-sm">Skills :</h6>
+						<p className="font-extralight text-sm">{skills}</p>
 					</span>
-					<span className="flex items-center gap-3">
+					<span className="flex items-center gap-2">
 						<BedIcon sx={{ color: "var(--secondary)" }} />
-						<h6>Visa (US only) :</h6>
-						<p className="font-extralight">{hasJobVisa}</p>
+						<h6 className="text-sm">Visa (US only) :</h6>
+						<p className="font-extralight text-sm">{hasJobVisa}</p>
 					</span>
 
-					<span className="flex mt-4">
+					<span className="flex mt-2">
 						<h4 className="text-[color:var(--jobs-primary)] ">
 							${minPrice}
 							<span className="font-extralight"> - </span>${maxPrice}
 							<span className="font-extralight">/{interval}</span>
 						</h4>
 					</span>
-				</React.Fragment>
+				</div>
 			);
 		}
 	}

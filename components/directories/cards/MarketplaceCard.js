@@ -10,9 +10,9 @@ import Drawer from "@mui/material/Drawer";
 import CloseIcon from "@mui/icons-material/Close";
 import Link from "next/link";
 
-const pid = "test-marketplace";
+const pid = "pid-marketplace";
 
-function MarketplaceCard({ isBusinessCenter, isBusinessUser }) {
+function MarketplaceCard({ isBusinessCenter, isBusinessUser, directory }) {
 	const [state, setState] = React.useState({
 		top: false,
 		left: false,
@@ -31,7 +31,10 @@ function MarketplaceCard({ isBusinessCenter, isBusinessUser }) {
 		setState({ ...state, [anchor]: open });
 	};
 	return (
-		<div className={`${styles.jobs_card_container} ${styles.flex}`}>
+		<Link
+			href={`/${directory}/${pid}`}
+			className={`${styles.jobs_card_container} ${styles.flex}`}
+		>
 			{isBusinessCenter && (
 				<div className="absolute right-0 mr-4">
 					<IconButton onClick={toggleDrawer("bottom", true)}>
@@ -94,7 +97,7 @@ function MarketplaceCard({ isBusinessCenter, isBusinessUser }) {
 					<p className={`${styles.days_ago_p}`}>29 days ago</p>
 				</div>
 			</div>
-		</div>
+		</Link>
 	);
 }
 

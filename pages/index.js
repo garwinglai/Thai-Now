@@ -1,10 +1,7 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.css";
 import gStyles from "../styles/global.module.css";
-import { getData } from "@/firebase/db/getData";
 import { useRef, useEffect, useState } from "react";
-import { addData } from "@/firebase/db/addData";
-import { useRouter } from "next/router";
 import Image from "next/image";
 import bannerImageDesktop from "../public/static/images/home/banner-picture-desktop.svg";
 import bannerImageMobile from "../public/static/images/home/banner-picture-mobile.svg";
@@ -12,8 +9,7 @@ import SearchBarGeo from "@/components/search/SearchBarGeo";
 import SearchBarMobile from "@/components/search/SearchBarMobile";
 import NavOptions from "@/components/home/NavOptions";
 import LandingPagePagination from "@/components/home/LandingPagePagination";
-import { dealsOfWeek, news, trips } from "@/helper/db/staticData";
-import DealsCard from "@/components/home/cards/DealsCard";
+import { news, trips } from "@/helper/db/staticData";
 import { IconButton } from "@mui/material";
 import NewsCard from "@/components/home/cards/NewsCard";
 import AdsBanner from "@/components/home/AdsBanner";
@@ -23,10 +19,16 @@ import DealsComponentMobile from "@/components/home/mobile/DealsComponentMobile"
 import DealsComponentDesktop from "@/components/home/desktop/DealsComponentDesktop";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import MainLayout from "@/components/layouts/MainLayout";
+import SearchDrawer from "@/components/search/page/SearchDrawer";
 
 export default function Home() {
 	const [lastScrollY, setLastScrollY] = useState(0);
 	const [lastScrollYMobile, setLastScrollYMobile] = useState(0);
+	// Search drawer state
+	const [state, setState] = useState({
+		right: false,
+	});
+
 	const offersRef = useRef();
 	const offersMobileRef = useRef();
 
@@ -64,6 +66,19 @@ export default function Home() {
 		detectScroll();
 	}, [lastScrollY, lastScrollYMobile]);
 
+	// * Actions
+	const toggleDrawer = (anchor, open) => (event) => {
+		if (
+			event.type === "keydown" &&
+			(event.key === "Tab" || event.key === "Shift")
+		) {
+			return;
+		}
+
+		setState({ ...state, [anchor]: open });
+	};
+
+	// * Displays
 	function offersSectionDesktop(offersRef) {
 		return <DealsComponentDesktop offersRef={offersRef} />;
 	}
@@ -109,7 +124,14 @@ export default function Home() {
 					/>
 
 					<SearchBarGeo />
-					<SearchBarMobile />
+					<span>
+						<SearchBarMobile handleClick={toggleDrawer("right", true)} />
+						<SearchDrawer
+							toggleDrawer={toggleDrawer}
+							state={state}
+							route="home"
+						/>
+					</span>
 				</section>
 				<section className={`${styles.navigation_options_section}`}>
 					<div className={`${styles.navgation_options_container}`}>

@@ -34,7 +34,7 @@ function PostProfile({ isPublicPage }) {
 						alt="profile image"
 						className="border-4 border-[color:var(--label-color)] rounded-full  w-16"
 					/>
-					<h4>Hosted by Lolar Ramsey</h4>
+					<h4 className=" text-lg">Hosted by Lolar Ramsey</h4>
 				</span>
 				{isPublicPage && (
 					<React.Fragment>

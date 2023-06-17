@@ -17,23 +17,33 @@ const tempCount = [1, 2, 3, 4, 5];
 function Directory({ directory }) {
 	function cardType(directory) {
 		if (directory == "jobs") {
-			return tempCount.map((item) => <JobsCard key={item} />);
+			return tempCount.map((item) => (
+				<JobsCard key={item} directory={directory} />
+			));
 		}
 
 		if (directory == "housing") {
-			return tempCount.map((item) => <HousingCard key={item} />);
+			return tempCount.map((item) => (
+				<HousingCard key={item} directory={directory} />
+			));
 		}
 
 		if (directory == "deals") {
-			return tempCount.map((item) => <DealCard key={item} />);
+			return tempCount.map((item) => (
+				<DealCard key={item} directory={directory} />
+			));
 		}
 
 		if (directory == "marketplace") {
-			return tempCount.map((item) => <MarketplaceCard key={item} />);
+			return tempCount.map((item) => (
+				<MarketplaceCard key={item} directory={directory} />
+			));
 		}
 
 		if (directory == "businesses") {
-			return tempCount.map((item) => <BusinessCard key={item} />);
+			return tempCount.map((item) => (
+				<BusinessCard key={item} directory={directory} />
+			));
 		}
 	}
 

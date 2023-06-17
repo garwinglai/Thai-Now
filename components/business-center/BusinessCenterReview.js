@@ -5,7 +5,7 @@ import avatar_image from "../../public/static/images/temp_avatar.png";
 import Rating from "@mui/material/Rating";
 import tripsImage from "@/public/static/images/home/trips-image.svg";
 
-function Review() {
+function BusinessCenterReview() {
 	const [rating, setRaing] = React.useState(4);
 
 	return (
@@ -44,4 +44,4 @@ function Review() {
 	);
 }
 
-export default Review;
+export default BusinessCenterReview;

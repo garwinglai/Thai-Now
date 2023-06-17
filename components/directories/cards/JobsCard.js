@@ -10,9 +10,9 @@ import Drawer from "@mui/material/Drawer";
 import CloseIcon from "@mui/icons-material/Close";
 import Link from "next/link";
 
-const pid = "test-job-post";
+const pid = "pid-job";
 
-function JobsCard({ isBusinessCenter, isBusinessUser }) {
+function JobsCard({ isBusinessCenter, isBusinessUser, directory }) {
 	const [state, setState] = React.useState({
 		top: false,
 		left: false,
@@ -32,7 +32,10 @@ function JobsCard({ isBusinessCenter, isBusinessUser }) {
 	};
 
 	return (
-		<div className={`${styles.jobs_card_container} ${styles.flex}`}>
+		<Link
+			href={`/${directory}/${pid}`}
+			className={`${styles.jobs_card_container} ${styles.flex}`}
+		>
 			{isBusinessCenter && (
 				<div className="absolute right-0 mr-4">
 					<IconButton onClick={toggleDrawer("bottom", true)}>
@@ -94,7 +97,7 @@ function JobsCard({ isBusinessCenter, isBusinessUser }) {
 					<p className={`${styles.days_ago_p}`}>29 days ago</p>
 				</div>
 			</div>
-		</div>
+		</Link>
 	);
 }
 

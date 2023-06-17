@@ -1,5 +1,5 @@
 import * as React from "react";
-import styles from "../../../styles/components/directory/filters/sort-search-results.module.css";
+
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -10,16 +10,16 @@ import FilterSortButtonGroup from "./FilterSortButtonGroup";
 
 export default function SortSearchResults({ closeDrawer }) {
 	return (
-		<div className={`${styles.sort_box}`}>
-			<div className={`${styles.title_box}`}>
-				<h1>Sort by</h1>
-				<div className={`${styles.close_sort_box}`}>
+		<div className="">
+			<div className="text-center p-4">
+				<h4>Sort by</h4>
+				<div className="absolute right-4 top-3">
 					<IconButton onClick={closeDrawer(false)}>
 						<CloseIcon fontSize="medium" />
 					</IconButton>
 				</div>
 			</div>
-			<div className={`${styles.sort_selection_box}`}>
+			<div className="border">
 				<FormControl sx={{ width: "100%", padding: "30px 30px 30px 10px" }}>
 					<RadioGroup
 						aria-labelledby="demo-radio-buttons-group-label"

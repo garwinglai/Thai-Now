@@ -10,11 +10,6 @@
 	gap: 1rem;
 }
 
-.breadcrumbs p {
-	font-size: 14px;
-	font-weight: 700;
-}
-
 .blue {
 	color: var(--deals-primary);
 }
@@ -31,7 +26,6 @@
 
 .title_group h4 {
 	color: #093869;
-	font-weight: 600;
 }
 
 .directory_icon {

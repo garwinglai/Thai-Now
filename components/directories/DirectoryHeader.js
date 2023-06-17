@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import styles from "../../styles/components/directory/directory-header.module.css";
 import Link from "next/link";
-import { navOptions } from "@/helper/db/staticData";
 import Image from "next/image";
 import SortIcon from "@mui/icons-material/Sort";
 import TuneIcon from "@mui/icons-material/Tune";
-import { IconButton } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import SortSearchResults from "./filters/SortSearchResults";
@@ -25,6 +23,7 @@ import BusinessFilters from "./filters/businesses/BusinessFilters";
 import MarketplaceFilters from "./filters/marketplace/MarketplaceFilters";
 import DealsFilters from "./filters/deals/DealsFilters";
 import HousingFilters from "./filters/housing/HousingFilters";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
 
 function DirectoryHeader({ directory }) {
 	const [capitalizedDirectory, setCapitalizedDirectory] = useState("");
@@ -207,14 +206,25 @@ function DirectoryHeader({ directory }) {
 			);
 	}
 
+	const breadcrumbs = [
+		<Link
+			underline="hover"
+			key="1"
+			color="inherit"
+			href="/"
+			className="hover:underline"
+		>
+			Home
+		</Link>,
+		<p className="text-[color:var(--deals-primary)]">{directory}</p>,
+	];
+
 	return (
 		<div className={`${styles.directory_header_container}`}>
 			<div className={`${styles.breadcrumbs} ${styles.flex}`}>
-				<p className={`${styles.blue}`}>Home</p>
-				<p>{`>`}</p>
-				<p className={`${styles.blue}`}>Services</p>
-				<p>{`>`}</p>
-				<p className={`${styles.directory_crumb}`}>{directory}</p>
+				<Breadcrumbs separator="›" aria-label="breadcrumb">
+					{breadcrumbs}
+				</Breadcrumbs>
 			</div>
 			<div className={`${styles.title_group} ${styles.flex}`}>
 				{directoryIcon(directory)}

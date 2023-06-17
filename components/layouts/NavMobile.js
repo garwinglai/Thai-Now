@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import AccountMenuMobile from "./AccountMenuMobile";
+import SearchDrawer from "../search/page/SearchDrawer";
 
 function NavMobile({ auth, route }) {
 	const [isLoggedIn, setIsLoggedIn] = useState(true);
@@ -18,10 +19,10 @@ function NavMobile({ auth, route }) {
 	const [navScroll, setNavScroll] = useState(false);
 	const [lastScrollY, setLastScrollY] = useState(0);
 	const [currDirectory, setCurrDirectory] = useState("");
-	const [state, setState] = React.useState({
-		top: false,
-		left: false,
-		bottom: false,
+	const [state, setState] = useState({
+		right: false,
+	});
+	const [searchDrawerState, setSearchDrawerState] = useState({
 		right: false,
 	});
 
@@ -83,6 +84,17 @@ function NavMobile({ auth, route }) {
 		setState({ ...state, [anchor]: open });
 	};
 
+	const toggleDrawerSearch = (anchor, open) => (event) => {
+		if (
+			event.type === "keydown" &&
+			(event.key === "Tab" || event.key === "Shift")
+		) {
+			return;
+		}
+
+		setSearchDrawerState({ ...searchDrawerState, [anchor]: open });
+	};
+
 	return (
 		<nav className={`${styles.nav}`}>
 			<div className={`${styles.nav_top}`}>
@@ -99,9 +111,14 @@ function NavMobile({ auth, route }) {
 				</div>
 
 				<div className={`${styles.nav_left} ${styles.flex}`}>
-					<IconButton>
+					<IconButton onClick={toggleDrawerSearch("right", true)}>
 						<SearchIcon color="action" fontSize="medium" />
 					</IconButton>
+					<SearchDrawer
+						toggleDrawer={toggleDrawerSearch}
+						state={searchDrawerState}
+						route="home"
+					/>
 					<IconButton>
 						<NotificationsNoneIcon color="action" />
 					</IconButton>
@@ -136,7 +153,7 @@ function NavMobile({ auth, route }) {
 					styles.nav_options_scroll_show
 				}`}
 			>
-				<NavOptions isScroll={navScroll} isMobile={true} />
+				<NavOptions isScroll={navScroll} isMobile={true} route={route} />
 			</div>
 		</nav>
 	);

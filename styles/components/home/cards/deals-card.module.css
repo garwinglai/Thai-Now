@@ -9,6 +9,7 @@
 	object-fit: cover;
 	width: 100%;
 	height: auto;
+	border-radius: 4px 4px 0 0;
 }
 
 .card_bottom {
@@ -17,7 +18,7 @@
 
 .card_review {
 	display: flex;
-	align-items: flex-end;
+	align-items: ;
 	gap: 5px;
 }
 

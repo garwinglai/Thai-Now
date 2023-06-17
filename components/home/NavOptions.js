@@ -4,7 +4,10 @@ import styles from "../../styles/components/home/nav-options.module.css";
 import Image from "next/image";
 import Link from "next/link";
 
-function NavOptions({ isScroll, isMobile, isDesktop, source }) {
+function NavOptions({ isScroll, isMobile, isDesktop, source, route }) {
+	// Don't show Navigation options on Post Detail pages
+	if (route === "post-detail") return;
+
 	function navOptionsStatic() {
 		return (
 			<div className={`${styles.options_container} ${styles.flex}`}>

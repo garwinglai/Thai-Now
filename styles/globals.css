@@ -54,6 +54,7 @@
 	--input-bg-primary: #d9dbe9;
 	--input-bg-secondary: #f7f7fc;
 	--element-color: rgba(249, 249, 249, 1);
+	--gray-btn: rgba(233, 236, 238, 1);
 
 	/* ? Gradient colors */
 	--gradient-primary: #1c3d99;
@@ -61,7 +62,7 @@
 
 	/* ? Button */
 	--login-button-color: #003ca7;
-
+	--filter-bg: #eceffa;
 	--placeholder-color: #aeaeae;
 	--text-body-color: #666666;
 	--border: rgba(246, 244, 240, 1);
@@ -102,12 +103,6 @@ button {
 	font-family: var(--kanit-font), sans-serif;
 	margin: 0;
 	padding: 0;
-}
-
-h2,
-h3,
-h4 {
-	font-weight: 500;
 }
 
 h1 {
