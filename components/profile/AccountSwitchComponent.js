@@ -30,7 +30,6 @@ function AccountSwitchComponent({ isActiveProfile }) {
 						<div className={`${styles.no_profile_image} ${styles.flex}`}>
 							<AddIcon color="action" />
 						</div>
-
 						<div className={`${styles.text_group}`}>
 							<h4>Add an existing business account</h4>
 						</div>

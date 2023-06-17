@@ -53,7 +53,8 @@ function BusinessCenter() {
 					<StyledTabs
 						value={value}
 						onChange={handleChange}
-						aria-label="styled tabs example"
+						aria-label="menu tabs"
+						variant="scrollable"
 					>
 						<StyledTab label="Housing" />
 						<StyledTab label="Marketplace" />

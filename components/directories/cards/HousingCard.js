@@ -95,7 +95,7 @@ function HousingCard({ isBusinessCenter, isBusinessUser, directory }) {
 						<p>Apartment</p>
 					</div>
 					<div className={`${styles.housing_deal} ${styles.flex}`}>
-						<span>$ 100</span>
+						<p className="font-medium">$ 100</p>
 						<p>/night</p>
 					</div>
 				</div>

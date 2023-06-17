@@ -112,18 +112,19 @@ export default function Home() {
 					<Image
 						src={bannerImageMobile}
 						alt="banner image"
-						className={`${styles.banner_image_mobile}`}
+						className="w-screen md:hidden"
 						priority={true}
 					/>
 
 					<Image
 						src={bannerImageDesktop}
 						alt="banner image"
-						className={`${styles.banner_image_desktop}`}
+						className="hidden md:block md:w-screen"
 						priority={true}
 					/>
-
-					<SearchBarGeo />
+					{/* <div className="md:hidden">
+						<SearchBarGeo />
+					</div> */}
 					<span>
 						<SearchBarMobile handleClick={toggleDrawer("right", true)} />
 						<SearchDrawer

@@ -46,7 +46,7 @@ function BusinessCenterBusiness() {
 	};
 
 	return (
-		<div className="flex flex-col gap-2 h-screen">
+		<div className="flex flex-col gap-2 h-screen w-full">
 			<BusinessCenterPageHeader isBusinessUser={true} />
 			<div className="bg-white border-t-4 border-gray-100">
 				<BusinessCenterBodyHeader route="business" />
@@ -55,6 +55,7 @@ function BusinessCenterBusiness() {
 						value={value}
 						onChange={handleChange}
 						aria-label="styled tabs example"
+						variant="scrollable"
 					>
 						<StyledTab label="Jobs" />
 						<StyledTab label="Housing" />
