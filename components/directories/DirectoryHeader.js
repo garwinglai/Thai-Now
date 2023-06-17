@@ -216,7 +216,7 @@ function DirectoryHeader({ directory }) {
 		>
 			Home
 		</Link>,
-		<p className="text-[color:var(--deals-primary)]">{directory}</p>,
+		<p key="2" className="text-[color:var(--deals-primary)]">{directory}</p>,
 	];
 
 	return (

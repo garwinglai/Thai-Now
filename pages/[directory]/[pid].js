@@ -23,14 +23,14 @@ function PostDetail() {
 		</Link>,
 		<Link
 			underline="hover"
-			key="1"
+			key="2"
 			color="inherit"
 			href={`/${directory}`}
 			className="hover:underline"
 		>
 			{directory}
 		</Link>,
-		<p className="text-[color:var(--deals-primary)]">post title</p>,
+		<p key="3" className="text-[color:var(--deals-primary)]">post title</p>,
 	];
 
 	function displayPostDetail(directory, pid) {
