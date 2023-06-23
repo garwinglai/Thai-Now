@@ -28,7 +28,6 @@ function NavMobile({ auth, route }) {
 
 	const router = useRouter();
 	const { directory } = router.query;
-	console.log(route, navScroll);
 
 	useEffect(() => {
 		const detectScroll = () => {
