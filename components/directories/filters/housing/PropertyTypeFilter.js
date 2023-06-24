@@ -4,10 +4,13 @@ import styles from "@/styles/components/directory/filters/housing/property-type-
 function PropertyTypeFilter() {
 	return (
 		<div className={`${styles.filter_box}`}>
-			<h4>Property type</h4>
-			<div className={`${styles.filter_group} ${styles.flex}`}>
+			<h4 className="lg:text-base">Property type</h4>
+			<div className="flex w-full gap-2 flex-wrap">
 				{propertyTypes.map((property) => (
-					<button key={property} className={`${styles.property_btn}`}>
+					<button
+						key={property}
+						className="text-sm font-extralight border rounded-full max-w-fit px-2 py-1"
+					>
 						{property}
 					</button>
 				))}

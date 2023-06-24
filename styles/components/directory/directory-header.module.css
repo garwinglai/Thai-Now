@@ -21,7 +21,7 @@
 .title_group {
 	align-items: center;
 	gap: 10px;
-	margin: 24px 0;
+	margin: 24px 0 0;
 }
 
 .title_group h4 {
@@ -35,6 +35,7 @@
 
 .filters_group {
 	gap: 16px;
+	margin-top: 1.4rem;
 }
 
 .button_box {
@@ -68,7 +69,7 @@
 	display: none;
 }
 
-@media screen and (min-width: 769px) {
+@media screen and (min-width: 1024px) {
 	.directory_header_container {
 		padding: unset;
 		padding-bottom: 24px;

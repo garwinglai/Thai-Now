@@ -66,6 +66,31 @@
 	--placeholder-color: #aeaeae;
 	--text-body-color: #666666;
 	--border: rgba(246, 244, 240, 1);
+
+	/* ? Thai-help category icons */
+	--housing: #c89340;
+	--housing-bg: #f9f2e7;
+	--moving: #d15733;
+	--moving-bg: #fcebe6;
+	--living: #89c157;
+	--living-bg: #edf5e6;
+	--travel: #29a0a8;
+	--travel-bg: #e8f7f7;
+	--learning: #b072aa;
+	--learning-bg: #faf0f8;
+	--transfer: #8b8450;
+	--transfer-bg: #f7f4df;
+	--health: #3d9c7f;
+	--health-bg: #e9f6ef;
+	--kids: #dc5a9a;
+	--kids-bg: #fdeef5;
+	--investment: #35b7c7;
+	--investment-bg: #e6fbfe;
+	--pride: #2c69b9;
+	--pride-bg: #eceffa;
+	--category-bg: #f8f8f9;
+
+	--divider: #f4f4f4;
 }
 
 * {

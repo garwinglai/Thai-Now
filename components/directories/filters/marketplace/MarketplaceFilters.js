@@ -5,6 +5,7 @@ import { IconButton } from "@mui/material";
 import MarketTypeFilter from "./MarketTypeFilter";
 import MarketPriceFilter from "./MarketPriceFilter";
 import FilterSortButtonGroup from "../FilterSortButtonGroup";
+import DistanceFilter from "../housing/DistanceFilter";
 
 function MarketplaceFilters({ directory, closeDrawer }) {
 	return (
@@ -22,6 +23,9 @@ function MarketplaceFilters({ directory, closeDrawer }) {
 			</div>
 			<div className={`${styles.filter_section_box}`}>
 				<MarketPriceFilter />
+			</div>
+			<div className={`${styles.filter_section_box}`}>
+				<DistanceFilter />
 			</div>
 			<FilterSortButtonGroup />
 		</div>

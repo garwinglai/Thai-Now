@@ -216,7 +216,9 @@ function DirectoryHeader({ directory }) {
 		>
 			Home
 		</Link>,
-		<p key="2" className="text-[color:var(--deals-primary)]">{directory}</p>,
+		<p key="2" className="text-[color:var(--deals-primary)]">
+			{directory}
+		</p>,
 	];
 
 	return (
@@ -230,32 +232,34 @@ function DirectoryHeader({ directory }) {
 				{directoryIcon(directory)}
 				<h4>{capitalizedDirectory} near Los Angeles, CA</h4>
 			</div>
-			<div className={`${styles.filters_group} ${styles.flex}`}>
-				<button
-					onClick={toggleDrawerPostedDate(true)}
-					className={`${styles.flex} ${styles.button_box} ${styles.posted_date_filter}`}
-				>
-					<SortIcon />
-					<p>Posted Date</p>
-				</button>
-				<SwipeableDrawer
-					anchor={"bottom"}
-					open={openSortDrawer}
-					onClose={toggleDrawerPostedDate(false)}
-					onOpen={toggleDrawerPostedDate(true)}
-				>
-					<SortSearchResults closeDrawer={toggleDrawerPostedDate} />
-				</SwipeableDrawer>
+			{directory !== "thai-help" && (
+				<div className={`${styles.filters_group} ${styles.flex}`}>
+					<button
+						onClick={toggleDrawerPostedDate(true)}
+						className={`${styles.flex} ${styles.button_box} ${styles.posted_date_filter}`}
+					>
+						<SortIcon />
+						<p>Posted Date</p>
+					</button>
+					<SwipeableDrawer
+						anchor={"bottom"}
+						open={openSortDrawer}
+						onClose={toggleDrawerPostedDate(false)}
+						onOpen={toggleDrawerPostedDate(true)}
+					>
+						<SortSearchResults closeDrawer={toggleDrawerPostedDate} />
+					</SwipeableDrawer>
 
-				<button
-					onClick={toggleDrawerFilter(directory, true)}
-					className={`${styles.flex} ${styles.button_box} ${styles.fitler_button}`}
-				>
-					<TuneIcon />
-					<p>Filter</p>
-				</button>
-				{showFilterDrawers(directory)}
-			</div>
+					<button
+						onClick={toggleDrawerFilter(directory, true)}
+						className={`${styles.flex} ${styles.button_box} ${styles.fitler_button}`}
+					>
+						<TuneIcon />
+						<p>Filter</p>
+					</button>
+					{showFilterDrawers(directory)}
+				</div>
+			)}
 			<div className={`${styles.footer_desktop} ${styles.flex}`}>
 				<div className={`${styles.footer_left}`}>
 					<p className={`${styles.footer_color_p_gray}`}>

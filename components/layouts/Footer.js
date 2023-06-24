@@ -132,7 +132,7 @@ function Footer() {
 
 	function mobileFooter() {
 		return (
-			<div className=" bg-[color:var(--footer-bg)] px-8 flex flex-col items-center py-4 gap-2 text-sm font-light lg:hidden">
+			<div className=" w-screen bg-[color:var(--footer-bg)] px-8 flex flex-col items-center py-4 gap-2 text-sm font-light lg:hidden">
 				<p className="text-white text-sm font-extralight">
 					A: Thai Town, Hollywood
 				</p>

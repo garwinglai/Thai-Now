@@ -37,7 +37,7 @@ function JobsCard({ isBusinessCenter, isBusinessUser, directory }) {
 			className={`${styles.jobs_card_container} ${styles.flex}`}
 		>
 			{isBusinessCenter && (
-				<div className="absolute right-0 mr-4">
+				<div className="absolute right-0 mr-4 ">
 					<IconButton onClick={toggleDrawer("bottom", true)}>
 						<MoreVertIcon />
 					</IconButton>

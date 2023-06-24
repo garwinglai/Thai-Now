@@ -10,7 +10,7 @@
 	margin-top: 55px;
 }
 
-@media screen and (min-width: 769px) {
+@media screen and (min-width: 1024px) {
 	.layout_nav_mobile {
 		height: 0;
 	}

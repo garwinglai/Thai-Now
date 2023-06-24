@@ -1,16 +1,18 @@
-import { useRouter } from "next/router";
 import React from "react";
-import styles from "../../styles/pages/directory.module.css";
 import DirectoryHeader from "@/components/directories/DirectoryHeader";
 import JobsCard from "@/components/directories/cards/JobsCard";
 import Fab from "@mui/material/Fab";
 import MapIcon from "@mui/icons-material/Map";
 import HousingCard from "@/components/directories/cards/HousingCard";
-import DealCard from "@/components/directories/cards/DealCard";
 import MarketplaceCard from "@/components/directories/cards/MarketplaceCard";
 import BusinessCard from "@/components/directories/cards/BusinessCard";
 import MainLayout from "@/components/layouts/MainLayout";
-import { PagesSharp } from "@mui/icons-material";
+import ThaiHelpCategory from "@/components/directories/thai-help/ThaiHelpCategory";
+import SearchResultCard from "@/components/directories/thai-help/SearchResultCard";
+import Pagination from "@mui/material/Pagination";
+import JobFiltersDesktop from "@/components/directories/filters/jobs/desktop/JobFiltersDesktop";
+import HousingFiltersDesktop from "@/components/directories/filters/housing/desktop/HousingFiltersDesktop";
+import MarketplaceFiltersDesktop from "@/components/directories/filters/marketplace/desktop/MarketplaceFiltersDesktop";
 
 const tempCount = [1, 2, 3, 4, 5];
 
@@ -28,11 +30,11 @@ function Directory({ directory }) {
 			));
 		}
 
-		if (directory == "deals") {
-			return tempCount.map((item) => (
-				<DealCard key={item} directory={directory} />
-			));
-		}
+		// if (directory == "deals") {
+		// 	return tempCount.map((item) => (
+		// 		<DealCard key={item} directory={directory} />
+		// 	));
+		// }
 
 		if (directory == "marketplace") {
 			return tempCount.map((item) => (
@@ -45,27 +47,46 @@ function Directory({ directory }) {
 				<BusinessCard key={item} directory={directory} />
 			));
 		}
+
+		if (directory === "thai-help") {
+			return (
+				<React.Fragment>
+					<SearchResultCard directory={directory} postType="housing" />
+					<SearchResultCard directory={directory} postType="living" />
+					<SearchResultCard directory={directory} postType="health" />
+				</React.Fragment>
+			);
+		}
+	}
+
+	function displayFilter(directory) {
+		if (directory == "jobs") return <JobFiltersDesktop />;
+
+		if (directory == "housing") return <HousingFiltersDesktop />;
+
+		if (directory == "marketplace") return <MarketplaceFiltersDesktop />;
 	}
 
 	return (
-		<div className={`${styles.directory} ${styles.flex}`}>
-			<div className={`${styles.filters_box}`}>
-				<h4>Filter section</h4>
-			</div>
-			<div className={`${styles.results_box}`}>
+		<div className="flex ">
+			<div className="hidden lg:block">{displayFilter(directory)}</div>
+			<div className="flex-grow lg:mt-4">
 				<DirectoryHeader directory={directory} />
-				<div className={`${styles.gray_divider}`}></div>
-				<div className={`${styles.directory_cards_container}`}>
-					{cardType(directory)}
-				</div>
-				<div className={`${styles.map_fab_mobile}`}>
+				<div className=" min-h-[0.5rem] bg-[color:var(--divider)]"></div>
+
+				{directory === "thai-help" && <ThaiHelpCategory />}
+				<div className="px-4">{cardType(directory)}</div>
+				<div className="fixed bottom-5 left-[50%] -translate-x-[50%] lg:hidden">
 					<Fab variant="extended" color="primary" aria-label="map view">
 						<MapIcon sx={{ mr: 1 }} />
 						View on Map
 					</Fab>
 				</div>
+				<div className="flex justify-center pt-8 pb-16">
+					<Pagination count={10} color="primary" />
+				</div>
 			</div>
-			<div className={`${styles.map_view_box}`}>
+			<div className="hidden lg:block lg:mt-4">
 				<h4>Map section</h4>
 			</div>
 		</div>
@@ -79,11 +100,11 @@ export async function getStaticPaths() {
 		{ params: { directory: "thai-help" } },
 		{ params: { directory: "jobs" } },
 		{ params: { directory: "housing" } },
-		{ params: { directory: "deals" } },
+		// { params: { directory: "deals" } },
 		{ params: { directory: "marketplace" } },
-		{ params: { directory: "businesses" } },
-		{ params: { directory: "guides" } },
-		{ params: { directory: "thai-talks" } },
+		// { params: { directory: "businesses" } },
+		// { params: { directory: "guides" } },
+		// { params: { directory: "thai-talks" } },
 	];
 
 	return {

@@ -8,7 +8,7 @@ import styles from "../../../../styles/components/directory/filters/jobs/salary-
 function SalaryFilter() {
 	return (
 		<div className={`${styles.filter_box}`}>
-			<h4>Salary</h4>
+			<h4 className="lg:text-base">Salary</h4>
 			<div className={`${styles.radio_box}`}>
 				<FormControl sx={{ width: "100%", marginLeft: "-16px" }}>
 					<RadioGroup
@@ -19,7 +19,7 @@ function SalaryFilter() {
 						<FormControlLabel
 							value="monthly"
 							control={<Radio />}
-							label="Montly"
+							label={<p className="lg:text-sm font-light">Monthly</p>}
 							labelPlacement="start"
 							sx={{
 								display: "flex",
@@ -31,7 +31,7 @@ function SalaryFilter() {
 						<FormControlLabel
 							value="hourly"
 							control={<Radio />}
-							label="Hourly"
+							label={<p className="lg:text-sm font-light">Hourly</p>}
 							labelPlacement="start"
 							sx={{
 								display: "flex",
@@ -43,8 +43,8 @@ function SalaryFilter() {
 					</RadioGroup>
 				</FormControl>
 			</div>
-			<div className={`${styles.salary_range_box} ${styles.flexCol}`}>
-				<p>Salary range:</p>
+			<div className="my-4">
+				<p className="mb-2 font-light text-sm">Salary range:</p>
 				<div className={`${styles.flex} ${styles.input_group_both}`}>
 					<div className={`${styles.flexCol} ${styles.input_box}`}>
 						<input id="min-salary" type="text" placeholder="$100" />

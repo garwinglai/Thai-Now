@@ -63,7 +63,7 @@
 	text-align: center;
 }
 
-@media screen and (min-width: 769px) {
+@media screen and (min-width: 1024px) {
 	/* *Static Nav Options Home*/
 	.options_container {
 		gap: 1rem;

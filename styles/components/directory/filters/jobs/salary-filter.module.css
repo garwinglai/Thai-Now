@@ -15,10 +15,6 @@
 	margin-bottom: 0.25rem;
 }
 
-.salary_range_box {
-	gap: 8px;
-}
-
 .input_group_both {
 	gap: 2rem;
 	flex-grow: 1;

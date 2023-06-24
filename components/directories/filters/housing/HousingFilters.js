@@ -5,6 +5,7 @@ import FilterSortButtonGroup from "../FilterSortButtonGroup";
 import PriceRangeFilter from "./PriceRangeFilter";
 import PropertyTypeFilter from "./PropertyTypeFilter";
 import { IconButton } from "@mui/material";
+import DistanceFilter from "./DistanceFilter";
 
 function HousingFilters({ directory, closeDrawer }) {
 	return (
@@ -23,6 +24,10 @@ function HousingFilters({ directory, closeDrawer }) {
 			<div className={`${styles.filter_section_box}`}>
 				<PropertyTypeFilter />
 			</div>
+			<div className={`${styles.filter_section_box}`}>
+				<DistanceFilter />
+			</div>
+
 			<FilterSortButtonGroup />
 		</div>
 	);

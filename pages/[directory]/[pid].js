@@ -6,6 +6,7 @@ import HousingPostDetail from "@/components/directories/posts/HousingPostDetail"
 import MainLayout from "@/components/layouts/MainLayout";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "next/link";
+import ThaiHelpDetail from "@/components/directories/posts/ThaiHelpDetail";
 
 function PostDetail() {
 	const { query } = useRouter();
@@ -30,13 +31,16 @@ function PostDetail() {
 		>
 			{directory}
 		</Link>,
-		<p key="3" className="text-[color:var(--deals-primary)]">post title</p>,
+		<p key="3" className="text-[color:var(--deals-primary)]">
+			post title
+		</p>,
 	];
 
 	function displayPostDetail(directory, pid) {
 		if (directory === "jobs") return <JobPostDetail />;
 		if (directory === "marketplace") return <MarketplacePostDetail />;
 		if (directory === "housing") return <HousingPostDetail />;
+		if (directory === "thai-help") return <ThaiHelpDetail />;
 	}
 
 	return (

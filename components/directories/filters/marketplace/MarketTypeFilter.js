@@ -4,10 +4,13 @@ import styles from "@/styles/components/directory/filters/marketplace/market-typ
 function MarketTypeFilter() {
 	return (
 		<div className={`${styles.market_type_box}`}>
-			<h4>Type</h4>
-			<div className={`${styles.filter_group} ${styles.flex}`}>
+			<h4 className="lg:text-base">Type</h4>
+			<div className="flex w-full gap-2 flex-wrap">
 				{marketTypes.map((type) => (
-					<button key={type} className={`${styles.property_btn}`}>
+					<button
+						key={type}
+						className="text-sm font-extralight border rounded-full max-w-fit px-2 py-1"
+					>
 						{type}
 					</button>
 				))}

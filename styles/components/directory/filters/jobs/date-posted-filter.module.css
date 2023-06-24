@@ -14,3 +14,9 @@
 .date_posted_filter_box h4 {
 	margin-bottom: 0.5rem;
 }
+
+@media screen and (min-width: 1024px) {
+	.radio_box {
+		display: hidden;
+	}
+}

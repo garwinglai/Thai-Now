@@ -4,7 +4,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 
-function ExperienceFilter() {
+function DistanceFilter() {
 	function displayMobile() {
 		return (
 			<div className="lg:hidden">
@@ -15,9 +15,9 @@ function ExperienceFilter() {
 						name="radio-buttons-group"
 					>
 						<FormControlLabel
-							value="no-experience"
+							value="0.5mi"
 							control={<Radio />}
-							label="No experience"
+							label="< 0.5 mi"
 							labelPlacement="start"
 							sx={{
 								display: "flex",
@@ -27,9 +27,9 @@ function ExperienceFilter() {
 							}}
 						/>
 						<FormControlLabel
-							value="1-2-years"
+							value="3mi"
 							control={<Radio />}
-							label="1-2 years"
+							label="< 3 mi"
 							labelPlacement="start"
 							sx={{
 								display: "flex",
@@ -39,21 +39,9 @@ function ExperienceFilter() {
 							}}
 						/>
 						<FormControlLabel
-							value="3-5-years"
+							value="5mi"
 							control={<Radio />}
-							label="3-5 years"
-							labelPlacement="start"
-							sx={{
-								display: "flex",
-								justifyContent: "space-between",
-								width: "100%",
-								color: "#717171",
-							}}
-						/>
-						<FormControlLabel
-							value="5-years"
-							control={<Radio />}
-							label="At least 5 years"
+							label="< 5 mi"
 							labelPlacement="start"
 							sx={{
 								display: "flex",
@@ -78,9 +66,9 @@ function ExperienceFilter() {
 						name="radio-buttons-group"
 					>
 						<FormControlLabel
-							value="no-experience"
+							value="0.5mi"
 							control={<Radio />}
-							label={<p className="font-light text-sm">No experience</p>}
+							label={<p className="font-light text-sm">{`< 0.5 mi`}</p>}
 							labelPlacement="end"
 							sx={{
 								paddingLeft: "1rem",
@@ -89,9 +77,9 @@ function ExperienceFilter() {
 							}}
 						/>
 						<FormControlLabel
-							value="1-2-years"
+							value="3mi"
 							control={<Radio />}
-							label={<p className="font-light text-sm">1-2 years</p>}
+							label={<p className="font-light text-sm">{`< 3 mi`}</p>}
 							labelPlacement="end"
 							sx={{
 								paddingLeft: "1rem",
@@ -100,20 +88,9 @@ function ExperienceFilter() {
 							}}
 						/>
 						<FormControlLabel
-							value="3-5-years"
+							value="5mi"
 							control={<Radio />}
-							label={<p className="font-light text-sm">3-5 years</p>}
-							labelPlacement="end"
-							sx={{
-								paddingLeft: "1rem",
-								width: "100%",
-								color: "#717171",
-							}}
-						/>
-						<FormControlLabel
-							value="5-years"
-							control={<Radio />}
-							label={<p className="font-light text-sm">At least 5 years</p>}
+							label={<p className="font-light text-sm">{`< 5 mi`}</p>}
 							labelPlacement="end"
 							sx={{
 								paddingLeft: "1rem",
@@ -129,11 +106,11 @@ function ExperienceFilter() {
 
 	return (
 		<div className="p-4">
-			<h4 className="mb-2 lg:text-base">Experience</h4>
+			<h4 className="mb-2 lg:text-base">Distance</h4>
 			{displayMobile()}
 			{displayDesktop()}
 		</div>
 	);
 }
 
-export default ExperienceFilter;
+export default DistanceFilter;
