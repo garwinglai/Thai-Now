@@ -42,7 +42,7 @@ function ClassicPublicPage() {
         <UserPosts groupPostTitle="Housing" />
         <div className="bg-white p-4">
           <h4 className="text-[color:var(--deals-primary)]">
-            Lolar Ramsey's reviews
+            Lolar Ramsey&apos;s reviews
           </h4>
           <BusinessCenterReview />
           <BusinessCenterReview />
