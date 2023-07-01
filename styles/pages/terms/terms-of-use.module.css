@@ -1,60 +1,67 @@
 .flex {
-	display: flex;
+  display: flex;
 }
 
 .flexCol {
-	display: flex;
-	flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .terms_box {
-	padding: 1rem;
-	padding-bottom: 5rem;
+  padding: 1rem;
+  padding-bottom: 5rem;
 }
 
 .terms_box a {
-	text-decoration: none;
-	color: var(--black);
+  text-decoration: none;
+  color: var(--black);
 }
 
 .terms_box a:focus {
-	color: var(--black);
-	outline: none;
+  color: var(--black);
+  outline: none;
 }
 
 .back_btn {
-	align-items: center;
-	gap: 4px;
-	background-color: transparent;
+  align-items: center;
+  gap: 4px;
+  background-color: transparent;
 }
 
 .back_btn p {
-	font-size: 16px;
-	color: rgba(9, 56, 105, 1);
+  font-size: 16px;
+  color: rgba(9, 56, 105, 1);
 }
 
 .terms_box > h2 {
-	text-align: center;
-	margin: 1rem 0 2rem;
-	color: rgba(0, 60, 167, 1);
+  text-align: center;
+  margin: 1rem 0 2rem;
+  color: rgba(0, 60, 167, 1);
 }
 
 .terms_box p {
-	font-weight: 300;
-	font-size: 15px;
+  font-weight: 300;
+  font-size: 15px;
 }
 
 .terms_box > section > p > a {
-	text-decoration: underline;
-	color: rgba(0, 60, 167, 1);
+  text-decoration: underline;
+  color: rgba(0, 60, 167, 1);
 }
 
 .terms_box > section > ol {
-	padding-left: 2rem;
+  padding-left: 2rem;
 }
 
 .terms_box > section > ol > li {
-	font-weight: 300;
-	font-size: 15px;
-	color: rgba(51, 51, 51, 1);
+  font-weight: 300;
+  font-size: 15px;
+  color: rgba(51, 51, 51, 1);
+}
+
+@media screen and (min-width: 1024px) {
+  .terms_box {
+    width: 80%;
+    margin: 55px auto 0;
+  }
 }

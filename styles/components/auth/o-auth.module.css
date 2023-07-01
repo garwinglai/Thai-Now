@@ -1,15 +1,27 @@
 .flexCol {
-	display: flex;
-	flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .oauth_group {
-	align-items: center;
-	gap: 4px;
-	background-color: transparent;
+  align-items: center;
+  gap: 4px;
+  background-color: transparent;
 }
 
 .oauth_group p {
-	font-size: 12px;
-	font-weight: 300;
+  font-size: 12px;
+  font-weight: 300;
+}
+
+.oauth_logo {
+  width: 4rem;
+  height: 4rem;
+}
+
+@media screen and (min-width: 1024px) {
+  .oauth_logo {
+    width: 3rem;
+    height: 3rem;
+  }
 }

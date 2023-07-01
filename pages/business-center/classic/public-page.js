@@ -12,8 +12,10 @@ import PostLocation from "@/components/posts/PostLocation";
 import BusinessHours from "@/components/business-center/BusinessHours";
 import UserPosts from "@/components/business-center/UserPosts";
 import BusinessCenterReview from "@/components/business-center/BusinessCenterReview";
+import PrimaryButton from "@/components/buttons/PrimaryButton";
 
-function BusinessPublicPage() {
+function ClassicPublicPage() {
+  // create this page similar to BusinessPublicPage
   const { back } = useRouter();
 
   const handleBack = () => {
@@ -21,7 +23,7 @@ function BusinessPublicPage() {
   };
 
   return (
-    <div className="pb-12">
+    <div>
       <button
         onClick={handleBack}
         className="flex items-center gap-1 bg-transparent pl-4 py-4"
@@ -29,30 +31,15 @@ function BusinessPublicPage() {
         <ChevronLeftIcon />
         <p className="text-[color:var(--deals-primary-med)] text-base">Back</p>
       </button>
-      <div className="relative w-full h-80 inline-block">
-        <Image
-          src={business_temp_img}
-          alt="business image"
-          fill={true}
-          className=" object-cover "
-        />
-        <button
-          type="button"
-          className="absolute z-10 bg-opacity-50 bg-black text-white border border-white rounded px-4 py-2 right-4 bottom-4 "
-        >
-          + 20 Photos
-        </button>
-      </div>
       <div className="flex flex-col gap-[1px] bg-[color:var(--border)] ">
         <PostProfile isPublicPage={true} />
-        <PostContactInfo />
+        <PostContactInfo isClassicUser={true} />
         <PostOfferOptions isPublicPage={true} />
         <PostDescription isPublicPage={true} isLoggedIn={true} />
         <PostLocation isPublicPage={true} />
         <BusinessHours />
         <UserPosts groupPostTitle="Deals" />
         <UserPosts groupPostTitle="Housing" />
-        <UserPosts groupPostTitle="Jobs" />
         <div className="bg-white p-4">
           <h4 className="text-[color:var(--deals-primary)]">
             Lolar Ramsey's reviews
@@ -70,8 +57,8 @@ function BusinessPublicPage() {
   );
 }
 
-export default BusinessPublicPage;
+export default ClassicPublicPage;
 
-BusinessPublicPage.getLayout = function getLayout(page) {
+ClassicPublicPage.getLayout = function getLayout(page) {
   return <MainLayout route="public-page">{page}</MainLayout>;
 };

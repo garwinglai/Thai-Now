@@ -14,7 +14,7 @@ import AccountMenuMobile from "./AccountMenuMobile";
 import SearchDrawer from "../search/page/SearchDrawer";
 
 function NavMobile({ auth, route }) {
-	const [isLoggedIn, setIsLoggedIn] = useState(true);
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
 	const [navScroll, setNavScroll] = useState(false);
 	const [lastScrollY, setLastScrollY] = useState(0);
