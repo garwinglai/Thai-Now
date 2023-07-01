@@ -5,9 +5,6 @@ import BusinessCenterBodyHeader from "@/components/business-center/BusinessCente
 import { styled } from "@mui/material/styles";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import Box from "@mui/material/Box";
-import marketplace_gray_icon from "@/public/static/images/icons/marketplace_gray_icon.png";
-import Image from "next/image";
 import HousingCard from "@/components/directories/cards/HousingCard";
 import MarketplaceCard from "@/components/directories/cards/MarketplaceCard";
 import BusinessCenterReview from "@/components/business-center/BusinessCenterReview";
@@ -16,7 +13,6 @@ import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { IconButton } from "@mui/material";
 import Link from "next/link";
 import JobsCard from "@/components/directories/cards/JobsCard";
-import login_banner from "@/public/static/images/login_banner.png";
 
 const StyledTabs = styled((props) => (
   <Tabs
