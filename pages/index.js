@@ -154,7 +154,10 @@ export default function Home() {
                 Connect with great, Deals, Jobs, Marketplcae, Housing
               </p>
               <div className="w-full mt-4">
-                <PrimaryButton name="Close" />
+                <PrimaryButton
+                  name="Close"
+                  handleClick={handleCloseCompleteSignupModal}
+                />
               </div>
             </div>
           </Box>
