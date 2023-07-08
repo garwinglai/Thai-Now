@@ -13,12 +13,18 @@ function SignIn() {
   return (
     <div className="lg:flex lg:h-screen">
       <div className="hidden lg:block lg:h-screen lg:max-w-1/3">
-        <Image src={login_banner} className="lg:h-full lg:w-fit" />
+        <Image
+          src={login_banner}
+          className="lg:h-full lg:w-fit"
+          alt="signup page banner image"
+          priority={true}
+        />
       </div>
       <div className="lg:flex-grow lg:min-w-5/12">
         <div className={`${styles.signin_box}`}>
           <Image
             src={thai_now_logo}
+            alt="ThaiNow Logo"
             className="hidden lg:block lg:mx-auto lg:mb-8 lg:w-20"
           />
           <h2>Welcome Back!</h2>

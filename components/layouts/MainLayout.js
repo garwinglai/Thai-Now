@@ -4,6 +4,7 @@ import NavMobile from "./NavMobile";
 import styles from "../../styles/components/layouts/main-layout.module.css";
 import Footer from "./Footer";
 import { useRouter } from "next/router";
+import AuthProvider from "../auth/AuthProvider";
 
 function MainLayout({ children, route }) {
   const router = useRouter();
@@ -11,20 +12,22 @@ function MainLayout({ children, route }) {
 
   return (
     <React.Fragment>
-      <div className={`${directory && styles.layout_nav_mobile}`}>
-        <NavMobile auth={false} route={route} />
-      </div>
-      {route !== "terms" && (
-        <div className={`${directory && styles.layout_nav_desktop}`}>
-          <NavDesktop />
+      <AuthProvider>
+        <div className={`${directory && styles.layout_nav_mobile}`}>
+          <NavMobile auth={false} route={route} />
         </div>
-      )}
-      <main className={`${route !== "post-detail" && styles.layout_main}`}>
-        {children}
-      </main>
-      {route !== "create-business" &&
-        route !== "business-center" &&
-        route !== "business-profile" && <Footer />}
+        {route !== "terms" && (
+          <div className={`${directory && styles.layout_nav_desktop}`}>
+            <NavDesktop />
+          </div>
+        )}
+        <main className={`${route !== "post-detail" && styles.layout_main}`}>
+          {children}
+        </main>
+        {route !== "create-business" &&
+          route !== "business-center" &&
+          route !== "business-profile" && <Footer />}
+      </AuthProvider>
     </React.Fragment>
   );
 }

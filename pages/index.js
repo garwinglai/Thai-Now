@@ -5,7 +5,6 @@ import { useRef, useEffect, useState } from "react";
 import Image from "next/image";
 import bannerImageDesktop from "../public/static/images/home/banner-picture-desktop.svg";
 import bannerImageMobile from "../public/static/images/home/banner-picture-mobile.svg";
-import SearchBarGeo from "@/components/search/SearchBarGeo";
 import SearchBarMobile from "@/components/search/SearchBarMobile";
 import NavOptions from "@/components/home/NavOptions";
 import LandingPagePagination from "@/components/home/LandingPagePagination";
@@ -21,12 +20,12 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import MainLayout from "@/components/layouts/MainLayout";
 import SearchDrawer from "@/components/search/page/SearchDrawer";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
 import thai_now_logo from "@/public/static/images/logos/thai_now_logo_blck.png";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
+import { deleteLocalStorage, getLocalStorage } from "@/utils/clientStorage";
+import AuthProvider, { useAuth } from "@/components/auth/AuthProvider";
 
 const style = {
   position: "absolute",
@@ -47,10 +46,13 @@ export default function Home() {
   const [state, setState] = useState({
     right: false,
   });
-  const [openCompleteSignupModal, setOpenCompleteSignupModal] = useState(true);
+  const [openCompleteSignupModal, setOpenCompleteSignupModal] = useState(false);
 
   const offersRef = useRef();
   const offersMobileRef = useRef();
+
+  const user = useAuth();
+  console.log("user", user);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -85,6 +87,17 @@ export default function Home() {
 
     detectScroll();
   }, [lastScrollY, lastScrollYMobile]);
+
+  useEffect(() => {
+    console.log();
+    // if user exists and getlocalstorage firstLogin is true, set openCompleteSIgnupmodal to true
+    const firstLoginLS = getLocalStorage("firstLogin");
+
+    if (user && firstLoginLS) {
+      setOpenCompleteSignupModal(true);
+      deleteLocalStorage("firstLogin");
+    }
+  }, [user]);
 
   // * Actions
   const toggleDrawer = (anchor, open) => (event) => {
@@ -146,7 +159,7 @@ export default function Home() {
                   <CloseIcon fontSize="small" />
                 </IconButton>
               </div>
-              <Image src={thai_now_logo} />
+              <Image src={thai_now_logo} alt="thai now logo" />
               <h4 className="text-[color:var(--deals-primary)] font-medium">
                 Welcome to ThaiNow
               </h4>
@@ -257,17 +270,6 @@ export default function Home() {
     </>
   );
 }
-
-// export async function getServerSideProps(context) {
-// 	const data = await getData();
-// 	const dataObject = JSON.parse(JSON.stringify(data));
-
-// 	console.log("SSR data:", dataObject);
-
-// 	return {
-// 		props: { dataObject },
-// 	};
-// }
 
 Home.getLayout = function getLayout(page) {
   return <MainLayout route="home">{page}</MainLayout>;

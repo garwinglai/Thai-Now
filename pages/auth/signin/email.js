@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import NavMobile from "@/components/layouts/NavMobile";
 import styles from "@/styles/pages/auth/signin/email.module.css";
 import Link from "next/link";
@@ -11,8 +11,18 @@ import thai_now_logo from "@/public/static/images/logos/thai_now_logo_blck.png";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import { IconButton } from "@mui/material";
 import { useRouter } from "next/router";
+import { signInWithEmailAndPassword } from "@firebase/auth";
+import { auth } from "@/firebase/fireConfig";
 
 function EmailSignIn() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [signupValues, setSignupValues] = useState({
+    email: "garwinglai@gmail.com",
+    password: "asdfghjkl",
+  });
+
+  // destructure signupValues
+  const { email, password } = signupValues;
   // Create an onclick function for the back button that uses the useRouter to go back
   const router = useRouter();
 
@@ -20,10 +30,33 @@ function EmailSignIn() {
     router.push("/");
   };
 
-  const handleSignUp = (e) => {
-    e.preventDefault();
-    window.alert(clicked);
+  const handleLoginInputChange = (e) => {
+    // destructure e.target
+    const { name, value } = e.target;
+    setSignupValues((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
+
+  const handleSignin = (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        setIsLoading(false);
+        if (user) router.push("/");
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log("error signing in", error);
+        setIsLoading(false);
+      });
+  };
+
   return (
     <div className="lg:flex lg:h-screen">
       <div className="hidden lg:block lg:h-screen lg:max-w-1/3">
@@ -43,25 +76,35 @@ function EmailSignIn() {
           <h2>Log in with Email</h2>
           <h4>Login to your ThaiNow to Conitnue</h4>
           <form
-            onSubmit={handleSignUp}
+            onSubmit={handleSignin}
             className={`${styles.credentials_box} ${styles.flexCol}`}
           >
             <TextField
               fullWidth
-              id="outlined-basic"
+              id="email"
+              name="email"
+              value={email}
               label="Email"
               variant="outlined"
               required
+              onChange={handleLoginInputChange}
             />
             <TextField
               fullWidth
-              id="outlined-basic"
+              id="password"
+              name="password"
+              value={password}
               label="Password"
               variant="outlined"
               required
+              onChange={handleLoginInputChange}
             />
-            <button type="submit" className={`${styles.login_btn}`}>
-              Log in
+            <button
+              type="submit"
+              className={`${styles.login_btn}`}
+              disabled={isLoading}
+            >
+              {isLoading ? "Logging in ..." : "Log in"}
             </button>
           </form>
           <div className={`${styles.forgot_password_link}`}>
