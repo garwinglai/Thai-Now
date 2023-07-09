@@ -52,7 +52,7 @@ function AccountMenuMobile({ onClose }) {
       <div className={`${styles.header} ${styles.flex}`}>
         <Avatar
           sx={{ width: 54, height: 54 }}
-          src={avatar_image_2}
+          // src={avatar_image_2}
           alt="profile image"
         />
         <div className={`${styles.header_context}`}>

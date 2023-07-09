@@ -7,7 +7,7 @@ import { IconButton } from "@mui/material";
 
 function PostContactInfo({ isClassicUser }) {
   return (
-    <di className="p-4 bg-white">
+    <div className="p-4 bg-white">
       <h5>Business Contact</h5>
       <div
         className={`flex justify-between py-4  ${
@@ -69,7 +69,7 @@ function PostContactInfo({ isClassicUser }) {
           <p className="text-sm font-light">Map</p>
         </span>
       </div>
-    </di>
+    </div>
   );
 }
 

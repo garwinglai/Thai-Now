@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "@/styles/pages/auth/signup/signup.module.css";
 import Link from "next/link";
 import OAuth from "@/components/auth/OAuth";
@@ -8,10 +8,55 @@ import NavMobile from "@/components/layouts/NavMobile";
 import login_banner from "@/public/static/images/thai-now-main/login_banner.png";
 import Image from "next/image";
 import thai_now_logo from "@/public/static/images/logos/thai_now_logo_blck.png";
+import { Snackbar } from "@mui/material";
+import { IconButton } from "@mui/material";
+// import { CloseIcon } from "@mui/icons-material";
 
 function SignUp() {
+  const [Snackbar, setSnackbar] = useState({
+    isSnackbarOpen: true,
+    snackbarMessage: "stuff",
+  });
+
+  // destructure snackbar
+  const { isSnackbarOpen, snackbarMessage } = Snackbar;
+
+  const handleSnackbarClose = () => {
+    setSnackbar({
+      isSnackbarOpen: false,
+      snackbarMessage: "",
+    });
+  };
+
+  const handleOpenSnackBar = (message) => {
+    setSnackbar({
+      isSnackbarOpen: true,
+      snackbarMessage: message,
+    });
+  };
+
+  const action = (
+    <React.Fragment>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleSnackbarClose}
+      >
+        {/* <CloseIcon fontSize="small" /> */}
+      </IconButton>
+    </React.Fragment>
+  );
+
   return (
     <div className="lg:flex lg:h-screen">
+      {/* <Snackbar
+        open={isSnackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        message={snackbarMessage}
+        action={action}
+      /> */}
       <div className="hidden lg:block lg:h-screen lg:max-w-1/3">
         <Image
           src={login_banner}
@@ -34,7 +79,7 @@ function SignUp() {
             <Link href="/auth/signin">Log in</Link>
           </div>
           <div className={`${styles.oauth_box} ${styles.flex}`}>
-            <OAuth />
+            <OAuth handleOpenSnackBar={handleOpenSnackBar} />
           </div>
           <div className={`${styles.divider_group}`}>
             <Divider>
