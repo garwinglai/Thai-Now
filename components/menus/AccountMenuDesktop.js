@@ -36,6 +36,10 @@ function AccountMenuDesktop({
       });
   };
 
+  const handleMenuClick = () => {
+    onClose();
+  };
+
   return (
     <Menu
       id="basic-menu"
@@ -51,7 +55,7 @@ function AccountMenuDesktop({
         horizontal: "right",
       }}
     >
-      <MenuList>
+      <MenuList onClick={handleMenuClick}>
         <div className="">
           <Link href="/profile/switch-account">
             <MenuItem sx={{ padding: "0 2rem" }}>
@@ -69,7 +73,7 @@ function AccountMenuDesktop({
               <ListItemIcon>
                 <PersonOutlineOutlinedIcon fontSize="small" />
               </ListItemIcon>
-              <p className="font-light py-4">Personal info</p>
+              <p className="font-light py-4">My Profile</p>
             </MenuItem>
           </Link>
           <Divider sx={{ width: "90%", margin: "0 auto" }} />
@@ -100,18 +104,9 @@ function AccountMenuDesktop({
               <ListItemIcon>
                 <StoreOutlinedIcon fontSize="small" />
               </ListItemIcon>
-              <p className="font-light py-4">Business on ThaiNow</p>
+              <p className="font-light py-4">My Business</p>
             </MenuItem>
           </Link>
-        </div>
-        <Divider sx={{ width: "90%", margin: "0 auto" }} />
-        <div className="">
-          <MenuItem sx={{ padding: "0 2rem" }}>
-            <ListItemIcon>
-              <ExplicitOutlinedIcon fontSize="small" />
-            </ListItemIcon>
-            <p className="font-light py-4">Language</p>
-          </MenuItem>
         </div>
         <Divider sx={{ width: "90%", margin: "0 auto" }} />
         <div className="">

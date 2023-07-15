@@ -14,7 +14,7 @@ function BusinessCenterPageHeader({ isBusinessUser }) {
   };
 
   return (
-    <div className="p-4 bg-white">
+    <div className="p-4 bg-white lg:rounded-md">
       <button onClick={handleBack} className="flex content-center gap-1">
         <ChevronLeftIcon />
         <p className="text-blue-950">Back</p>
@@ -37,7 +37,7 @@ function BusinessCenterPageHeader({ isBusinessUser }) {
               ? `/business-center/business/public-page`
               : `/business-center/classic/public-page`
           }`}
-          className=" bg-orange-600 text-white px-1 py-2 text-xs h-full rounded-md "
+          className=" bg-[color:var(--secondary)]  text-white px-3 py-2 text-xs h-full rounded "
         >
           View public page
         </Link>

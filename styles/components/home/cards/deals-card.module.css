@@ -1,47 +1,47 @@
 .deals_card {
-	background-color: var(--white);
-	border-radius: 5px;
-	box-shadow: 10px 12px 20px -1px rgba(88, 103, 145, 0.2);
-	width: 70%;
+  background-color: var(--white);
+  border-radius: 5px;
+  box-shadow: 10px 12px 20px -1px rgba(88, 103, 145, 0.2);
+  width: 70%;
 }
 
 .card_image {
-	object-fit: cover;
-	width: 100%;
-	height: auto;
-	border-radius: 4px 4px 0 0;
+  object-fit: cover;
+  width: 100%;
+  height: auto;
+  border-radius: 4px 4px 0 0;
 }
 
 .card_bottom {
-	padding: 5px 15px 20px 15px;
+  padding: 5px 15px 20px 15px;
 }
 
 .card_review {
-	display: flex;
-	align-items: ;
-	gap: 5px;
+  display: flex;
+
+  gap: 5px;
 }
 
 .card_bottom h5,
 .biz_name_location {
-	margin: 5px 0;
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	width: 170px;
+  margin: 5px 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 170px;
 }
 
 .biz_name_location {
-	font-size: 10px;
-	color: #717171;
-	margin-bottom: 10px;
+  font-size: 10px;
+  color: #717171;
+  margin-bottom: 10px;
 }
 
 .bullet_point_bit_type {
-	color: var(--secondary);
+  color: var(--secondary);
 }
 
 .biz_type {
-	font-size: 12px;
-	color: var(--text-body-color);
+  font-size: 12px;
+  color: var(--text-body-color);
 }

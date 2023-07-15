@@ -81,7 +81,7 @@ function AccountMenuMobile({ onClose }) {
               <ListItemIcon>
                 <PersonOutlineOutlinedIcon fontSize="small" />
               </ListItemIcon>
-              <ListItemText>Personal info</ListItemText>
+              <ListItemText>My Profile</ListItemText>
               <ArrowForwardIosIcon fontSize="small" />
             </MenuItem>
           </Link>
@@ -116,7 +116,7 @@ function AccountMenuMobile({ onClose }) {
               <ListItemIcon>
                 <StoreOutlinedIcon fontSize="small" />
               </ListItemIcon>
-              <ListItemText>Business on ThaiNow</ListItemText>
+              <ListItemText>My Business</ListItemText>
               <ArrowForwardIosIcon fontSize="small" />
             </MenuItem>
           </Link>

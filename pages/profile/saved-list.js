@@ -1,56 +1,46 @@
 import React from "react";
 import MainLayout from "@/components/layouts/MainLayout";
-import styles from "@/styles/pages/profile/saved-list.module.css";
-import Link from "next/link";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import no_saved_list_image from "@/public/static/images/saved_list_none.png";
-import Image from "next/image";
-import SavedListSection from "@/components/profile/SavedListSection";
 import { useRouter } from "next/router";
+import AccountPrivateMenu from "@/components/menus/AccountPrivateMenu";
+import PrivateProfileBreadcrumbs from "@/components/menus/PrivateProfileBreadcrumbs";
+import SavedListComponent from "@/components/profile/SavedListComponent";
 
 function SavedList() {
-	const menuList = ["All", "Jobs", "Housing", "Deals", "Marketplace"];
-	const { back } = useRouter();
+  const { back } = useRouter();
 
-	const handleBack = () => {
-		back();
-	};
+  const handleBack = () => {
+    back();
+  };
 
-	return (
-		<div className={`${styles.saved_list_box}`}>
-			<div className={`${styles.header_box}`}>
-				<button
-					onClick={handleBack}
-					className={`${styles.flex} ${styles.back_btn}`}
-				>
-					<ChevronLeftIcon />
-					<p>Back</p>
-				</button>
-				<h2>Saved List</h2>
-				<div className={`${styles.flex} ${styles.list_filter_box}`}>
-					{menuList.map((menu, idx) => (
-						<button className={`${styles.menu_btn}`} key={menu}>
-							{menu}
-						</button>
-					))}
-				</div>
-			</div>
-			<div className={`${styles.divider}`}></div>
-			{/* <div className={`${styles.no_saved_list_box}`}>
-				<Image src={no_saved_list_image} alt="vector image of no saved list" />
-				<h3>No favorites yet</h3>
-				<p>
-					Tap the star on store page to save your favorite deals, jobs,
-					marketplace, or living for later.
-				</p>
-			</div> */}
-			<SavedListSection />
-		</div>
-	);
+  return (
+    <div className=" pb-16 lg:bg-[color:var(--profile-bg)] lg:p-4">
+      <button
+        onClick={handleBack}
+        className="flex gap-2 items-center px-4 pt-4 lg:hidden"
+      >
+        <ChevronLeftIcon />
+        <p>Back</p>
+      </button>
+      <div className="lg:pt-20">
+        <div className="hidden lg:block lg:ml-[10%] lg:pb-6 ">
+          <PrivateProfileBreadcrumbs breadcrumb="saved" />
+        </div>
+        <div className="lg:flex lg:mx-auto  lg:gap-4 lg:w-[80%]">
+          <div className="hidden lg:block lg:bg-white lg:rounded-md lg:shadow-md lg:h-fit lg:min-w-[11rem]">
+            <AccountPrivateMenu currentRoute="saved" />
+          </div>
+          <div className="lg:bg-white lg:rounded-md lg:shadow-md lg:flex-grow lg:px-4 lg:pb-16">
+            <SavedListComponent />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default SavedList;
 
 SavedList.getLayout = function getLayout(page) {
-	return <MainLayout route="profile">{page}</MainLayout>;
+  return <MainLayout route="profile">{page}</MainLayout>;
 };

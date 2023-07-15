@@ -177,7 +177,7 @@ function PostOfferOptions({ postType, values, isPublicPage }) {
 		}
 	}
 
-	return <div className="p-4 bg-white">{displayPostOfferings(postType)}</div>;
+	return <div className="p-4 bg-white lg:px-0 lg:pt-0">{displayPostOfferings(postType)}</div>;
 }
 
 export default PostOfferOptions;

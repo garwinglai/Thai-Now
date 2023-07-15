@@ -18,7 +18,7 @@ function MainLayout({ children, route }) {
         </div>
         {route !== "terms" && (
           <div className={`${directory && styles.layout_nav_desktop}`}>
-            <NavDesktop />
+            <NavDesktop route={route} />
           </div>
         )}
         <main className={`${route !== "post-detail" && styles.layout_main}`}>

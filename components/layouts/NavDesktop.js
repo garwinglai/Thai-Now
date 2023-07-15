@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import styles from "../../styles/components/layouts/nav-desktop.module.css";
-import gStyles from "../../styles/global.module.css";
-import logo_white from "../../public/static/images/logos/logo_white.svg";
-import logo_black from "../../public/static/images/logos/logo_black.svg";
-import thai_royal_logo from "../../public/static/images/logos/royal_thai_logo.svg";
+import logo_white from "../../public/static/images/logos/logo_white.png";
+import logo_black from "../../public/static/images/logos/logo_black.png";
 import LoginButton from "../buttons/LoginButton";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
@@ -19,7 +16,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import AccountMenuDesktop from "../menus/AccountMenuDesktop";
 
-function NavDesktop() {
+function NavDesktop({ route }) {
   const user = useAuth();
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -78,45 +75,70 @@ function NavDesktop() {
     setAnchorEl(null);
   };
 
+  console.log(navScroll, directory, route);
+
   return (
     <nav
-      className={`${styles.nav} ${styles.flexCol} ${
-        (navScroll || directory) && styles.nav_scroll
-      } `}
+      className={`hidden lg:block lg:fixed lg:z-10 lg:w-full  ${
+        (navScroll || directory || route) && `bg-white lg:shadow-md`
+      }`}
     >
-      <div className={`${styles.flex} ${styles.nav_top} `}>
-        <div className={`${styles.nav_left} ${styles.flex}`}>
+      <div
+        className={`flex justify-between items-center py-4 px-8 ${
+          (navScroll || directory || route) && `border-b`
+        }`}
+      >
+        <div>
           <Link href="/">
             <Image
               alt="Logo"
-              src={navScroll || directory ? logo_black : logo_white}
-              className={`${styles.thai_now_logo_image}`}
+              src={navScroll || directory || route ? logo_black : logo_white}
+              className="h-10 w-auto"
             />
           </Link>
         </div>
-        <SearchBarGeo
-          navScrollAppear={navScroll || (directory && true)}
-          scrollSearchBar={true}
-        />
-        <div className={`${styles.nav_right} ${styles.flex}`}>
+        <div
+          className={
+            directory || navScroll || route ? "block w-[40%]" : "hidden"
+          }
+        >
+          <SearchBarGeo
+            navScrollAppear={navScroll || directory || route}
+            scrollSearchBar={true}
+          />
+        </div>
+        <div className="flex">
           <div className="flex items-center gap-2">
             {/* <Image alt="bell icon" src={icon_bell_notif_white} /> */}
             <IconButton>
               <NotificationsNoneOutlinedIcon
-                sx={{ color: navScroll || directory ? "black" : "white" }}
+                sx={{
+                  color: navScroll || directory || route ? "black" : "white",
+                }}
               />
             </IconButton>
-            <div
-              className={` px-4 ${styles.flex} ${
-                (navScroll || directory) && styles.language_button_scroll
-              }`}
-            >
-              <div className="flex pl-4 pr-2 items-center border-x">
-                <p className={`${gStyles.medium_bold}`}>EN</p>
+            <div className="">
+              <div
+                className={`flex pl-4 pr-2 items-center ${
+                  user ? "border-x" : `border-l`
+                } `}
+              >
+                <p
+                  className={`${
+                    directory || navScroll || route
+                      ? `text-black`
+                      : `text-white`
+                  } font-normal`}
+                >
+                  EN
+                </p>
                 {/* <Image alt="down arrow" src={down_arrow} /> */}
                 <IconButton>
                   <KeyboardArrowDownOutlinedIcon
-                    sx={{ color: navScroll || directory ? "black" : "white" }}
+                    sx={{
+                      color:
+                        navScroll || directory || route ? "black" : "white",
+                    }}
                   />
                 </IconButton>
               </div>
@@ -125,18 +147,37 @@ function NavDesktop() {
           {user ? (
             <React.Fragment>
               <button
-                className="flex gap-2 items-center"
+                className="flex gap-2 items-center pl-4"
                 onClick={handleOpenAccountMenu}
               >
                 <Avatar sx={{ width: 30, height: 30 }} color="action" />
-                <p className="font-extralight">Lolar Ramsey</p>
+                <p
+                  className={`font-normal ${
+                    directory || navScroll || route
+                      ? `text-black`
+                      : `text-white`
+                  }`}
+                >
+                  Lolar Ramsey
+                </p>
                 {open ? (
-                  <ExpandLessIcon sx={{ color: "white", marginTop: "2px" }} />
+                  <ExpandLessIcon
+                    sx={{
+                      color:
+                        directory || navScroll || route ? "black" : "white",
+                      marginTop: "2px",
+                    }}
+                  />
                 ) : (
-                  <ExpandMoreIcon sx={{ color: "white", marginTop: "2px" }} />
+                  <ExpandMoreIcon
+                    sx={{
+                      color:
+                        directory || navScroll || route ? "black" : "white",
+                      marginTop: "2px",
+                    }}
+                  />
                 )}
               </button>
-
               <AccountMenuDesktop
                 isDesktop={true}
                 anchorEl={anchorEl}
@@ -151,9 +192,15 @@ function NavDesktop() {
         </div>
       </div>
       <div
-        className={`${styles.nav_options_scroll_hide} ${
-          (navScroll || directory) && styles.nav_options_scroll_show
-        }`}
+        className={
+          !directory
+            ? route
+              ? "hidden"
+              : navScroll
+              ? `block`
+              : `hidden`
+            : `block`
+        }
       >
         <NavOptions isScroll={true} isDesktop={true} />
       </div>
