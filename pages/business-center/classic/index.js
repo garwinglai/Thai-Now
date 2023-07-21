@@ -142,7 +142,7 @@ function BusinessCenter() {
                   className="bg-orange-600 text-white text-sm rounded-md py-3 px-4 w-full"
                   onClick={toggleDrawer("bottom", true)}
                 >
-                  Create your post hi
+                  Create your post
                 </button>
                 <Drawer
                   anchor={"bottom"}
@@ -215,9 +215,12 @@ function getDesktopViewDisplayPosts() {
     <div className="hidden lg:p-4 lg:block">
       <div className="flex justify-between items-center">
         <h4 className="">10 Listings</h4>
-        <button className="text-white bg-[color:var(--secondary)] rounded px-3 py-2 font-light text-xs">
+        <Link
+          href="/business-center/classic/create"
+          className="text-white bg-[color:var(--secondary)] rounded px-3 py-2 font-light text-xs"
+        >
           Create your post
-        </button>
+        </Link>
       </div>
       <div className="hidden lg:block my-4">
         <table className="w-full">

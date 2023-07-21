@@ -7,7 +7,7 @@ import LinearProgress, {
 
 function ReviewStats() {
 	return (
-		<div className="flex items-center gap-3 pt-4 pb-8 px-3">
+		<div className="flex items-center gap-3 pt-4 pb-8 px-3 lg:w-1/2">
 			<div className="flex flex-col justify-center items-center">
 				<div className=" w-20 h-20 flex items-center justify-center rounded-full border-4 border-[color:var(--housing-primary)] ">
 					<h3 className="">4.96</h3>

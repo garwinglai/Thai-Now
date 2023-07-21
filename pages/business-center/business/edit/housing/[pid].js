@@ -323,31 +323,31 @@ function EditHousingBusiness({ pid }) {
 				<div className="flex gap-1">
 					<span
 						className={`flex-grow h-1 ${
-							step === 1 ? "bg-[color:var(--secondary)]" : "bg-gray-100 "
+							step >= 1 ? "bg-[color:var(--secondary)]" : "bg-gray-100 "
 						}`}
 					></span>
 					<span
 						className={`flex-grow h-1  ${
-							step === 2 ? "bg-[color:var(--secondary)]" : "bg-gray-100 "
+							step >= 2 ? "bg-[color:var(--secondary)]" : "bg-gray-100 "
 						}`}
 					></span>
 					<span
 						className={`flex-grow h-1  ${
-							step === 3
+							step >= 3
 								? "bg-[color:var(--gradient-secondary)]"
 								: "bg-gray-100 "
 						}`}
 					></span>
 					<span
 						className={`flex-grow h-1  ${
-							step === 4
+							step >= 4
 								? "bg-[color:var(--gradient-secondary)]"
 								: "bg-gray-100 "
 						}`}
 					></span>
 					<span
 						className={`flex-grow h-1  ${
-							step === 5
+							step >= 5
 								? "bg-[color:var(--gradient-secondary)]"
 								: "bg-gray-100 "
 						}`}

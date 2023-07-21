@@ -3,7 +3,12 @@ import React from "react";
 import { useRouter } from "next/router";
 import PrimaryButton from "../buttons/PrimaryButton";
 
-function PostDescription({ description, isPublicPage, isLoggedIn }) {
+function PostDescription({
+  description,
+  isPublicPage,
+  isLoggedIn,
+  isCreatePost,
+}) {
   const { push } = useRouter();
 
   const handleLoginClick = () => {

@@ -6,9 +6,9 @@ function PostAmenities({ amenities }) {
 	console.log(amenitiesKeysArray);
 
 	return (
-		<div className="p-4 bg-white">
+		<div className="p-4 bg-white lg:pl-0">
 			<h5>Amenities</h5>
-			<ul className="ml-4 my-4">
+			<ul className="ml-4 my-4 lg:ml-6 lg:grid lg:grid-cols-3">
 				{amenitiesKeysArray.map((item, key) => {
 					if (amenities[item])
 						return <li key={key} className="list-disc font-extralight">{item}</li>;

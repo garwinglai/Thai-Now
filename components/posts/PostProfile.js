@@ -10,7 +10,7 @@ import Drawer from "@mui/material/Drawer";
 import CloseIcon from "@mui/icons-material/Close";
 import Link from "next/link";
 
-function PostProfile({ isPublicPage }) {
+function PostProfile({ isPublicPage, isCreatePostDesktop }) {
   const [state, setState] = useState({
     bottom: false,
   });
@@ -79,7 +79,8 @@ function PostProfile({ isPublicPage }) {
             (20 Reviews) - East Hollywood
           </p>
         </span>
-        <span className="flex lg:gap-2">
+
+        <span className={`flex lg:gap-2 ${isCreatePostDesktop && "lg:hidden"}`}>
           <div className="flex items-center">
             <IconButton>
               <StarOutlineOutlinedIcon

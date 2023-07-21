@@ -8,7 +8,7 @@ import Link from "next/link";
 
 function PostContactInfo({ isClassicUser }) {
   return (
-    <div className="p-4 bg-white lg:border lg:h-fit lg:rounded-md lg:shadow-sm ">
+    <div className="p-4 bg-white">
       <h5>Business Contact</h5>
       <div
         className={`flex justify-between py-4 lg:px-0 lg:pt-0 lg:pb-4 lg:flex-col-reverse  ${
@@ -48,7 +48,7 @@ function PostContactInfo({ isClassicUser }) {
           <p className="text-sm font-light lg:hidden">Email</p>
         </span>
         {!isClassicUser && (
-          <span className="flex flex-col items-center gap-1 lg:flex-row">
+          <span className="flex flex-col items-center gap-1 lg:flex-row lg:justify-between lg:border-b lg:py-2">
             <Link
               href="https://thai-now.vercel.app/"
               className="hidden lg:block text-[color:var(--deals-primary)] font-light text-sm"
@@ -68,7 +68,7 @@ function PostContactInfo({ isClassicUser }) {
             <p className="text-sm font-light lg:hidden">Website</p>
           </span>
         )}
-        <span className="flex flex-col items-center gap-1 lg:flex-row lg:border-b lg:py-2 lg:justify-between">
+        <span className="flex flex-col items-center gap-1 lg:flex-row lg:justify-between lg:border-b lg:py-2">
           <p className="hidden lg:block text-[color:var(--deals-primary)] font-light text-sm ">
             location
           </p>

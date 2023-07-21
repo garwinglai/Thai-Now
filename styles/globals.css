@@ -92,7 +92,9 @@
 
   --divider: #f4f4f4;
   --profile-bg: #f6f6fb;
+  --verify-bg: #dbebfa;
   --row-bg: #f5f6f7;
+  --light-blue-bg: #f3f6fa;
 }
 
 * {

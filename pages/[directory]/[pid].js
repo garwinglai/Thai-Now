@@ -9,54 +9,54 @@ import Link from "next/link";
 import ThaiHelpDetail from "@/components/directories/posts/ThaiHelpDetail";
 
 function PostDetail() {
-	const { query } = useRouter();
-	const { directory, pid } = query;
+  const { query } = useRouter();
+  const { directory, pid } = query;
 
-	const breadcrumbs = [
-		<Link
-			underline="hover"
-			key="1"
-			color="inherit"
-			href="/"
-			className="hover:underline"
-		>
-			Home
-		</Link>,
-		<Link
-			underline="hover"
-			key="2"
-			color="inherit"
-			href={`/${directory}`}
-			className="hover:underline"
-		>
-			{directory}
-		</Link>,
-		<p key="3" className="text-[color:var(--deals-primary)]">
-			post title
-		</p>,
-	];
+  const breadcrumbs = [
+    <Link
+      underline="hover"
+      key="1"
+      color="inherit"
+      href="/"
+      className="hover:underline text-[color:var(--deals-primary)] font-light"
+    >
+      Home
+    </Link>,
+    <Link
+      underline="hover"
+      key="2"
+      color="inherit"
+      href={`/${directory}`}
+      className="hover:underline text-[color:var(--deals-primary)] font-light"
+    >
+      {directory}
+    </Link>,
+    <p key="3" className="font-light text-opacity-50">
+      post title
+    </p>,
+  ];
 
-	function displayPostDetail(directory, pid) {
-		if (directory === "jobs") return <JobPostDetail />;
-		if (directory === "marketplace") return <MarketplacePostDetail />;
-		if (directory === "housing") return <HousingPostDetail />;
-		if (directory === "thai-help") return <ThaiHelpDetail />;
-	}
+  function displayPostDetail(directory, pid) {
+    if (directory === "jobs") return <JobPostDetail />;
+    if (directory === "marketplace") return <MarketplacePostDetail />;
+    if (directory === "housing") return <HousingPostDetail />;
+    if (directory === "thai-help") return <ThaiHelpDetail />;
+  }
 
-	return (
-		<div className="">
-			<div className="p-4">
-				<Breadcrumbs separator="›" aria-label="breadcrumb">
-					{breadcrumbs}
-				</Breadcrumbs>
-			</div>
-			{displayPostDetail(directory, pid)}
-		</div>
-	);
+  return (
+    <div className="">
+      <div className="p-4 lg:w-9/12 lg:mx-auto lg:pl-0 lg:mb-4">
+        <Breadcrumbs separator="›" aria-label="breadcrumb">
+          {breadcrumbs}
+        </Breadcrumbs>
+      </div>
+      {displayPostDetail(directory, pid)}
+    </div>
+  );
 }
 
 export default PostDetail;
 
 PostDetail.getLayout = function getLayout(page) {
-	return <MainLayout route="post-detail">{page}</MainLayout>;
+  return <MainLayout route="post-detail">{page}</MainLayout>;
 };

@@ -49,6 +49,16 @@ function BusinessCenterPageHeader({ isBusinessUser }) {
           (20 Reviews) - East Hollywood, CA
         </p>
       </div>
+      {isBusinessUser && (
+        <div className="flex justify-between bg-[color:var(--verify-bg)] rounded-md p-2 mb-4 mt-6 items-center">
+          <p className="text-[color:var(--deals-primary)] text-sm font-light">
+            Verify your business on ThaiNow and build trust with customers
+          </p>
+          <button className="bg-white font-normal text-xs border border-opacity-50 border-blue-800 rounded-md py-1 px-2 text-[color:var(--deals-primary)] ">
+            Verify
+          </button>
+        </div>
+      )}
     </div>
   );
 }

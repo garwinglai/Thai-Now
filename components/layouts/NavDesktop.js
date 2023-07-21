@@ -75,11 +75,9 @@ function NavDesktop({ route }) {
     setAnchorEl(null);
   };
 
-  console.log(navScroll, directory, route);
-
   return (
     <nav
-      className={`hidden lg:block lg:fixed lg:z-10 lg:w-full  ${
+      className={`hidden lg:block lg:fixed lg:z-20 lg:w-full  ${
         (navScroll || directory || route) && `bg-white lg:shadow-md`
       }`}
     >

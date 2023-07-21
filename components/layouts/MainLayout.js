@@ -16,11 +16,11 @@ function MainLayout({ children, route }) {
         <div className={`${directory && styles.layout_nav_mobile}`}>
           <NavMobile auth={false} route={route} />
         </div>
-        {route !== "terms" && (
-          <div className={`${directory && styles.layout_nav_desktop}`}>
-            <NavDesktop route={route} />
-          </div>
-        )}
+
+        <div className={`${directory && styles.layout_nav_desktop}`}>
+          <NavDesktop route={route} />
+        </div>
+
         <main className={`${route !== "post-detail" && styles.layout_main}`}>
           {children}
         </main>
