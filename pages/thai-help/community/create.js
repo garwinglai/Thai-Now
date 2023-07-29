@@ -23,14 +23,16 @@ const guideTopics = [
 
 function CreateConversation() {
   return (
-    <div className="pt-14">
-      <DirectoryHeader
-        directory="Thai help"
-        title="Community"
-        slug="community"
-        breadcrumbTitle="Create"
-      />
-      <div className="px-4">
+    <div className="pt-14 md:pt-16">
+      <div className="md:px-[10%]">
+        <DirectoryHeader
+          directory="Thai help"
+          title="Community"
+          slug="community"
+          breadcrumbTitle="Create"
+        />
+      </div>
+      <div className="px-4 md:px-[25%] md:mt-6">
         <h4 className="text-[color:var(--deals-primary)]">
           Start a conversation
         </h4>
@@ -53,7 +55,9 @@ function CreateConversation() {
           placeholder="input area"
         />
         <div className="mt-4 mb-12">
-          <h5 className="text-[color:var(--deals-primary)] mt-8 mb-4">Category</h5>
+          <h5 className="text-[color:var(--deals-primary)] mt-8 mb-4">
+            Category
+          </h5>
           <RadioGroup
             aria-labelledby="housing-type-radio-group"
             name="housingType"

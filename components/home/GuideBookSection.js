@@ -6,13 +6,13 @@ import GuidesCard from "./cards/GuidesCard";
 
 function GuideBookSection({ isThaiHelpDirectory }) {
   return (
-    <div className={`${styles.guide_book}`}>
+    <div className="md:px-[10%] md:flex md:items-start md:gap-4">
       <Image
         src={guideVideo}
         alt="guide video image"
-        className={`${styles.guide_video_image}`}
+        className="w-full md:w-1/2 md:h-auto md:object-cover"
       />
-      <div className={`${styles.guide_items_container}`}>
+      <div className="flex w-full overflow-x-scroll p-4 gap-4 md:grid md:grid-cols-2 md:p-0">
         <GuidesCard
           className={`${styles.item_1}`}
           isThaiHelpDirectory={isThaiHelpDirectory}
@@ -21,7 +21,7 @@ function GuideBookSection({ isThaiHelpDirectory }) {
           directory="thai-help"
           slug="guide-book"
           pid="1"
-					category="basic-living"
+          category="basic-living"
         />
         <GuidesCard
           className={`${styles.item_2}`}
@@ -31,7 +31,7 @@ function GuideBookSection({ isThaiHelpDirectory }) {
           directory="thai-help"
           slug="guide-book"
           pid="1"
-					category="basic-living"
+          category="basic-living"
         />
         <GuidesCard
           className={`${styles.item_3}`}
@@ -41,7 +41,7 @@ function GuideBookSection({ isThaiHelpDirectory }) {
           directory="thai-help"
           slug="guide-book"
           pid="1"
-					category="basic-living"
+          category="basic-living"
         />
         <GuidesCard
           className={`${styles.item_4}`}
@@ -51,7 +51,7 @@ function GuideBookSection({ isThaiHelpDirectory }) {
           directory="thai-help"
           slug="guide-book"
           pid="1"
-					category="basic-living"
+          category="basic-living"
         />
       </div>
     </div>

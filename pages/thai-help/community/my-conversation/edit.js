@@ -23,14 +23,16 @@ const guideTopics = [
 
 function EditConversation() {
   return (
-    <div className="pt-14">
-      <DirectoryHeader
-        directory="Thai help"
-        title="Community"
-        slug="community"
-        breadcrumbTitle="Create"
-      />
-      <div className="px-4">
+    <div className="pt-14 md:pt-16">
+      <div className="md:px-[10%]">
+        <DirectoryHeader
+          directory="Thai help"
+          title="Community"
+          slug="community"
+          breadcrumbTitle="Create"
+        />
+      </div>
+      <div className="px-4 md:px-[25%] md:mt-6">
         <h4 className="text-[color:var(--deals-primary)]">
           Start a conversation
         </h4>

@@ -16,13 +16,15 @@ function CommunityCategory() {
 
   return (
     <div className="pt-16">
-      <DirectoryHeader
-        directory="Thai help"
-        title="Community"
-        slug="community"
-        breadcrumbTitle={breadcrumbTitle}
-      />
-      <div className="px-4 -mt-4">
+      <div className="md:px-[10%]">
+        <DirectoryHeader
+          directory="Thai help"
+          title="Community"
+          slug="community"
+          breadcrumbTitle={breadcrumbTitle}
+        />
+      </div>
+      <div className="px-4 -mt-4 md:px-[10%] md:mt-4">
         <CategorySearchResultHeader title={breadcrumbTitle} />
         <SearchResultCard
           directory="thai-help"
@@ -48,7 +50,7 @@ function CommunityCategory() {
           category={category}
           postId="1"
         />
-        <div className="flex justify-center pt-8 pb-16">
+        <div className="flex justify-center pt-8 pb-16 w-full">
           <Pagination count={10} color="primary" />
         </div>
       </div>

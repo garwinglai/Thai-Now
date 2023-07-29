@@ -43,8 +43,8 @@ function SearchResultCard({
   };
 
   return (
-    <div className="flex justify-between items-end border-b py-4">
-      <div className="flex flex-col gap-2 relative">
+    <div className="flex justify-between items-end border-b py-4 w-full">
+      <div className="flex flex-col gap-2 relative flex-grow">
         <button
           onClick={handleRouteClickTitle}
           className="w-fit underline text-[color:var(--deals-primary)] py-1 rounded font-light text-sm"

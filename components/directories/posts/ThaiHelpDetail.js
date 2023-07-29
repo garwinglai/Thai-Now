@@ -35,7 +35,7 @@ function ThaiHelpDetail({ slug, category, breadcrumbTitle }) {
   };
 
   return (
-    <div className="px-4">
+    <div className="px-4 md:p-0">
       <div className="flex justify-between items-end border-b pb-4">
         <div className="flex flex-col gap-2">
           <Link

@@ -202,6 +202,7 @@ function NavDesktop({ route }) {
       >
         <NavOptions isScroll={true} isDesktop={true} />
       </div>
+      {route === "thai-help" && <NavOptions isScroll={true} isDesktop={true} />}
     </nav>
   );
 }

@@ -58,13 +58,13 @@ function ThaiHelpVideoPost() {
   ];
   return (
     <div className="pt-16">
-      <div className="p-4 lg:w-9/12 lg:mx-auto lg:pl-0 lg:mb-4">
+      <div className="p-4 md:px-[10%] md:pt-8">
         <Breadcrumbs separator="›" aria-label="breadcrumb">
           {breadcrumbs}
         </Breadcrumbs>
       </div>
       <div className="bg-[color:var(--divider)] h-2"></div>
-      <div className="mt-4">
+      <div className="mt-4 md:px-[10%]">
         <ThaiHelpDetail
           slug="guide-book"
           postTitle="post title"
@@ -84,7 +84,7 @@ function ThaiHelpVideoPost() {
             </IconButton>
           </div>
         </div>
-        <div className={`${styles.trips_container} ${styles.flexRow}`}>
+        <div className="flex w-full overflow-x-scroll px-4 gap-4 md:px-[10%] md:pb-4">
           <GuidesCard
             isThaiHelpDirectory={true}
             postTitle="Basic living"

@@ -30,16 +30,19 @@ const guideTopics = [
 function ThaiGuideBook() {
   return (
     <div className="pt-10">
-      <DirectoryHeader
-        directory="Thai help"
-        title="Thai Guide Book"
-        slug="guide-book"
-      />
+      <div className="md:px-[10%]">
+        <DirectoryHeader
+          directory="Thai help"
+          title="Thai Guide Book"
+          slug="guide-book"
+        />
+      </div>
+
       <ThaiHelpCategory slug="guide-book" title="Thai Guide Book" />
+
       <section className={`${styles.guide_book_section}`}>
-        <div className="flex justify-between items-center px-4 pb-2 pt-4">
+        <div className="flex justify-between items-center px-4 pb-2 pt-4 md:px-[10%]">
           <h3 className="text-[color:var(--deals-primary)]">Thai Guide Book</h3>
-          <LandingPagePagination />
         </div>
         <GuideBookSection isThaiHelpDirectory={true} />
       </section>
@@ -53,7 +56,7 @@ function ThaiGuideBook() {
             </IconButton>
           </div>
         </div>
-        <div className={`${styles.trips_container} ${styles.flexRow}`}>
+        <div className="flex w-full overflow-x-scroll px-4 gap-4 md:px-[10%] md:pb-4">
           <GuidesCard
             isThaiHelpDirectory={true}
             postTitle="Basic living"
@@ -92,7 +95,7 @@ function ThaiGuideBook() {
           />
         </div>
       </section>
-      <section className="p-4">
+      <section className="p-4  md:px-[10%]">
         <h3 className="text-[color:var(--deals-primary)] mb-4">
           Thai Guide Book Topics
         </h3>
@@ -100,13 +103,13 @@ function ThaiGuideBook() {
           {guideTopics.map((topic, index) => (
             <button
               key={index}
-              className="border rounded-full px-4 py-1 font-light text-sm"
+              className="border rounded-full px-4 py-1 font-extralight text-xs"
             >
               {topic}
             </button>
           ))}
         </div>
-        <div className="mt-8">
+        <div className="mt-8 md:grid md:grid-cols-3 md:gap-4">
           <GuidesCard
             isThaiHelpDirectory={true}
             postTitle="Basic living"
@@ -116,6 +119,7 @@ function ThaiGuideBook() {
             pid="1"
             category="basic-living"
           />
+
           <GuidesCard
             isThaiHelpDirectory={true}
             postTitle="Basic living"

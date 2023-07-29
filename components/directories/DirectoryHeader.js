@@ -227,7 +227,7 @@ function DirectoryHeader({
       key="1"
       color="inherit"
       href="/"
-      className="hover:underline"
+      className="hover:underlin text-[color:var(--deals-primary)] font-base text-sm"
     >
       Home
     </Link>,
@@ -291,11 +291,11 @@ function DirectoryHeader({
   ];
 
   return (
-    <div className="pt-6 pb-4 px-4">
+    <div className="pt-6 pb-4 px-4 md:px-0">
       <div
         className={`flex flex-nowrap w-full bg-white overflow-x-scroll ${
-          slug === "guide-book" && "mt-4 mb-4"
-        }`}
+          slug === "guide-book" ? "mt-4 mb-4 md:mb-0 md:mt-6" : ""
+        } ${slug === "community" && "md:p-0 md:-mb-4 "} `}
       >
         <Breadcrumbs
           separator="›"
@@ -310,76 +310,88 @@ function DirectoryHeader({
         </Breadcrumbs>
       </div>
       {slug !== "guide-book" && (
-        <div className="flex justify-between items-center mt-4">
-          <div className="flex items-center gap-2">
-            {slug !== "community" && directoryIcon(directory)}
-            {slug === "community" &&
-              (!breadcrumbTitle || breadcrumbTitle === "My Conversation") && (
-                <h4 className="text-[color:var(--deals-primary)]">
+        <>
+          <div className="flex justify-between items-center mt-4">
+            <div className="flex items-center gap-2">
+              {slug !== "community" && directoryIcon(directory)}
+              {((slug === "community" &&
+                (!breadcrumbTitle || breadcrumbTitle === "My Conversation")) ||
+                directory) && (
+                <h4
+                  className={`text-[color:var(--deals-primary)] ${
+                    slug === "community" && "md:hidden"
+                  } ${breadcrumbTitle && "hidden"}`}
+                >
                   {capitalizedDirectory}
-                  {slug !== "community" && "near Los Angeles, CA"}
+                  {slug !== "community" && " near Los Angeles, CA"}
                 </h4>
               )}
+            </div>
+            {slug === "community" && !breadcrumbTitle && (
+              <Link
+                href="/thai-help/community/my-conversation"
+                className="border px-2 py-1 border-[color:var(--deals-primary)] font-light text-[color:var(--deals-primary)] rounded md:hidden"
+              >
+                My Conversation
+              </Link>
+            )}
           </div>
-          {slug === "community" && !breadcrumbTitle && (
-            <Link
-              href="/thai-help/community/my-conversation"
-              className="border px-2 py-1 border-[color:var(--deals-primary)] font-light text-[color:var(--deals-primary)] rounded"
-            >
-              My Conversation
-            </Link>
-          )}
-        </div>
-      )}
-      {directory !== "Thai help" && (
-        <div className={`${styles.filters_group} ${styles.flex}`}>
-          <button
-            onClick={toggleDrawerPostedDate(true)}
-            className={`${styles.flex} ${styles.button_box} ${styles.posted_date_filter}`}
-          >
-            <SortIcon />
-            <p>Posted Date</p>
-          </button>
-          <SwipeableDrawer
-            anchor={"bottom"}
-            open={openSortDrawer}
-            onClose={toggleDrawerPostedDate(false)}
-            onOpen={toggleDrawerPostedDate(true)}
-          >
-            <SortSearchResults closeDrawer={toggleDrawerPostedDate} />
-          </SwipeableDrawer>
 
-          <button
-            onClick={toggleDrawerFilter(directory, true)}
-            className={`${styles.flex} ${styles.button_box} ${styles.fitler_button}`}
-          >
-            <TuneIcon />
-            <p>Filter</p>
-          </button>
-          {showFilterDrawers(directory)}
-        </div>
+          {slug !== "community" && (
+            <>
+              <div className={`${styles.filters_group} ${styles.flex}`}>
+                <button
+                  onClick={toggleDrawerPostedDate(true)}
+                  className={`${styles.flex} ${styles.button_box} ${styles.posted_date_filter}`}
+                >
+                  <SortIcon />
+                  <p>Posted Date</p>
+                </button>
+                <SwipeableDrawer
+                  anchor={"bottom"}
+                  open={openSortDrawer}
+                  onClose={toggleDrawerPostedDate(false)}
+                  onOpen={toggleDrawerPostedDate(true)}
+                >
+                  <SortSearchResults closeDrawer={toggleDrawerPostedDate} />
+                </SwipeableDrawer>
+
+                <button
+                  onClick={toggleDrawerFilter(directory, true)}
+                  className={`${styles.flex} ${styles.button_box} ${styles.fitler_button}`}
+                >
+                  <TuneIcon />
+                  <p>Filter</p>
+                </button>
+                {showFilterDrawers(directory)}
+              </div>
+              <div className={`${styles.footer_desktop} ${styles.flex}`}>
+                <div className={`${styles.footer_left}`}>
+                  <p className={`${styles.footer_color_p_gray}`}>
+                    18 results for{" "}
+                    <span
+                      className={`${styles.directory_color}`}
+                    >{`"${capitalizedDirectory}"`}</span>
+                  </p>
+                </div>
+                <div className={`${styles.footer_right} ${styles.flex}`}>
+                  <p
+                    className={`${styles.footer_sort_p} ${styles.footer_color_p_gray}`}
+                  >
+                    Sort :
+                  </p>
+                  <button
+                    className={`${styles.flex} ${styles.desktop_sort_button} `}
+                  >
+                    <p className={`${styles.footer_posted_p}`}>Posted Date</p>
+                    <KeyboardArrowDownIcon fontSize="small" />
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+        </>
       )}
-      <div className={`${styles.footer_desktop} ${styles.flex}`}>
-        <div className={`${styles.footer_left}`}>
-          <p className={`${styles.footer_color_p_gray}`}>
-            18 results for{" "}
-            <span
-              className={`${styles.directory_color}`}
-            >{`"${capitalizedDirectory}"`}</span>
-          </p>
-        </div>
-        <div className={`${styles.footer_right} ${styles.flex}`}>
-          <p
-            className={`${styles.footer_sort_p} ${styles.footer_color_p_gray}`}
-          >
-            Sort :
-          </p>
-          <button className={`${styles.flex} ${styles.desktop_sort_button} `}>
-            <p className={`${styles.footer_posted_p}`}>Posted Date</p>
-            <KeyboardArrowDownIcon fontSize="small" />
-          </button>
-        </div>
-      </div>
     </div>
   );
 }

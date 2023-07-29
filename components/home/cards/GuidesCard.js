@@ -14,23 +14,22 @@ function GuidesCard({
   postTitle,
 }) {
   return (
-    <div className={`${styles.guides_card}`}>
+    <div className={`${styles.guides_card} w-full`}>
       <Link href={`/${directory}/${slug}/${category}/${postType}/${pid}`}>
-        <Image
-          src={guideImage}
-          alt="guide book image"
-          className={`${styles.guide_image}`}
-        />
+        <Image src={guideImage} alt="guide book image" className="w-full" />
       </Link>
       {isThaiHelpDirectory ? (
-        <div className="w-[300px]">
+        <div className="w-[300px] md:w-full">
           <Link
             href={`/${directory}/${slug}/${category}`}
             className="underline font-light text-xs text-[color:var(--deals-primary)]"
           >
             {postTitle}
           </Link>
-          <p className="font-medium text-sm"> Lorem ipsum dolor sit amet.</p>
+          <p className="font-medium text-sm md:text-xs">
+            {" "}
+            Lorem ipsum dolor sit amet.
+          </p>
         </div>
       ) : (
         <h5>Lorem ipsum dolor sit amet consectetur adipisicing elit.</h5>

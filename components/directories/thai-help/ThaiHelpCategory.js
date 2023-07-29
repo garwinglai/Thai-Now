@@ -99,7 +99,7 @@ function ThaiHelpCategory({ slug, title }) {
     <React.Fragment>
       <div className=" pt-4 w-screen bg-[color:var(--category-bg)]">
         {slug === "guide-book" ? (
-          <div className="px-4 pt-2 pb-4">
+          <div className="px-4 pt-2 pb-4 md:px-[10%]">
             <h3 className="text-[color:var(--deals-primary)]">{title}</h3>
             <p className="py-4 font-extralight">
               Lorem ipsum, dolor sit amet consectetur adipisicing elit. Laborum
@@ -107,18 +107,31 @@ function ThaiHelpCategory({ slug, title }) {
             </p>
           </div>
         ) : (
-          <div>
-            <div className="mx-4 mb-4 h-10">
-              <PrimaryButton
-                handleClick={handleCreateConversationClick}
-                name="New Conversation"
-              />
+          <div className="md:px-[10%]">
+            <div className="md:flex md:justify-between">
+              <h4 className="hidden md:block">ThaiNow Community</h4>
+              <div className="mx-4 mb-4 h-10 md:flex md:gap-4 md:mx-0">
+                <Link
+                  href="/thai-help/community/my-conversation"
+                  className="hidden md:border md:border-[color:var(--deals-primary)] md:font-light md:text-[color:var(--deals-primary)] md:rounded md:text-sm md:flex md:items-center md:px-2"
+                >
+                  My Conversation
+                </Link>
+                <div>
+                  <PrimaryButton
+                    handleClick={handleCreateConversationClick}
+                    name="New Conversation"
+                  />
+                </div>
+              </div>
             </div>
-            <h3 className="pl-4 text-[var(--deals-primary)] mb-4">Category</h3>
+            <h3 className="pl-4 text-[var(--deals-primary)] mb-4 md:pl-0">
+              Category
+            </h3>
           </div>
         )}
 
-        <div className="flex flex-nowrap gap-4 overflow-x-auto pb-8 pl-4">
+        <div className="flex flex-nowrap gap-4 overflow-x-auto pb-8 pl-4 md:px-[10%] md:grid md:grid-cols-5">
           {categoryList.map((listItem, idx) => {
             const category = listItem.text.toLowerCase().replace(" ", "-");
             const categoryRemoveSecondSpace = category.replace(" ", "-");
@@ -138,12 +151,6 @@ function ThaiHelpCategory({ slug, title }) {
           })}
         </div>
       </div>
-
-      {slug === "community" && (
-        <div className="bg-white p-4">
-          <CategorySearchResultHeader title="Trending Post" />
-        </div>
-      )}
     </React.Fragment>
   );
 }

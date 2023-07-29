@@ -10,7 +10,7 @@ function CategoryCard({ imgSrc, imgAlt, text, color, bg, slug, category }) {
     >
       <div className="flex flex-col items-start text-left">
         <Image src={imgSrc} alt={imgAlt} />
-        <p className={`${color} text-sm mt-2 font-base`}>{text}</p>
+        <p className={`${color} text-xs mt-2 font-light`}>{text}</p>
       </div>
     </Link>
   );

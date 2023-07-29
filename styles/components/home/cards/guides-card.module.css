@@ -16,7 +16,7 @@
 
 @media screen and (min-width: 769px) {
 	.guides_card {
-		width: 45%;
+		/* width: 45%; */
 		font-size: 12px;
 		word-wrap: normal;
     padding-bottom: 10px;

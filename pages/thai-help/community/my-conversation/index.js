@@ -14,13 +14,18 @@ function MyConversation() {
   };
   return (
     <div className="pt-16">
-      <DirectoryHeader
-        directory="Thai help"
-        title="Community"
-        slug="community"
-        breadcrumbTitle="My Conversation"
-      />
-      <div className="bg-[--input-bg-secondary]">
+      <div className="md:px-[10%]">
+        <DirectoryHeader
+          directory="Thai help"
+          title="Community"
+          slug="community"
+          breadcrumbTitle="My Conversation"
+        />
+        <h4 className=" px-4 pb-4 text-[color:var(--deals-primary)] md:my-4 md:pb-0">
+          My Conversation
+        </h4>
+      </div>
+      <div className="bg-[--input-bg-secondary] md:mx-[10%] md:bg-white md:border-b">
         <StyledTabs
           value={value}
           onChange={handleChange}
@@ -31,7 +36,7 @@ function MyConversation() {
           <StyledTab label="Reply" />
         </StyledTabs>
       </div>
-      <div className="px-4">
+      <div className="px-4 md:px-[10%]">
         <SearchResultCard
           directory="thai-help"
           postType="housing"

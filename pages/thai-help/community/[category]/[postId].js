@@ -61,13 +61,13 @@ function CommunityPost() {
 
   return (
     <div className="pt-16">
-      <div className="p-4 lg:w-9/12 lg:mx-auto lg:pl-0 lg:mb-4">
+      <div className="p-4 md:px-[10%] md:pt-8">
         <Breadcrumbs separator="›" aria-label="breadcrumb">
           {breadcrumbs}
         </Breadcrumbs>
       </div>
-      <div className="bg-[color:var(--divider)] h-2"></div>
-      <div className="mt-4 border-b">
+      <div className="bg-[color:var(--divider)] h-2 md:hidden"></div>
+      <div className="mt-4 md:px-[10%]">
         <ThaiHelpDetail
           slug="community"
           postTitle="post title"
@@ -75,7 +75,7 @@ function CommunityPost() {
           breadcrumbTitle={breadcrumbTitle}
         />
       </div>
-      <div className="p-4">
+      <div className="p-4 md:px-[10%]">
         <h5 className="my-4">Enter Your Reply</h5>
         <textarea
           name="reply"
@@ -96,7 +96,7 @@ function CommunityPost() {
         </div>
         <PrimaryButton name="Reply" />
       </div>
-      <div className="px-4 py-8">
+      <div className="px-4 py-8 md:px-[10%]">
         <h4>6 Replies</h4>
         <Comments />
         <Comments />

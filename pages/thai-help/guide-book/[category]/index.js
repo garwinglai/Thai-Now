@@ -18,21 +18,41 @@ function ThaiGuideCategories() {
 
   return (
     <div className="pt-10">
-      <DirectoryHeader
-        directory="Thai help"
-        slug="guide-book"
-        title="Thai Guide Book"
-        category={category}
-        breadcrumbTitle={breadcrumbTitle}
-      />
-      <div className="bg-[color:var(--divider)] h-2"></div>
-      <div className="p-4">
+      <div className="md:px-[10%]">
+        <DirectoryHeader
+          directory="Thai help"
+          slug="guide-book"
+          title="Thai Guide Book"
+          category={category}
+          breadcrumbTitle={breadcrumbTitle}
+        />
+      </div>
+      <div className="bg-[color:var(--divider)] h-2 md:hidden"></div>
+      <div className="p-4 md:px-[10%]">
         <div>
           <div className="pb-4">
             <h3>{breadcrumbTitle}</h3>
             <p>12 posts in {breadcrumbTitle}</p>
           </div>
-          <div>
+          <div className="md:grid md:grid-cols-4 md:gap-4">
+            <GuidesCard
+              isThaiHelpDirectory={true}
+              directory="thai-help"
+              slug="guide-book"
+              category={category}
+              postType="post"
+              pid="1"
+              postTitle={breadcrumbTitle}
+            />
+            <GuidesCard
+              isThaiHelpDirectory={true}
+              directory="thai-help"
+              slug="guide-book"
+              category={category}
+              postType="post"
+              pid="1"
+              postTitle={breadcrumbTitle}
+            />
             <GuidesCard
               isThaiHelpDirectory={true}
               directory="thai-help"
@@ -67,7 +87,7 @@ function ThaiGuideCategories() {
             <h3>VDO</h3>
             <p>20 posts in {category}</p>
           </div>
-          <div>
+          <div className="md:grid md:grid-cols-4 md:gap-4">
             <GuidesCard
               isThaiHelpDirectory={true}
               directory="thai-help"
