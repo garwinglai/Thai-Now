@@ -12,7 +12,7 @@ function GuideBookSection({ isThaiHelpDirectory }) {
         alt="guide video image"
         className="w-full md:w-1/2 md:h-auto md:object-cover"
       />
-      <div className="flex w-full overflow-x-scroll p-4 gap-4 md:grid md:grid-cols-2 md:p-0">
+      <div className="flex w-full overflow-x-scroll p-4 gap-4 md:grid md:grid-cols-2 md:p-0 md:w-1/2">
         <GuidesCard
           className={`${styles.item_1}`}
           isThaiHelpDirectory={isThaiHelpDirectory}
