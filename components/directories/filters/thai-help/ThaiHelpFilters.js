@@ -1,33 +1,22 @@
 import React from "react";
-import styles from "../../../../styles/components/directory/filters/filter-title.module.css";
 import CloseIcon from "@mui/icons-material/Close";
 
-function ThaiHelpFilters({ directory, closeDrawer }) {
-	return (
-		<div className={`${styles.filter_box}`}>
-			<div className={`${styles.title_box}`}>
-				<h1>Filter</h1>
-				<div className={`${styles.close_sort_box}`}>
-					<CloseIcon
-						onClick={closeDrawer(directory, false)}
-						fontSize="medium"
-					/>
-				</div>
-			</div>
-			{/* <div className={`${styles.filter_section_box}`}>
-				<SalaryFilter />
-			</div>
-			<div className={`${styles.filter_section_box}`}>
-				<JobTypeFilter />
-			</div>
-			<div className={`${styles.filter_section_box}`}>
-				<DatePostedFilter />
-			</div>
-			<div className={`${styles.filter_section_box}`}>
-				<ExperienceFilter />
-			</div> */}
-		</div>
-	);
+function ThaiHelpFilters({ closeDrawer }) {
+  return (
+    <div className="relative">
+      <div className="border-b">
+        <h4 className="text-center p-4">Sort by</h4>
+        <div className="absolute right-4 top-4">
+          <CloseIcon onClick={closeDrawer("bottom", false)} fontSize="medium" />
+        </div>
+      </div>
+      <div className="flex flex-col items-start p-4 gap-4">
+        <button className="font-light">Top</button>
+        <button className="font-light">Posted Date</button>
+        <button className="font-light">Last reply</button>
+      </div>
+    </div>
+  );
 }
 
 export default ThaiHelpFilters;

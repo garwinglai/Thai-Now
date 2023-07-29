@@ -66,6 +66,7 @@
   --placeholder-color: #aeaeae;
   --text-body-color: #666666;
   --border: rgba(246, 244, 240, 1);
+  --load-more-btn: #e9ecee;
 
   /* ? Thai-help category icons */
   --housing: #c89340;
@@ -95,6 +96,7 @@
   --verify-bg: #dbebfa;
   --row-bg: #f5f6f7;
   --light-blue-bg: #f3f6fa;
+  --gray-border: #f2f2f2;
 }
 
 * {

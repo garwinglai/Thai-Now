@@ -12,7 +12,7 @@
 }
 
 .guide_items_container {
-	padding: 20px 0 0 20px;
+	padding: 20px 20px 0 20px;
 	display: flex;
 	overflow: scroll;
 	gap: 1rem;

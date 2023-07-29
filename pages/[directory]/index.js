@@ -47,16 +47,6 @@ function Directory({ directory }) {
         <BusinessCard key={item} directory={directory} />
       ));
     }
-
-    if (directory === "thai-help") {
-      return (
-        <React.Fragment>
-          <SearchResultCard directory={directory} postType="housing" />
-          <SearchResultCard directory={directory} postType="living" />
-          <SearchResultCard directory={directory} postType="health" />
-        </React.Fragment>
-      );
-    }
   }
 
   function displayFilter(directory) {
@@ -73,8 +63,6 @@ function Directory({ directory }) {
       <div className="flex-grow lg:mt-4">
         <DirectoryHeader directory={directory} />
         <div className=" min-h-[0.5rem] bg-[color:var(--divider)] lg:hidden"></div>
-
-        {directory === "thai-help" && <ThaiHelpCategory />}
         <div className="px-4">{cardType(directory)}</div>
         <div className="fixed bottom-5 left-[50%] -translate-x-[50%] lg:hidden">
           <Fab variant="extended" color="primary" aria-label="map view">
@@ -97,7 +85,7 @@ export default Directory;
 
 export async function getStaticPaths() {
   const paths = [
-    { params: { directory: "thai-help" } },
+    // { params: { directory: "thai-help" } },
     { params: { directory: "jobs" } },
     { params: { directory: "housing" } },
     // { params: { directory: "deals" } },
