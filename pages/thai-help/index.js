@@ -108,7 +108,7 @@ function ThaiHelp() {
           />
         </div>
       </section>
-      <section className="p-4 md:py-8 md:bg-[color:var(--input-bg-secondary)]">
+      <section className="p-4 md:py-8 md:bg-[color:var(--filter-bg)]">
         <div className="md:mx-[10%] md:p-8 md:rounded-md md:shadow-lg md:bg-white">
           <div className="md:flex md:justify-between md:items-center">
             <div className="">
