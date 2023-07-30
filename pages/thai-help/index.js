@@ -109,22 +109,26 @@ function ThaiHelp() {
         </div>
       </section>
       <section className="p-4 md:py-8 md:bg-[color:var(--input-bg-secondary)]">
-        <div className="md:mx-16 md:p-4 md:rounded-md md:shadow-lg md:bg-white">
-          <Link
-            href="/thai-help/community"
-            className="text-[color:var(--deals-primary)] mb-4 text-xl"
-          >
-            Thai Help Community
-          </Link>
-          <p className="font-light my-4">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus,
-            corrupti.
-          </p>
-          <div className="mt-4 h-12">
-            <PrimaryButton
-              handleClick={handleCreateConversationClick}
-              name="New Conversation"
-            />
+        <div className="md:mx-[10%] md:p-8 md:rounded-md md:shadow-lg md:bg-white">
+          <div className="md:flex md:justify-between md:items-center">
+            <div className="">
+              <Link
+                href="/thai-help/community"
+                className="text-[color:var(--deals-primary)] mb-4"
+              >
+                <h3 className="">Thai Help Community</h3>
+              </Link>
+              <p className="font-light my-4">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus,
+                corrupti.
+              </p>
+            </div>
+            <div className="mt-4 h-10">
+              <PrimaryButton
+                handleClick={handleCreateConversationClick}
+                name="New Conversation"
+              />
+            </div>
           </div>
           <div className="mt-4">
             <SearchResultCard
