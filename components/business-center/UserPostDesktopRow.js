@@ -15,11 +15,13 @@ function UserPostDesktopRow({ even, post }) {
     createdAt,
     postTitle,
     postDescription,
-    postAddressDetails: { city },
+    postAddressDetails,
     postAddress,
     rating,
     reviewNum,
   } = post || {};
+
+  const { city } = postAddressDetails || {};
 
   const pricePerTimeline = pricePer
     ? pricePer === 0
