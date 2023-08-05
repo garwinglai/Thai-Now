@@ -20,10 +20,12 @@ function HousingCard({ isBusinessCenter, isBusinessUser, directory, post }) {
     pricePer,
     createdAt,
     postTitle,
-    postAddressDetails: { city },
+    postAddressDetails,
     rating,
     reviewNum,
   } = post || {};
+
+  const { city } = postAddressDetails || {};
 
   const pricePerTimeline = pricePer
     ? pricePer === 0
