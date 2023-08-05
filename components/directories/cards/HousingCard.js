@@ -37,7 +37,7 @@ function HousingCard({ isBusinessCenter, isBusinessUser, directory, post }) {
       : "year"
     : "night";
 
-  const postCreatedDate = createdAt.toDate() || new Date();
+  const postCreatedDate = createdAt ? createdAt.toDate() : new Date();
   const today = new Date();
   const postedDaysAgo = Math.floor(
     (today - postCreatedDate) / (1000 * 60 * 60 * 24)
