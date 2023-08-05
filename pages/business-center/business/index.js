@@ -211,11 +211,11 @@ function getMobileViewDisplayPosts(value) {
         />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <HousingCard
+        {/* <HousingCard
           isBusinessCenter={true}
           isBusinessUser={true}
           directory="housing"
-        />
+        /> */}
       </TabPanel>
       <TabPanel value={value} index={2}>
         <MarketplaceCard
@@ -225,11 +225,11 @@ function getMobileViewDisplayPosts(value) {
         />
       </TabPanel>
       <TabPanel value={value} index={3}>
-        <HousingCard
+        {/* <HousingCard
           isBusinessCenter={true}
           isBusinessUser={true}
           directory="housing"
-        />
+        /> */}
         <JobsCard
           isBusinessCenter={true}
           isBusinessUser={true}
