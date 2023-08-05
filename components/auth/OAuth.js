@@ -12,6 +12,10 @@ import {
 } from "@firebase/auth";
 import { auth } from "@/firebase/fireConfig";
 import { useRouter } from "next/router";
+import { createUser } from "@/helper/client/auth/signup";
+import { Timestamp } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/firebase/fireConfig";
 
 function OAuth() {
   const { push } = useRouter();
@@ -48,15 +52,50 @@ function OAuth() {
 
   const handleGoogleLogin = async () => {
     const provider = new GoogleAuthProvider();
+    // TODO: check if user email signed up via other methods yet
     signInWithPopup(auth, provider)
-      .then((result) => {
+      .then(async (result) => {
         // // This gives you a Google Access Token. You can use it to access the Google API.
-        // const credential = GoogleAuthProvider.credentialFromResult(result);
+        const credential = GoogleAuthProvider.credentialFromResult(result);
         // const token = credential.accessToken;
         // // The signed-in user info.
         const user = result.user;
 
-        if (user) push("/");
+        if (user) {
+          const { uid, displayName, email } = user;
+          const userRef = doc(db, "users", uid);
+          const userDoc = await getDoc(userRef);
+          if (userDoc.exists()) {
+            push("/");
+            return;
+          }
+
+          const fName = displayName.split(" ")[0];
+          const lName = displayName.split(" ")[1];
+
+          const userNoPassword = {
+            createdAt: Timestamp.now(),
+            fName,
+            lName,
+            email,
+            numHousing: 0,
+            numMarket: 0,
+            numReviews: 0,
+            reviewScore: 0,
+          };
+
+          const { success, value, error } = await createUser(
+            userNoPassword,
+            uid
+          );
+
+          if (success) {
+            console.log("User created successfully");
+            // setLocalStorage("firstLogin", true);
+            // setIsLoading(false);
+            push("/");
+          }
+        }
         // IdP data available using getAdditionalUserInfo(result)
         // ...
       })
@@ -69,7 +108,8 @@ function OAuth() {
         // // The AuthCredential type that was used.
         // const credential = GoogleAuthProvider.credentialFromError(error);
 
-        handleOpenSnackBar("Error signing in.");
+        // handleOpenSnackBar("Error signing in.", error);
+        console.log("error signing in with google", error);
       });
   };
 

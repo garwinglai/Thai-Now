@@ -119,15 +119,12 @@ function HousingFormFour({
           <PostLocation location={location} />
         </div>
       </div>
-      <CustomModal isPublish={isPublish} onClose={closeModal}>
+      <CustomModal isPublish={isPublish}>
         <div className="flex flex-col items-center text-center gap-4">
           <Image src={complete_post} alt="complete post image" />
           <h4>Complete</h4>
-          <p className="font-light">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. A officiis
-            laborum labore quaerat beatae similique.
-          </p>
-          <PrimaryButton name="View your Post" />
+          <p className="font-light">Your post has been posted.</p>
+          <PrimaryButton type="button" name="View your Post" />
           <Link
             href={` ${
               isBusinessUser

@@ -19,11 +19,7 @@ export default function App({ Component, pageProps }) {
           }
         `}
       </style>
-      {getLayout(
-        <AuthProvider>
-          <Component {...pageProps} />
-        </AuthProvider>
-      )}
+      <AuthProvider>{getLayout(<Component {...pageProps} />)}</AuthProvider>
     </>
   );
 }

@@ -12,9 +12,9 @@ function CustomModal({ header, isPublish, onClose, children }) {
 			<div className="bg-white w-[400px] px-4 py-6 rounded">
 				<div className="flex items-center justify-between">
 					<h2>{header}</h2>
-					<IconButton onClick={onClose}>
+					{/* <IconButton onClick={onClose}>
 						<CloseIcon />
-					</IconButton>
+					</IconButton> */}
 				</div>
 				<div className="modal-content">{children}</div>
 			</div>

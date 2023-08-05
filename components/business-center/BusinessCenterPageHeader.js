@@ -6,7 +6,9 @@ import Image from "next/image";
 import StarIcon from "@mui/icons-material/Star";
 import Link from "next/link";
 
-function BusinessCenterPageHeader({ isBusinessUser }) {
+function BusinessCenterPageHeader({ isBusinessUser, userData }) {
+  const { fName, lName, numReviews, reviewScore, city } = userData || {};
+
   const { back } = useRouter();
 
   const handleBack = () => {
@@ -28,7 +30,9 @@ function BusinessCenterPageHeader({ isBusinessUser }) {
           />
           <div className="flex flex-col">
             <p>Welcome</p>
-            <h4>Lolar Ramsey</h4>
+            <h4>
+              {fName} {lName}
+            </h4>
           </div>
         </div>
         <Link
@@ -44,9 +48,9 @@ function BusinessCenterPageHeader({ isBusinessUser }) {
       </div>
       <div className="flex items-center gap-2">
         <StarIcon fontSize="small" sx={{ color: "orange" }} />
-        <p className="font-light">4.96</p>
+        <p className="font-light">{reviewScore}</p>
         <p className=" font-extralight text-gray-600">
-          (20 Reviews) - East Hollywood, CA
+          ({numReviews} Reviews) - {city ? city : "No location provided"}
         </p>
       </div>
       {isBusinessUser && (

@@ -9,8 +9,13 @@ import MarketFormFour from "@/components/business-center/marketplace/MarketFormF
 import MarketFormFive from "@/components/business-center/marketplace/MarketFormFive";
 import Snackbar from "@mui/material/Snackbar";
 import { Alert, IconButton } from "@mui/material";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { Timestamp } from "firebase/firestore";
 
 function MarketPlacePost() {
+  const { authUser } = useAuth();
+  const { uid, email, displayName } = authUser || {};
+
   const [isPublish, setIsPublish] = useState(false);
   const [step, setStep] = useState(1);
   const [marketPostType, setMarketPostType] = useState("Product");
@@ -19,6 +24,11 @@ function MarketPlacePost() {
     productType: "Food",
     description: "",
     location: "",
+    addy1: "",
+    addy2: "",
+    city: "",
+    state: "",
+    zip: "",
   });
   const [isProductPhysical, setIsProductPhysical] = useState("Yes");
   const [productCondition, setProductCondition] = useState("Used");
@@ -34,7 +44,17 @@ function MarketPlacePost() {
     snackMessage: "",
   });
 
-  const { title, description, location, productType } = productDetails;
+  const {
+    title,
+    description,
+    location,
+    productType,
+    addy1,
+    addy2,
+    city,
+    state,
+    zip,
+  } = productDetails;
   const { isSnackBarOpen, snackMessage } = snackBar;
   const { exactPrice, priceRange } = offerPrice;
 
@@ -74,7 +94,7 @@ function MarketPlacePost() {
         return;
       }
 
-      if (location === "") {
+      if (addy1 === "" || city === "" || state === "" || zip === "") {
         setSnackBar((prev) => ({
           isSnackBarOpen: true,
           snackMessage: "Location required.",
@@ -105,11 +125,130 @@ function MarketPlacePost() {
     }
 
     if (step === 5) {
-      setIsPublish(true);
+      publishPost();
+      // setIsPublish(true);
       return;
     }
 
     setStep((prev) => (prev += 1));
+  };
+
+  const publishPost = async () => {
+    const housingPostData = structureHousingPostData();
+    // const { success, error } = await createHousingClassic(housingPostData, uid);
+
+    if (success) {
+      setIsPublish(true);
+    }
+    // TODO: handle housing post error
+  };
+
+  const structureHousingPostData = () => {
+    const postAddress =
+      addy1 + " " + addy2 + " " + city + " " + state + " " + zip;
+
+    let offerType = marketPostType === "Product" ? 0 : 1;
+
+    // 0 = Food
+    let productTypeInt = 0;
+
+    switch (productType) {
+      case "Handmade":
+        break;
+      case "Vehicles":
+        productTypeInt = 1;
+        break;
+      case "Home & Garden":
+        productTypeInt = 2;
+        break;
+      case "Freelance":
+        productTypeInt = 3;
+        break;
+      case "Handyman":
+        productTypeInt = 4;
+        break;
+      case "Taxi":
+        productTypeInt = 5;
+        break;
+      case "Other":
+        productTypeInt = 6;
+        break;
+      default:
+        break;
+    }
+
+    let physicalProduct = isProductPhysical === "Yes" ? 1 : 0;
+    let condition = productCondition === "Used" ? 0 : 1;
+
+    // instantiate 0 = day
+    let pricePer = 0;
+    let pricePerDisplay = "per Day";
+
+    switch (exactPrice.interval) {
+      case "week":
+        pricePer = 1;
+        break;
+      case "month":
+        pricePer = 2;
+        break;
+      case "year":
+        pricePer = 3;
+      default:
+        break;
+    }
+
+    switch (pricePer) {
+      case 1:
+        pricePerDisplay = "per Week";
+        break;
+      case 2:
+        pricePerDisplay = "per Month";
+        break;
+      case 3:
+        pricePerDisplay = "per Year";
+      default:
+        break;
+    }
+
+    let includeTax = offerIncludesTax === "Yes" ? 1 : 0;
+
+    const marketplaceData = {
+      postTitle: title,
+      postDescription: description,
+      createdAt: Timestamp.now(),
+      postAddress,
+      postAddressDetails: {
+        addy1,
+        addy2,
+        city,
+        state,
+        zip,
+      },
+      // geoHash: "",
+      // postCoord: {
+      //   lat: 0,
+      //   lng: 0,
+      // },
+      userId: uid,
+      userName: displayName,
+      poserType: 0,
+      // photos: uploadedPhotos,
+      offerType,
+      offerTypeDisplay: marketPostType,
+      productType: productTypeInt,
+      productTypeDisplay: productType,
+      physicalProduct,
+      condition,
+      conditionDisplay: productCondition,
+      price: priceOption === "exact" && "$" + exactPrice.price,
+      pricePer,
+      pricePerDisplay,
+      includeTax,
+    };
+
+    // TODO: add standout amenities
+
+    return marketplaceData;
   };
 
   const closeModal = () => {

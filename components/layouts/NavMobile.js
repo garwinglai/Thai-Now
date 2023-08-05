@@ -15,7 +15,7 @@ import SearchDrawer from "../search/page/SearchDrawer";
 import { useAuth } from "../auth/AuthProvider";
 
 function NavMobile({ auth, route }) {
-  const user = useAuth();
+  const { authUser, loading } = useAuth();
 
   const [navScroll, setNavScroll] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -122,7 +122,7 @@ function NavMobile({ auth, route }) {
           <IconButton>
             <NotificationsNoneIcon color="action" />
           </IconButton>
-          {user ? (
+          {authUser ? (
             <React.Fragment>
               <IconButton onClick={toggleDrawer("right", true)}>
                 <Avatar sx={{ width: 25, height: 25 }} color="action" />

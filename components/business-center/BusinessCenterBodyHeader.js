@@ -4,7 +4,9 @@ import thai_marketplace_icon from "@/public/static/images/icons/thai_marketplace
 import thai_jobs_icon from "@/public/static/images/icons/thai_jobs_icon.svg";
 import Image from "next/image";
 
-function BusinessCenterBodyHeader({ route }) {
+function BusinessCenterBodyHeader({ route, userData }) {
+  const { numHousing, numMarket } = userData || {};
+
   function displayRoutes(route) {
     if (route === "classic") {
       return (
@@ -17,7 +19,7 @@ function BusinessCenterBodyHeader({ route }) {
             />
             <div className="text-center">
               <p className=" text-gray-400 font-extralight text-xs">Housing</p>
-              <p className="text-blue-900 text-sm">0 Post</p>
+              <p className="text-blue-900 text-sm">{numHousing} Post</p>
             </div>
           </div>
           <div className="flex flex-col justify-center items-center flex-grow gap-1 lg:flex-grow-0 lg:flex-row lg:gap-12 lg:border lg:px-4 lg:py-2 lg:rounded-md">
@@ -30,7 +32,7 @@ function BusinessCenterBodyHeader({ route }) {
               <p className=" text-gray-400 font-extralight text-xs">
                 Marketplace
               </p>
-              <p className="text-blue-900 text-sm">0 Post</p>
+              <p className="text-blue-900 text-sm">{numMarket} Post</p>
             </div>
           </div>
         </React.Fragment>
@@ -43,7 +45,9 @@ function BusinessCenterBodyHeader({ route }) {
             <Image src={thai_jobs_icon} alt="jobs icon" className="w-12 h-12" />
             <div className="text-center">
               <p className=" text-gray-400 font-extralight text-xs">Jobs</p>
-              <p className="text-blue-900 text-sm lg:whitespace-nowrap">0 Post</p>
+              <p className="text-blue-900 text-sm lg:whitespace-nowrap">
+                0 Post
+              </p>
             </div>
           </div>
           <div className="flex flex-col justify-center items-center flex-grow gap-1 lg:flex-grow-0 lg:flex-row lg:gap-12 lg:border lg:px-4 lg:py-2 lg:rounded-md">

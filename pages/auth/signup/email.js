@@ -20,6 +20,7 @@ import { setLocalStorage } from "@/utils/clientStorage";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { createUser } from "@/helper/client/auth/signup";
 import { auth } from "@/firebase/fireConfig";
+import { Timestamp } from "firebase/firestore";
 
 // TODO: Save to user
 
@@ -60,6 +61,7 @@ function EmailSignUp() {
     e.preventDefault();
 
     setIsLoading(true);
+    // TODO: check if user email already exists in database
 
     createUserWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
@@ -67,6 +69,7 @@ function EmailSignUp() {
         const user = userCredential.user;
         const { uid } = user;
         const userNoPassword = {
+          createdAt: Timestamp.now(),
           fName,
           lName,
           email,
@@ -75,8 +78,8 @@ function EmailSignUp() {
           numReviews: 0,
           reviewScore: 0,
         };
-        // const { success, value, error } = await createUser(userNoPassword, uid);
-        const success = true;
+        const { success, value, error } = await createUser(userNoPassword, uid);
+
         if (success) {
           console.log("User created successfully");
           setLocalStorage("firstLogin", true);

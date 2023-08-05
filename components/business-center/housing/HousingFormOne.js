@@ -17,24 +17,25 @@ function HousingFormOne({
   handleHousingValuesChange,
   housingPostValues,
 }) {
-  const { title, description, location } = housingPostValues;
+  const { postTitle, postDescription, addy1, addy2, city, state, zip } =
+    housingPostValues;
 
   return (
     <form className="p-4 lg:w-1/2 lg:mx-auto">
       <h4 className="pt-4">Tell us about your place.</h4>
       <label
-        htmlFor="title"
+        htmlFor="postTitle"
         className="block text-[color:var(--deals-primary)] pt-4 pb-2 "
       >
         Title <span className="text-[color:var(--secondary)] ">* </span>
       </label>
       <input
         type="text"
-        name="title"
-        id="title"
-        value={title}
+        name="postTitle"
+        id="postTitle"
+        value={postTitle}
         onChange={handleHousingValuesChange}
-        className="rounded bg-[color:var(--input-bg-secondary)] text-[color:var(--deals-primary)] w-full indent-4 py-2 "
+        className="rounded bg-[color:var(--input-bg-secondary)] text-[color:var(--deals-primary)] w-full indent-2 py-2 "
       />
 
       <div className="mt-4">
@@ -179,10 +180,10 @@ function HousingFormOne({
         Description <span className="text-[color:var(--secondary)] ">* </span>
       </h5>
       <textarea
-        value={description}
+        value={postDescription}
         onChange={handleHousingValuesChange}
-        name="description"
-        id="description"
+        name="postDescription"
+        id="postDescription"
         rows="5"
         className="w-full bg-[color:var(--input-bg-secondary)] text-[color:var(--deals-primary)] rounded p-4 "
       />
@@ -190,17 +191,53 @@ function HousingFormOne({
       <h5 className=" text-[color:var(--deals-primary)] pt-6 pb-2 ">
         Location <span className="text-[color:var(--secondary)] ">* </span>
       </h5>
-      <div className="w-full relative">
-        <i className="absolute top-1 left-2">
+      <div className="w-full relative flex flex-col gap-2">
+        {/* <i className="absolute top-1 left-2">
           <FmdGoodOutlinedIcon />
-        </i>
+        </i> */}
         <input
-          value={location}
+          value={addy1}
           onChange={handleHousingValuesChange}
-          name="location"
+          name="addy1"
           type="text"
-          className="rounded bg-[color:var(--input-bg-secondary)] text-[color:var(--deals-primary)] w-full indent-9 py-2 "
+          placeholder="address 1"
+          className="rounded bg-[color:var(--input-bg-secondary)] text-[color:var(--deals-primary)] w-full  py-2 "
         />
+        <input
+          value={addy2}
+          onChange={handleHousingValuesChange}
+          name="addy2"
+          type="text"
+          placeholder="address 2"
+          className="rounded bg-[color:var(--input-bg-secondary)] text-[color:var(--deals-primary)] w-full  py-2 "
+        />
+        <div className="flex gap-2">
+          <input
+            value={city}
+            onChange={handleHousingValuesChange}
+            name="city"
+            type="text"
+            placeholder="city"
+            className="rounded bg-[color:var(--input-bg-secondary)] text-[color:var(--deals-primary)] w-full  py-2 "
+          />
+          <input
+            value={state}
+            onChange={handleHousingValuesChange}
+            name="state"
+            type="text"
+            maxLength={2}
+            placeholder="state"
+            className="rounded bg-[color:var(--input-bg-secondary)] text-[color:var(--deals-primary)] w-full  py-2 "
+          />
+          <input
+            value={zip}
+            onChange={handleHousingValuesChange}
+            name="zip"
+            type="text"
+            placeholder="zip"
+            className="rounded bg-[color:var(--input-bg-secondary)] text-[color:var(--deals-primary)] w-full  py-2 "
+          />
+        </div>
       </div>
     </form>
   );

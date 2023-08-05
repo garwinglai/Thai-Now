@@ -8,18 +8,29 @@ import HousingFormTwo from "@/components/business-center/housing/HousingFormTwo"
 import HousingFormThree from "@/components/business-center/housing/HousingFormThree";
 import HousingFormFour from "@/components/business-center/housing/HousingFormFour";
 import { Alert, IconButton } from "@mui/material";
-import CreatePost from ".";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { Timestamp } from "firebase/firestore";
+import { createHousingClassic } from "@/helper/client/housing";
 
 function HousingPost() {
+  const { authUser } = useAuth();
+  const { uid, email, displayName } = authUser || {};
+
   const [isPublish, setIsPublish] = useState(false);
   const [step, setStep] = useState(1);
   const [housingType, setHousingType] = useState("Apartment");
   const [uploadedPhotos, setUploadedPhotos] = useState([]);
   const [housingPostValues, setHousingPostValues] = useState({
-    title: "",
-    description: "",
-    location: "",
+    postTitle: "",
+    postDescription: "",
+    postAddress: "",
+    addy1: "",
+    addy2: "",
+    city: "",
+    state: "",
+    zip: "",
   });
+  const [geoHash, setGeoHash] = useState("");
   const [guestCount, setGuestCount] = useState(0);
   const [bedroomCount, setBedroomCount] = useState(0);
   const [parkingCount, setParkingCount] = useState(0);
@@ -48,7 +59,16 @@ function HousingPost() {
   });
 
   const { isSnackBarOpen, snackMessage } = snackBar;
-  const { title, description, location } = housingPostValues;
+  const {
+    postTitle,
+    postDescription,
+    postAddress,
+    addy1,
+    addy2,
+    city,
+    state,
+    zip,
+  } = housingPostValues;
   const { exactPrice, priceRange } = housingPrice;
 
   const { back } = useRouter();
@@ -97,7 +117,7 @@ function HousingPost() {
 
   const handleNext = () => {
     if (step === 1) {
-      if (title === "") {
+      if (postTitle === "") {
         setSnackBar((prev) => ({
           isSnackBarOpen: true,
           snackMessage: "Missing title.",
@@ -113,7 +133,7 @@ function HousingPost() {
         return;
       }
 
-      if (description === "") {
+      if (postDescription === "") {
         setSnackBar((prev) => ({
           isSnackBarOpen: true,
           snackMessage: "Missing description.",
@@ -121,10 +141,10 @@ function HousingPost() {
         return;
       }
 
-      if (location === "") {
+      if (addy1 === "" || city === "" || state === "" || zip === "") {
         setSnackBar((prev) => ({
           isSnackBarOpen: true,
-          snackMessage: "Location required.",
+          snackMessage: "Address required.",
         }));
         return;
       }
@@ -170,11 +190,151 @@ function HousingPost() {
     }
 
     if (step === 4) {
-      setIsPublish(true);
+      publishPost();
+      // setIsPublish(true);
       return;
     }
 
     setStep((prev) => (prev += 1));
+  };
+
+  const publishPost = async () => {
+    const housingPostData = structureHousingPostData();
+    const { success, error } = await createHousingClassic(housingPostData, uid);
+
+    if (success) {
+      setIsPublish(true);
+    }
+    // TODO: handle housing post error
+  };
+
+  const structureHousingPostData = () => {
+    const postAddress =
+      addy1 + " " + addy2 + " " + city + " " + state + " " + zip;
+
+    // instantiate 0 = day
+    let pricePer = 0;
+    let pricePerDisplay = "per Day";
+
+    switch (exactPrice.interval) {
+      case "week":
+        pricePer = 1;
+        break;
+      case "month":
+        pricePer = 2;
+        break;
+      case "year":
+        pricePer = 3;
+      default:
+        break;
+    }
+
+    switch (pricePer) {
+      case 1:
+        pricePerDisplay = "per Week";
+        break;
+      case 2:
+        pricePerDisplay = "per Month";
+        break;
+      case 3:
+        pricePerDisplay = "per Year";
+      default:
+        break;
+    }
+
+    // instantiate 0 = apartment
+    let propertyType = 0;
+    let propertyTypeDisplay = "Apartment";
+
+    switch (housingType) {
+      case "Room":
+        propertyType = 1;
+        break;
+      case "Condo":
+        propertyType = 2;
+        break;
+      case "House":
+        propertyType = 3;
+        break;
+      case "Other":
+        propertyType = 4;
+        break;
+      default:
+        break;
+    }
+
+    switch (propertyType) {
+      case 1:
+        propertyTypeDisplay = "Room";
+        break;
+      case 2:
+        propertyTypeDisplay = "Condo";
+        break;
+      case 3:
+        propertyTypeDisplay = "House";
+        break;
+      case 4:
+        propertyTypeDisplay = "Other";
+        break;
+      default:
+        break;
+    }
+
+    let amenitiesDisplay = "";
+    const amenitiesIntArr = [];
+    let i = 0;
+
+    for (const [key, value] of Object.entries(amenities)) {
+      if (value) {
+        i === 0
+          ? (amenitiesDisplay = key)
+          : (amenitiesDisplay = amenitiesDisplay.concat(", " + key));
+        amenitiesIntArr.push(i);
+      }
+      i++;
+    }
+
+    i = 0;
+
+    const housingData = {
+      createdAt: Timestamp.now(),
+      postTitle,
+      postDescription,
+      postAddress,
+      postAddressDetails: {
+        addy1,
+        addy2,
+        city,
+        state,
+        zip,
+      },
+      userId: uid,
+      userName: displayName,
+      // userProfilePic: "",
+      posterType: 0,
+      // geoHash,
+      // postCoord: {
+      //   lat: 0,
+      //   lng: 0,
+      // },
+      price: priceOption === "exact" && "$" + exactPrice.price,
+      pricePer,
+      pricePerDisplay,
+      propertyType,
+      propertyTypeDisplay,
+      guestNum: guestCount,
+      bedroomNum: bedroomCount,
+      parkingNum: parkingCount,
+      bathroomNum: bathroomCount,
+      amenities: amenitiesIntArr,
+      amenitiesDisplay,
+      rating: 0,
+      reviewNum: 0,
+      // photos: uploadedPhotos, || store in firebase storage
+    };
+
+    console.log(housingData);
+    return housingData;
   };
 
   const handleCloseSnackBar = () => {

@@ -10,14 +10,14 @@ import SearchBarGeo from "../search/SearchBarGeo";
 import NavOptions from "../home/NavOptions";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { useAuth } from "../auth/AuthProvider";
 import { Avatar } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import AccountMenuDesktop from "../menus/AccountMenuDesktop";
+import { useAuth } from "../auth/AuthProvider";
 
 function NavDesktop({ route }) {
-  const user = useAuth();
+  const { authUser, loading } = useAuth();
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [navScroll, setNavScroll] = useState(false);
@@ -118,7 +118,7 @@ function NavDesktop({ route }) {
             <div className="">
               <div
                 className={`flex pl-4 pr-2 items-center ${
-                  user ? "border-x" : `border-l`
+                  authUser ? "border-x" : `border-l`
                 } `}
               >
                 <p
@@ -142,7 +142,7 @@ function NavDesktop({ route }) {
               </div>
             </div>
           </div>
-          {user ? (
+          {authUser ? (
             <React.Fragment>
               <button
                 className="flex gap-2 items-center pl-4"

@@ -12,7 +12,37 @@ import Link from "next/link";
 
 const pid = "pid-housing";
 
-function HousingCard({ isBusinessCenter, isBusinessUser, directory }) {
+function HousingCard({ isBusinessCenter, isBusinessUser, directory, post }) {
+  // pricePer | 0:day, 1:week, 2:month, 3:year
+  const {
+    id,
+    price,
+    pricePer,
+    createdAt,
+    postTitle,
+    postAddressDetails: { city },
+    rating,
+    reviewNum,
+  } = post || {};
+
+  const pricePerTimeline = pricePer
+    ? pricePer === 0
+      ? "day"
+      : pricePer === 1
+      ? "week"
+      : pricePer === 2
+      ? "month"
+      : "year"
+    : "night";
+
+  const postCreatedDate = createdAt.toDate();
+  const today = new Date();
+  const postedDaysAgo = Math.floor(
+    (today - postCreatedDate) / (1000 * 60 * 60 * 24)
+  );
+
+  // write a function to see how many days ago postedCreatedDate is from today
+
   const [state, setState] = React.useState({
     top: false,
     left: false,
@@ -48,11 +78,13 @@ function HousingCard({ isBusinessCenter, isBusinessUser, directory }) {
           <div className={`${styles.context_box_top}`}>
             <div className={`${styles.flex} ${styles.review_box}`}>
               <StarIcon style={{ color: yellow[700] }} fontSize="small" />
-              <p>4.69</p>
-              <p className={`${styles.review_count_p}`}>{`(20 Reviews)`}</p>
+              <p>{rating}</p>
+              <p className={`${styles.review_count_p}`}>
+                ({reviewNum} reviews)
+              </p>
             </div>
-            <h4>ใกล้ little Toyo</h4>
-            <p className={`${styles.business_location_p}`}>Los Angeles</p>
+            <h4>{postTitle}</h4>
+            <p className={`${styles.business_location_p}`}>{city}</p>
             <div className={`${styles.amenities_desktop_p} ${styles.flex}`}>
               <span>•</span>
               <p>1 Guest(s), 1 Bed(s), 1 Bath(s), 1 Parking(s)</p>
@@ -62,12 +94,12 @@ function HousingCard({ isBusinessCenter, isBusinessUser, directory }) {
               <p>Apartment</p>
             </div>
             <div className={`${styles.housing_deal} ${styles.flex}`}>
-              <p className="font-medium">$ 100</p>
-              <p>/night</p>
+              <p className="font-medium">{price}</p>
+              <p>/{pricePerTimeline}</p>
             </div>
           </div>
           <div className={`${styles.context_box_bottom}`}>
-            <p className={`${styles.days_ago_p}`}>29 days ago</p>
+            <p className={`${styles.days_ago_p}`}>{postedDaysAgo} days ago</p>
           </div>
         </div>
       </Link>

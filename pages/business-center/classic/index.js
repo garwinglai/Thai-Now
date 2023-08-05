@@ -1,4 +1,4 @@
-import React from "react";
+import React, { use, useEffect, useState } from "react";
 import MainLayout from "@/components/layouts/MainLayout";
 import BusinessCenterPageHeader from "@/components/business-center/BusinessCenterPageHeader";
 import BusinessCenterBodyHeader from "@/components/business-center/BusinessCenterBodyHeader";
@@ -14,11 +14,13 @@ import { IconButton } from "@mui/material";
 import Link from "next/link";
 import AccountPrivateMenu from "@/components/menus/AccountPrivateMenu";
 import PrivateProfileBreadcrumbs from "@/components/menus/PrivateProfileBreadcrumbs";
-import marketplace_gray_icon from "@/public/static/images/icons/marketplace_gray_icon.png";
-import Image from "next/image";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import UserPostDesktopRow from "@/components/business-center/UserPostDesktopRow";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { useRouter } from "next/router";
+import { db } from "@/firebase/fireConfig";
+import { getDocs, collection, getDoc, doc } from "firebase/firestore";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -70,15 +72,59 @@ const StyledTab = styled((props) => <Tab disableRipple {...props} />)(
 );
 
 function BusinessCenter() {
-  const [value, setValue] = React.useState(0);
-  const [state, setState] = React.useState({
+  const { authUser, loading } = useAuth();
+  const { uid } = authUser || {};
+
+  const [value, setValue] = useState(0);
+  const [state, setState] = useState({
     top: false,
     left: false,
     bottom: false,
     right: false,
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [housingPosts, setHousingPosts] = useState([]);
+  const [userData, setUserData] = useState({});
+
+  const { push } = useRouter();
+
+  useEffect(() => {
+    if (!authUser && !loading) {
+      push("/auth/login");
+    }
+  }, [authUser, loading]);
+
+  useEffect(() => {
+    if (uid) {
+      setIsLoading(true);
+      getHousingPosts();
+      getUser();
+      setIsLoading(false);
+    }
+  }, [uid]);
+
+  const getHousingPosts = async () => {
+    const housingCollectionRef = collection(db, "users", uid, "housingPosts");
+    const housingSnapshot = await getDocs(housingCollectionRef);
+    const housingPostsArr = [];
+    housingSnapshot.forEach((doc) => {
+      const data = doc.data();
+      data.id = doc.id;
+      housingPostsArr.push(data);
+    });
+
+    setHousingPosts(housingPostsArr);
+  };
+
+  const getUser = async () => {
+    const userRef = doc(db, "users", uid);
+    const userSnapshot = await getDoc(userRef);
+    const userData = userSnapshot.data();
+    setUserData(userData);
+  };
 
   const handleChange = (event, newValue) => {
+    // newValue | 0-Housing, 1-Marketplace, 2-Drafts, 3-Review
     setValue(newValue);
   };
 
@@ -97,6 +143,111 @@ function BusinessCenter() {
     toggleDrawer("bottom", true);
   };
 
+  function getMobileViewDisplayPosts(value) {
+    return (
+      <div className="px-4 mb-16 pb-8 lg:hidden">
+        <TabPanel value={value} index={0}>
+          {housingPosts.map((post) => (
+            <HousingCard
+              key={post.id}
+              isBusinessCenter={true}
+              directory="housing"
+              post={post}
+            />
+          ))}
+          {/* <HousingCard isBusinessCenter={true} directory="housing" /> */}
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <MarketplaceCard isBusinessCenter={true} directory="marketplace" />
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          <MarketplaceCard isBusinessCenter={true} directory="marketplace" />
+          <HousingCard isBusinessCenter={true} directory="housing" />
+        </TabPanel>
+        <TabPanel value={value} index={3}>
+          <BusinessCenterReview />
+          <BusinessCenterReview />
+        </TabPanel>
+      </div>
+    );
+  }
+
+  function getDesktopViewDisplayPosts() {
+    return (
+      <div className="hidden lg:p-4 lg:block">
+        <div className="flex justify-between items-center">
+          <h4 className="">10 Listings</h4>
+          <Link
+            href="/business-center/classic/create"
+            className="text-white bg-[color:var(--secondary)] rounded px-3 py-2 font-light text-xs"
+          >
+            Create your post
+          </Link>
+        </div>
+        <div className="hidden lg:block my-4">
+          <table className="w-full">
+            <thead className="w-full pb-20 border-b">
+              <tr className="">
+                <th className="text-center pb-2 w-1/12">
+                  <input
+                    type="checkbox"
+                    className="form-checkbox checked:accent-[color:var(--deals-primary-med)] w-4 h-4 rounded border-[color:var(--placeholder-color)] focus:ring-0"
+                  />
+                </th>
+                <th className="text-left font-medium text-xs pb-2 w-3/12">
+                  Name
+                </th>
+                <th className="text-left font-medium text-xs pb-2 w-1/12">
+                  Type
+                </th>
+                <th className="text-left font-medium text-xs pb-2 w-1/12">
+                  Price
+                </th>
+                <th className="text-left font-medium text-xs pb-2 w-3/12">Location</th>
+                <th className="text-center font-medium text-xs pb-2 whitespace-nowrap ">
+                  Last Modified
+                </th>
+                <th className="text-center font-medium text-xs pb-2">Author</th>
+              </tr>
+            </thead>
+            <tbody className="w-full">
+              {housingPosts.map((post, index) => {
+                const isEven = index % 2 === 0;
+                return (
+                  <UserPostDesktopRow key={post.id} post={post} even={isEven} />
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        <div className="flex justify-between items-center pt-4">
+          <div className="flex items-center gap-4">
+            <input
+              type="checkbox"
+              name="select-all"
+              id="select-all"
+              className=""
+            />
+            <p className="text-sm font-light opacity-70">Select All</p>
+            <button className="text-[color:var(--deals-primary)]  border-[color:var(--deals-primary)] border border-opacity-50 rounded px-2 ">
+              Delete
+            </button>
+          </div>
+          <div className="flex gap-2 items-center">
+            <IconButton>
+              <NavigateBeforeIcon />
+            </IconButton>
+            <p className="mr-4 font-light text-[color:var(--secondary)] ">1</p>
+            <p className=" font-light">2</p>
+            <IconButton>
+              <NavigateNextIcon />
+            </IconButton>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="lg:pt-20 lg:bg-[color:var(--profile-bg)] lg:p-4">
       <div className="hidden lg:block lg:ml-[10%] lg:pb-6 lg:pt-4">
@@ -109,10 +260,10 @@ function BusinessCenter() {
         <div className="lg:flex-grow lg:pb-16">
           <div className="flex flex-col gap-2 h-screen">
             <div className="lg:shadow">
-              <BusinessCenterPageHeader />
+              <BusinessCenterPageHeader userData={userData} />
             </div>
             <div className=" bg-white border-t-4 border-gray-100 lg:shadow lg:rounded-md">
-              <BusinessCenterBodyHeader route="classic" />
+              <BusinessCenterBodyHeader route="classic" userData={userData} />
               <div className="bg-gray-100">
                 <StyledTabs
                   value={value}
@@ -188,27 +339,6 @@ export default BusinessCenter;
 BusinessCenter.getLayout = function getLayout(page) {
   return <MainLayout route="business-center">{page}</MainLayout>;
 };
-
-function getMobileViewDisplayPosts(value) {
-  return (
-    <div className="px-4 mb-16 pb-8 lg:hidden">
-      <TabPanel value={value} index={0}>
-        <HousingCard isBusinessCenter={true} directory="housing" />
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <MarketplaceCard isBusinessCenter={true} directory="marketplace" />
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        <MarketplaceCard isBusinessCenter={true} directory="marketplace" />
-        <HousingCard isBusinessCenter={true} directory="housing" />
-      </TabPanel>
-      <TabPanel value={value} index={3}>
-        <BusinessCenterReview />
-        <BusinessCenterReview />
-      </TabPanel>
-    </div>
-  );
-}
 
 function getDesktopViewDisplayPosts() {
   return (

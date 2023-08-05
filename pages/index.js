@@ -25,7 +25,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import thai_now_logo from "@/public/static/images/logos/thai_now_logo_blck.png";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import { deleteLocalStorage, getLocalStorage } from "@/utils/clientStorage";
-import AuthProvider, { useAuth } from "@/components/auth/AuthProvider";
 
 const style = {
   position: "absolute",
@@ -50,8 +49,6 @@ export default function Home() {
 
   const offersRef = useRef();
   const offersMobileRef = useRef();
-
-  const user = useAuth();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -87,15 +84,15 @@ export default function Home() {
     detectScroll();
   }, [lastScrollY, lastScrollYMobile]);
 
-  useEffect(() => {
-    // if user exists and getlocalstorage firstLogin is true, set openCompleteSIgnupmodal to true
-    const firstLoginLS = getLocalStorage("firstLogin");
+  // useEffect(() => {
+  //   // if user exists and getlocalstorage firstLogin is true, set openCompleteSIgnupmodal to true
+  //   const firstLoginLS = getLocalStorage("firstLogin");
 
-    if (user && firstLoginLS) {
-      setOpenCompleteSignupModal(true);
-      deleteLocalStorage("firstLogin");
-    }
-  }, [user]);
+  //   if (user && firstLoginLS) {
+  //     setOpenCompleteSignupModal(true);
+  //     deleteLocalStorage("firstLogin");
+  //   }
+  // }, [user]);
 
   // * Actions
   const toggleDrawer = (anchor, open) => (event) => {

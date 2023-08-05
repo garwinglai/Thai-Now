@@ -15,7 +15,17 @@ function MarketFormTwo({
   handlePhotoFileChange,
   uploadedPhotos,
 }) {
-  const { title, description, location, productType } = productDetails;
+  const {
+    title,
+    description,
+    location,
+    productType,
+    addy1,
+    addy2,
+    city,
+    state,
+    zip,
+  } = productDetails;
   return (
     <form className="p-4 lg:w-1/2 lg:mx-auto">
       <h4 className="pt-4">Tell us about your Product.</h4>
@@ -222,17 +232,53 @@ function MarketFormTwo({
       <h5 className=" text-[color:var(--deals-primary)] pt-6 pb-2 ">
         Location <span className="text-[color:var(--secondary)] ">* </span>
       </h5>
-      <div className="w-full relative">
-        <i className="absolute top-1 left-2">
+      <div className="w-full relative flex flex-col gap-2">
+        {/* <i className="absolute top-1 left-2">
           <FmdGoodOutlinedIcon />
-        </i>
+        </i> */}
         <input
-          value={location}
+          value={addy1}
           onChange={handleProductValueChange}
-          name="location"
+          name="addy1"
           type="text"
-          className="rounded bg-[color:var(--input-bg-secondary)] text-[color:var(--deals-primary)] w-full indent-9 py-2 "
+          placeholder="address 1"
+          className="rounded bg-[color:var(--input-bg-secondary)] text-[color:var(--deals-primary)] w-full  py-2 "
         />
+        <input
+          value={addy2}
+          onChange={handleProductValueChange}
+          name="addy2"
+          type="text"
+          placeholder="address 2"
+          className="rounded bg-[color:var(--input-bg-secondary)] text-[color:var(--deals-primary)] w-full  py-2 "
+        />
+        <div className="flex gap-2">
+          <input
+            value={city}
+            onChange={handleProductValueChange}
+            name="city"
+            type="text"
+            placeholder="city"
+            className="rounded bg-[color:var(--input-bg-secondary)] text-[color:var(--deals-primary)] w-full  py-2 "
+          />
+          <input
+            value={state}
+            onChange={handleProductValueChange}
+            name="state"
+            type="text"
+            maxLength={2}
+            placeholder="state"
+            className="rounded bg-[color:var(--input-bg-secondary)] text-[color:var(--deals-primary)] w-full  py-2 "
+          />
+          <input
+            value={zip}
+            onChange={handleProductValueChange}
+            name="zip"
+            type="text"
+            placeholder="zip"
+            className="rounded bg-[color:var(--input-bg-secondary)] text-[color:var(--deals-primary)] w-full  py-2 "
+          />
+        </div>
       </div>
     </form>
   );

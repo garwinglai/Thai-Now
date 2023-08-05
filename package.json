@@ -16,12 +16,13 @@
 		"@mui/material": "^5.13.7",
 		"cross-env": "^7.0.3",
 		"eslint": "8.36.0",
-		"firebase": "^9.18.0",
-		"firebase-admin": "^11.5.0",
+		"firebase": "^10.1.0",
+		"firebase-admin": "^11.10.1",
 		"next": "^13.3.4",
 		"nookies": "^2.5.2",
 		"react": "^18.2.0",
-		"react-dom": "^18.2.0"
+		"react-dom": "^18.2.0",
+		"react-geocode": "^0.2.3"
 	},
 	"devDependencies": {
 		"@tailwindcss/forms": "^0.5.4",
