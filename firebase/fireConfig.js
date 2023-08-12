@@ -2,6 +2,7 @@ import { initializeApp, getApps } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
+import * as geofire from "geofire-common";
 
 // TODO: Replace the following with your app's Firebase project configuration
 // See: https://support.google.com/firebase/answer/7015592
@@ -25,6 +26,11 @@ if (getApps().length < 1) {
 const db = getFirestore(app);
 const auth = getAuth(app);
 const storage = getStorage(app);
+
+export const createGeoHash = async (lat, lng) => {
+  const hash = geofire.geohashForLocation([lat, lng]);
+  return hash;
+};
 
 export default app;
 export { db, auth, storage };
