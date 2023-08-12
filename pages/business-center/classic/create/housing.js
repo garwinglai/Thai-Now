@@ -11,9 +11,10 @@ import { Alert, IconButton } from "@mui/material";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { Timestamp } from "firebase/firestore";
 import { createHousingClassic } from "@/helper/client/housing";
-import { getLatLngFromAddress } from "@/helper/client/geo";
+// import { getLatLngFromAddress } from "@/helper/client/geo";
 import { createGeoHash } from "@/firebase/fireConfig";
 import CircularProgress from "@mui/material/CircularProgress";
+import Geocode from "react-geocode";
 
 function HousingPost() {
   const { authUser, loading } = useAuth();
@@ -377,19 +378,19 @@ function HousingPost() {
     return housingData;
   };
 
-  // const getLatLngFromAddress = (address) => {
-  //   return Geocode.fromAddress(address).then(
-  //     (response) => {
-  //       const { lat, lng } = response.results[0].geometry.location;
+  const getLatLngFromAddress = (address) => {
+    return Geocode.fromAddress(address).then(
+      (response) => {
+        const { lat, lng } = response.results[0].geometry.location;
 
-  //       return { lat, lng };
-  //     },
-  //     (error) => {
-  //       console.error(error);
-  //       // return { error };
-  //     }
-  //   );
-  // };
+        return { lat, lng };
+      },
+      (error) => {
+        console.error(error);
+        // return { error };
+      }
+    );
+  };
 
   const handleCloseSnackBar = () => {
     setSnackBar({ isSnackBarOpen: false, snackMessage: "" });
