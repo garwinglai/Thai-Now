@@ -4,7 +4,7 @@ import * as geofire from "geofire-common";
 Geocode.setApiKey(process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY);
 Geocode.setLanguage("en");
 
-const getLatLngFromAddress = (address) => {
+export const getLatLngFromAddress = (address) => {
   return Geocode.fromAddress(address).then(
     (response) => {
       const { lat, lng } = response.results[0].geometry.location;
@@ -22,5 +22,3 @@ export const createGeoHash = async (lat, lng) => {
   const hash = geofire.geohashForLocation([lat, lng]);
   return hash;
 };
-
-export default getLatLngFromAddress;
