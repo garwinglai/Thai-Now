@@ -62,9 +62,9 @@ function BusinessPublicPage() {
             <PostDescription isPublicPage={true} isLoggedIn={true} />
             <PostLocation isPublicPage={true} />
             <BusinessHours />
-            <UserPosts groupPostTitle="Deals" />
+            {/* <UserPosts groupPostTitle="Deals" />
             <UserPosts groupPostTitle="Housing" />
-            <UserPosts groupPostTitle="Jobs" />
+            <UserPosts groupPostTitle="Jobs" /> */}
             <div className="bg-white p-4 lg:px-0">
               <h4 className="text-[color:var(--deals-primary)]">
                 Lolar Ramsey&apos;s reviews
