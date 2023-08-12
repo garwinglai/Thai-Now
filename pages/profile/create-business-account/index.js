@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MainLayout from "@/components/layouts/MainLayout";
 import styles from "@/styles/pages/profile/create-business/index.module.css";
 import Link from "next/link";
@@ -13,10 +13,14 @@ import InputAdornment from "@mui/material/InputAdornment";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { Alert, IconButton } from "@mui/material";
 import Snackbar from "@mui/material/Snackbar";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 // TODO: get data to prefill business name and email
 
 function CreateBusiness() {
+  const { authUser, loading } = useAuth();
+  const { uid } = authUser || {};
+
   const [step, setStep] = useState(1);
   const [businessCategory, setBusinessCategory] = useState("Restaurant");
   const [businessValues, setBusinessValues] = useState({
@@ -37,6 +41,13 @@ function CreateBusiness() {
   const { isSnackBarOpen, snackMessage } = snackBar;
 
   const { push, back } = useRouter();
+
+  useEffect(() => {
+    if (!authUser && !loading) {
+      push("/auth/signin");
+    }
+    // TODO: loading, show skeleton
+  }, [authUser, loading]);
 
   const handleNext = () => {
     if (step === 2) {

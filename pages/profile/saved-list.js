@@ -1,17 +1,29 @@
-import React from "react";
+import React, { useEffect } from "react";
 import MainLayout from "@/components/layouts/MainLayout";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { useRouter } from "next/router";
 import AccountPrivateMenu from "@/components/menus/AccountPrivateMenu";
 import PrivateProfileBreadcrumbs from "@/components/menus/PrivateProfileBreadcrumbs";
 import SavedListComponent from "@/components/profile/SavedListComponent";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 function SavedList() {
-  const { back } = useRouter();
+  const { authUser, loading } = useAuth();
+  const { uid } = authUser || {};
+
+  const { back, push } = useRouter();
+
+  useEffect(() => {
+    if (!authUser && !loading) {
+      push("/auth/signin");
+    }
+  }, [authUser, loading]);
 
   const handleBack = () => {
     back();
   };
+
+  // TODO: loading, show skeleton
 
   return (
     <div className=" pb-16 lg:bg-[color:var(--profile-bg)] lg:p-4">

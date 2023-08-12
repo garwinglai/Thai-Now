@@ -16,6 +16,7 @@ function HousingFormOne({
   uploadedPhotos,
   handleHousingValuesChange,
   housingPostValues,
+  handleRemoveImage,
 }) {
   const { postTitle, postDescription, addy1, addy2, city, state, zip } =
     housingPostValues;
@@ -139,37 +140,40 @@ function HousingFormOne({
       </label>
       {uploadedPhotos.length !== 0 && (
         <div className="flex w-full gap-8 pt-4">
-          {uploadedPhotos.map((file, idx) => (
-            <div
-              key={idx}
-              className=" w-14 h-14 relative flex items-center justify-center lg:w-16 lg:h-16"
-            >
-              <Image
-                src={file.imgUrl}
-                alt={file.fileName}
-                fill={true}
-                className=" object-cover w-full rounded"
-              />
-              <div className="absolute opacity-0 flex  h-full items-end justify-center hover:opacity-70 ">
-                <div className="bg-black h-2/5 flex justify-center items-center rounded-b lg:h-1/3">
-                  <IconButton>
-                    <RemoveRedEyeOutlinedIcon
-                      fontSize="small"
-                      sx={{
-                        color: "white",
-                      }}
-                    />
-                  </IconButton>
-                  <IconButton>
-                    <DeleteForeverOutlinedIcon
-                      fontSize="small"
-                      sx={{ color: "white" }}
-                    />
-                  </IconButton>
+          {uploadedPhotos.map((file, idx) => {
+            const { imgUrl, fileName } = file;
+            return (
+              <div
+                key={idx}
+                className=" w-14 h-14 relative flex items-center justify-center lg:w-16 lg:h-16"
+              >
+                <Image
+                  src={imgUrl}
+                  alt={fileName}
+                  fill={true}
+                  className=" object-cover w-full rounded"
+                />
+                <div className="absolute opacity-0 flex  h-full items-end justify-center hover:opacity-70 ">
+                  <div className="bg-black h-2/5 flex justify-center items-center rounded-b lg:h-1/3">
+                    <IconButton>
+                      <RemoveRedEyeOutlinedIcon
+                        fontSize="small"
+                        sx={{
+                          color: "white",
+                        }}
+                      />
+                    </IconButton>
+                    <IconButton onClick={handleRemoveImage(imgUrl)}>
+                      <DeleteForeverOutlinedIcon
+                        fontSize="small"
+                        sx={{ color: "white" }}
+                      />
+                    </IconButton>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
       <p className="text-[color:var(--label-color)]  text-sm pt-2 ">

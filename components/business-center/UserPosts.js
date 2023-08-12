@@ -7,7 +7,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 import OfferCards from "../home/cards2/OfferCards";
 
-function UserPosts({ groupPostTitle }) {
+function UserPosts({ groupPostTitle, housingPosts }) {
   return (
     <div className="bg-white">
       <div className="flex justify-between items-center p-4 lg:pt-0 lg:px-0">
@@ -17,12 +17,18 @@ function UserPosts({ groupPostTitle }) {
         <div className="hidden lg:flex gap-4">
           <div className="shadow-md rounded-full">
             <IconButton>
-              <ChevronLeftIcon sx={{ color: "var(--secondary)" }} fontSize="small"/>
+              <ChevronLeftIcon
+                sx={{ color: "var(--secondary)" }}
+                fontSize="small"
+              />
             </IconButton>
           </div>
           <div className="shadow-md rounded-full">
             <IconButton>
-              <ChevronRightIcon sx={{ color: "var(--secondary)" }} fontSize="small"/>
+              <ChevronRightIcon
+                sx={{ color: "var(--secondary)" }}
+                fontSize="small"
+              />
             </IconButton>
           </div>
         </div>
@@ -33,10 +39,13 @@ function UserPosts({ groupPostTitle }) {
         </div>
       </div>
       <div className="flex px-4 pb-6 overflow-x-scroll gap-4 lg:px-0">
-        <OfferCards groupPostTitle={groupPostTitle} />
-        <OfferCards groupPostTitle={groupPostTitle} />
-        <OfferCards groupPostTitle={groupPostTitle} />
-        <OfferCards groupPostTitle={groupPostTitle} />
+        {housingPosts.map((post) => (
+          <OfferCards
+            key={post.id}
+            groupPostTitle={groupPostTitle}
+            housingPost={post}
+          />
+        ))}
       </div>
     </div>
   );

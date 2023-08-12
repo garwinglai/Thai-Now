@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styles from "../../../styles/components/directory/cards/housing-card.module.css";
-import massageImage from "../../../public/static/images/directory/massage_large.png";
 import Image from "next/image";
 import StarIcon from "@mui/icons-material/Star";
 import { yellow } from "@mui/material/colors";
@@ -9,10 +8,15 @@ import { IconButton } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import CloseIcon from "@mui/icons-material/Close";
 import Link from "next/link";
-
-const pid = "pid-housing";
+import { doc, writeBatch, increment } from "firebase/firestore";
+import { ref, deleteObject } from "firebase/storage";
+import { storage, db } from "@/firebase/fireConfig";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 function HousingCard({ isBusinessCenter, isBusinessUser, directory, post }) {
+  const { authUser, loading } = useAuth();
+  const { uid } = authUser || {};
+
   // pricePer | 0:day, 1:week, 2:month, 3:year
   const {
     id,
@@ -23,6 +27,11 @@ function HousingCard({ isBusinessCenter, isBusinessUser, directory, post }) {
     postAddressDetails,
     rating,
     reviewNum,
+    bathroomNum,
+    bedroomNum,
+    parkingNum,
+    photos,
+    guestNum,
   } = post || {};
 
   const { city } = postAddressDetails || {};
@@ -37,13 +46,27 @@ function HousingCard({ isBusinessCenter, isBusinessUser, directory, post }) {
       : "year"
     : "night";
 
+  const [defaultImage, setDefaultImage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (photos) {
+      // loop through photos object to find the first photo
+      for (const key in photos) {
+        if (photos.hasOwnProperty(key)) {
+          const defaultImage = photos[key];
+          setDefaultImage(defaultImage);
+          break;
+        }
+      }
+    }
+  }, [photos]);
+
   const postCreatedDate = createdAt ? createdAt.toDate() : new Date();
   const today = new Date();
   const postedDaysAgo = Math.floor(
     (today - postCreatedDate) / (1000 * 60 * 60 * 24)
   );
-
-  // write a function to see how many days ago postedCreatedDate is from today
 
   const [state, setState] = React.useState({
     top: false,
@@ -63,19 +86,75 @@ function HousingCard({ isBusinessCenter, isBusinessUser, directory, post }) {
     setState({ ...state, [anchor]: open });
   };
 
+  const handleDeletePost = async () => {
+    setIsLoading(true);
+    await deleteFirestorePost();
+    await removeImagesFromStorage(photos);
+    setIsLoading(false);
+  };
+
+  const deleteFirestorePost = async () => {
+    const housingRef = doc(db, "users", uid, "housingPosts", id);
+    const allHousingRef = doc(db, "allHousing", id);
+    const userRef = doc(db, "users", uid);
+
+    const batch = writeBatch(db);
+
+    try {
+      batch.delete(housingRef);
+      batch.delete(allHousingRef);
+      batch.update(userRef, {
+        numHousing: increment(-1),
+      });
+
+      await batch.commit();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const removeImagesFromStorage = async (photos) => {
+    const fileNames = [];
+
+    for (const key in photos) {
+      if (photos.hasOwnProperty(key)) {
+        const fileName = key + ".jpg";
+        fileNames.push(fileName);
+      }
+    }
+
+    for (let i = 0; i < fileNames.length; i++) {
+      const fileName = fileNames[i];
+      const photoRef = ref(storage, `users/${uid}/housing/${id}/${fileName}`);
+      try {
+        await deleteObject(photoRef);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
   return (
     <div className="relative">
       <Link
-        href={`/${directory}/${pid}`}
+        href={`/${directory}/${id}`}
         className={`${styles.jobs_card_container} ${styles.flex}`}
       >
-        <div className={`${styles.image_box}`}>
-          <Image
-            src={massageImage}
-            alt="massage image"
-            className={`${styles.card_image}`}
-          />
-        </div>
+        {defaultImage ? (
+          <div className="w-1/3 h-[33vw] relative md:h-[25vw] md:w-1/4 lg:w-1/3 lg:h-[14vw]">
+            <Image
+              src={defaultImage}
+              alt="post image"
+              fill
+              className="object-cover rounded-md aspect-square"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+          </div>
+        ) : (
+          <div className="w-1/3 h-[calc(33vw)] rounded bg-gray-200 text-xs font-extralight flex justify-center items-center">
+            .img
+          </div>
+        )}
         <div className={`${styles.card_context_box} ${styles.flexCol}`}>
           <div className={`${styles.context_box_top}`}>
             <div className={`${styles.flex} ${styles.review_box}`}>
@@ -125,14 +204,17 @@ function HousingCard({ isBusinessCenter, isBusinessUser, directory, post }) {
               <Link
                 href={`${
                   isBusinessUser
-                    ? `/business-center/business/edit/housing/${pid}`
-                    : `/business-center/classic/edit/housing/${pid}`
+                    ? `/business-center/business/edit/housing/${id}`
+                    : `/business-center/classic/edit/housing/${id}`
                 }`}
                 className="font-light text-base text-gray-700 mb-4"
               >
                 Edit post
               </Link>
-              <button className="font-light w-fit text-base text-gray-700">
+              <button
+                onClick={handleDeletePost}
+                className="font-light w-fit text-base text-gray-700"
+              >
                 Delete post
               </button>
             </div>

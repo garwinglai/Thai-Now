@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import MainLayout from "@/components/layouts/MainLayout";
 import avatar_image from "@/public/static/images/temp_avatar.png";
@@ -13,12 +13,23 @@ import Link from "next/link";
 import { IconButton } from "@mui/material";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 function BusinessProfile() {
+  const { authUser, loading } = useAuth();
+  const { uid } = authUser || {};
+
   const [uploadedBusinessPhotos, setUploadedBusinessPhotos] = useState([]);
   const [isPublish, setIsPublish] = useState(false);
 
-  const { back } = useRouter();
+  const { back, push } = useRouter();
+
+  useEffect(() => {
+    if (!authUser && !loading) {
+      push("/auth/signin");
+    }
+    // TODO: loading, show skeleton
+  }, [authUser, loading]);
 
   const handleBack = () => {
     back();

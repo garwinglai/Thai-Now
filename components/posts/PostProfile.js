@@ -10,7 +10,9 @@ import Drawer from "@mui/material/Drawer";
 import CloseIcon from "@mui/icons-material/Close";
 import Link from "next/link";
 
-function PostProfile({ isPublicPage, isCreatePostDesktop }) {
+function PostProfile({ isPublicPage, isCreatePostDesktop, userData, city }) {
+  const { email, fName, lName, profileImgUrl } = userData ? userData : {};
+
   const [state, setState] = useState({
     bottom: false,
   });
@@ -34,7 +36,9 @@ function PostProfile({ isPublicPage, isCreatePostDesktop }) {
             alt="profile image"
             className="border-4 border-[color:var(--label-color)] rounded-full  w-16"
           />
-          <h4 className=" text-lg">Hosted by Lolar Ramsey</h4>
+          <h4 className=" text-lg">
+            Hosted by {fName} {lName}
+          </h4>
         </span>
         {isPublicPage && (
           <React.Fragment>
@@ -75,8 +79,8 @@ function PostProfile({ isPublicPage, isCreatePostDesktop }) {
         <span className="flex items-center overflow-hidden whitespace-nowrap  ">
           <StarOutlinedIcon sx={{ color: "rgba(251, 197, 4, 1)" }} />
           <p className="font-extralight text-sm text-ellipsis overflow-hidden whitespace-nowrap">
-            <span className="font-light">4.96 </span>
-            (20 Reviews) - East Hollywood
+            <span className="font-light">0 </span>
+            (0 Reviews) {city ? `- ${city}` : ""}
           </p>
         </span>
 

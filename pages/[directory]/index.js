@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import DirectoryHeader from "@/components/directories/DirectoryHeader";
 import Fab from "@mui/material/Fab";
 import MapIcon from "@mui/icons-material/Map";
@@ -13,10 +13,52 @@ import JobFiltersDesktop from "@/components/directories/filters/jobs/desktop/Job
 import HousingFiltersDesktop from "@/components/directories/filters/housing/desktop/HousingFiltersDesktop";
 import MarketplaceFiltersDesktop from "@/components/directories/filters/marketplace/desktop/MarketplaceFiltersDesktop";
 import JobsCard from "@/components/directories/cards/JobsCard";
+import { db } from "@/firebase/fireConfig";
+import { collection, doc, onSnapshot } from "firebase/firestore";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 const tempCount = [1, 2, 3, 4, 5];
 
 function Directory({ directory }) {
+  const { authUser, loading } = useAuth();
+  const { uid } = authUser || {};
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [housingPosts, setHousingPosts] = useState([]);
+  const [userData, setUserData] = useState({});
+
+  useEffect(() => {
+    if (!uid) return;
+
+    setIsLoading(true);
+    const housingCollectionRef = collection(db, "users", uid, "housingPosts");
+    const unsubHousingListener = onSnapshot(
+      housingCollectionRef,
+      (snapshot) => {
+        const housingPostsArr = [];
+        snapshot.forEach((doc) => {
+          const data = doc.data();
+          data.id = doc.id;
+          housingPostsArr.push(data);
+        });
+        setHousingPosts(housingPostsArr);
+        setIsLoading(false);
+      }
+    );
+
+    const unsubUserListener = onSnapshot(doc(db, "users", uid), (snapshot) => {
+      const userData = snapshot.data();
+      setUserData(userData);
+    });
+
+    setIsLoading(false);
+
+    return () => {
+      unsubHousingListener();
+      unsubUserListener();
+    };
+  }, [uid]);
+
   function cardType(directory) {
     if (directory == "jobs") {
       return tempCount.map((item) => (
@@ -25,8 +67,13 @@ function Directory({ directory }) {
     }
 
     if (directory == "housing") {
-      return tempCount.map((item) => (
-        <HousingCard key={item} directory={directory} />
+      return housingPosts.map((post) => (
+        <HousingCard
+          key={post.id}
+          isBusinessCenter={false}
+          directory={directory}
+          post={post}
+        />
       ));
     }
 

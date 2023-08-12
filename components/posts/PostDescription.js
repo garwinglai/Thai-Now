@@ -3,12 +3,7 @@ import React from "react";
 import { useRouter } from "next/router";
 import PrimaryButton from "../buttons/PrimaryButton";
 
-function PostDescription({
-  description,
-  isPublicPage,
-  isLoggedIn,
-  isCreatePost,
-}) {
+function PostDescription({ description, isPublicPage, authUser }) {
   const { push } = useRouter();
 
   const handleLoginClick = () => {
@@ -18,7 +13,7 @@ function PostDescription({
   return (
     <div className="p-4 bg-white w-full lg:px-0">
       <h5>{isPublicPage ? "About Business" : "Description"}</h5>
-      {isLoggedIn ? (
+      {authUser ? (
         <p className="font-extralight mt-4 whitespace-pre-line text-sm">
           {isPublicPage
             ? "Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio obcaecati id tenetur magni deleniti sint libero voluptate ut quis officia blanditiis, amet, iusto ex."

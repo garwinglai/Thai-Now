@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MainLayout from "@/components/layouts/MainLayout";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { useRouter } from "next/router";
@@ -9,8 +9,12 @@ import MarketFormFour from "@/components/business-center/marketplace/MarketFormF
 import MarketFormFive from "@/components/business-center/marketplace/MarketFormFive";
 import Snackbar from "@mui/material/Snackbar";
 import { Alert, IconButton } from "@mui/material";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 function MarketplacePostBusinessUser() {
+  const { authUser, loading } = useAuth();
+  const { uid } = authUser || {};
+
   const [isPublish, setIsPublish] = useState(false);
   const [step, setStep] = useState(1);
   const [marketPostType, setMarketPostType] = useState("Product");
@@ -38,7 +42,14 @@ function MarketplacePostBusinessUser() {
   const { isSnackBarOpen, snackMessage } = snackBar;
   const { exactPrice, priceRange } = offerPrice;
 
-  const { back } = useRouter();
+  const { back, push } = useRouter();
+
+  useEffect(() => {
+    if (!authUser && !loading) {
+      push("/auth/signin");
+    }
+    // TODO: loading, show skeleton
+  }, [authUser, loading]);
 
   const handleBack = () => {
     if (step === 1) {

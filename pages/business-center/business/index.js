@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useAuth } from "@/components/auth/AuthProvider";
 import MainLayout from "@/components/layouts/MainLayout";
 import BusinessCenterPageHeader from "@/components/business-center/BusinessCenterPageHeader";
 import BusinessCenterBodyHeader from "@/components/business-center/BusinessCenterBodyHeader";
 import { styled } from "@mui/material/styles";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import HousingCard from "@/components/directories/cards/HousingCard";
 import MarketplaceCard from "@/components/directories/cards/MarketplaceCard";
 import BusinessCenterReview from "@/components/business-center/BusinessCenterReview";
 import Drawer from "@mui/material/Drawer";
@@ -13,13 +13,12 @@ import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { IconButton } from "@mui/material";
 import Link from "next/link";
 import JobsCard from "@/components/directories/cards/JobsCard";
-import marketplace_gray_icon from "@/public/static/images/icons/marketplace_gray_icon.png";
-import Image from "next/image";
 import PrivateProfileBreadcrumbs from "@/components/menus/PrivateProfileBreadcrumbs";
 import AccountPrivateMenu from "@/components/menus/AccountPrivateMenu";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import UserPostDesktopRow from "@/components/business-center/UserPostDesktopRow";
+import { useRouter } from "next/router";
 
 const StyledTabs = styled((props) => (
   <Tabs
@@ -55,6 +54,9 @@ const StyledTab = styled((props) => <Tab disableRipple {...props} />)(
 );
 
 function BusinessCenterBusiness() {
+  const { authUser, loading } = useAuth();
+  const { uid } = authUser || {};
+
   const [value, setValue] = React.useState(0);
   const [state, setState] = React.useState({
     top: false,
@@ -62,6 +64,19 @@ function BusinessCenterBusiness() {
     bottom: false,
     right: false,
   });
+
+  const { back, push } = useRouter();
+
+  useEffect(() => {
+    if (!authUser && !loading) {
+      push("/auth/signin");
+    }
+    // TODO: loading, show skeleton
+  }, [authUser, loading]);
+
+  const handleBack = () => {
+    back();
+  };
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

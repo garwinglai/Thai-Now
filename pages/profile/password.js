@@ -1,17 +1,30 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import MainLayout from "@/components/layouts/MainLayout";
 import ChangePassword from "@/components/profile/ChangePassword";
 import PrivateProfileBreadcrumbs from "@/components/menus/PrivateProfileBreadcrumbs";
 import AccountPrivateMenu from "@/components/menus/AccountPrivateMenu";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 function ProfilePassword() {
-  const { back } = useRouter();
+  const { authUser, loading } = useAuth();
+  const { uid } = authUser || {};
+
+  const { back, push } = useRouter();
+
+  useEffect(() => {
+    if (!authUser && !loading) {
+      push("/auth/signin");
+    }
+  }, [authUser, loading]);
 
   const handleBack = () => {
     back();
   };
+
+  // TODO: show skeleton
+
   return (
     <div className="p-4 pb-16 lg:bg-[color:var(--profile-bg)]">
       <button

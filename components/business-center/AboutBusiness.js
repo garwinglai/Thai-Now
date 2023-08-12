@@ -14,7 +14,10 @@ function AboutBusiness({ isBusinessUser }) {
           </p>
         </div>
       )}
-      <button className="border w-full text-sm py-2 rounded text-[color:var(--deals-primary)] font-light border-[color:var(--deals-primary)]">
+      <button
+        type="button"
+        className="border w-full text-sm py-2 rounded text-[color:var(--deals-primary)] font-light border-[color:var(--deals-primary)]"
+      >
         View Business Profile
       </button>
     </div>

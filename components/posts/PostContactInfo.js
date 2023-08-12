@@ -6,7 +6,9 @@ import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import { IconButton } from "@mui/material";
 import Link from "next/link";
 
-function PostContactInfo({ isClassicUser }) {
+function PostContactInfo({ isClassicUser, userData }) {
+  const { email, fName, lName, profileImgUrl } = userData ? userData : {};
+
   return (
     <div className="p-4 bg-white">
       <h5>Business Contact</h5>
@@ -33,7 +35,7 @@ function PostContactInfo({ isClassicUser }) {
         </span>
         <span className="flex flex-col items-center gap-1 lg:flex-row lg:justify-between lg:border-b lg:py-2">
           <p className="hidden lg:block text-[color:var(--deals-primary)] font-light text-sm ">
-            thainow@gmail.com
+            {email}
           </p>
           <span>
             <IconButton

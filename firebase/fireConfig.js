@@ -1,6 +1,7 @@
 import { initializeApp, getApps } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+import { getStorage } from "firebase/storage";
 
 // TODO: Replace the following with your app's Firebase project configuration
 // See: https://support.google.com/firebase/answer/7015592
@@ -12,6 +13,7 @@ const firebaseConfig = {
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
+  storageBUCKET: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
 };
 
 // Initialize Firebase
@@ -22,6 +24,7 @@ if (getApps().length < 1) {
 
 const db = getFirestore(app);
 const auth = getAuth(app);
+const storage = getStorage(app);
 
 export default app;
-export { db, auth };
+export { db, auth, storage };

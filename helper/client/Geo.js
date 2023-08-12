@@ -1,16 +1,26 @@
 import Geocode from "react-geocode";
-Geocode.setApiKey("AIzaSyDTcxR9M5UTt2L2uKkCBYDAIWfSOIFbwvg");
+import * as geofire from "geofire-common";
+
+Geocode.setApiKey(process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY);
 Geocode.setLanguage("en");
 
-export const getLatLng = (address) => {
-  return Geocode.fromAddress("Eiffel Tower").then(
+const getLatLngFromAddress = (address) => {
+  return Geocode.fromAddress(address).then(
     (response) => {
       const { lat, lng } = response.results[0].geometry.location;
-      console.log(lat, lng);
+
       return { lat, lng };
     },
     (error) => {
       console.error(error);
+      // return { error };
     }
   );
 };
+
+export const createGeoHash = async (lat, lng) => {
+  const hash = geofire.geohashForLocation([lat, lng]);
+  return hash;
+};
+
+export default getLatLngFromAddress;

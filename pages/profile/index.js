@@ -1,18 +1,24 @@
+import React, { useEffect } from "react";
+import { useAuth } from "@/components/auth/AuthProvider";
 import MainLayout from "@/components/layouts/MainLayout";
-import React from "react";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import { TextField } from "@mui/material";
-import Image from "next/image";
-import avatar_image from "@/public/static/images/temp_avatar.png";
-import CameraAltOutlinedIcon from "@mui/icons-material/CameraAltOutlined";
 import { useRouter } from "next/router";
-import Link from "next/link";
 import EditProfile from "@/components/profile/EditProfile";
 import AccountPrivateMenu from "@/components/menus/AccountPrivateMenu";
 import PrivateProfileBreadcrumbs from "@/components/menus/PrivateProfileBreadcrumbs";
 
 function Profile() {
-  const { back } = useRouter();
+  const { authUser, loading } = useAuth();
+  const { uid } = authUser || {};
+
+  const { back, push } = useRouter();
+
+  useEffect(() => {
+    if (!authUser && !loading) {
+      push("/auth/signin");
+    }
+    // TODO: loading, show skeleton
+  }, [authUser, loading]);
 
   const handleBack = () => {
     back();

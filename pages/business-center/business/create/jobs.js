@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MainLayout from "@/components/layouts/MainLayout";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { useRouter } from "next/router";
@@ -14,8 +14,12 @@ import JobsFormThree from "@/components/business-center/jobs/JobsFormThree";
 import JobsFormFour from "@/components/business-center/jobs/JobsFormFour";
 import JobsFormFive from "@/components/business-center/jobs/JobsFormFive";
 import JobsFormSix from "@/components/business-center/jobs/JobsFormSix";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 function JobsPostBusinessUser() {
+  const { authUser, loading } = useAuth();
+  const { uid } = authUser || {};
+
   const [isPublish, setIsPublish] = useState(false);
   const [step, setStep] = useState(1);
   const [jobValues, setJobValues] = useState({
@@ -47,7 +51,14 @@ function JobsPostBusinessUser() {
 
   const { isSnackBarOpen, snackMessage } = snackBar;
 
-  const { back } = useRouter();
+  const { back, push } = useRouter();
+
+  useEffect(() => {
+    if (!authUser && !loading) {
+      push("/auth/signin");
+    }
+    // TODO: loading, show skeleton
+  }, [authUser, loading]);
 
   const handleNext = () => {
     if (step === 1) {

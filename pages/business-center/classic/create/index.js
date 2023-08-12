@@ -1,14 +1,25 @@
+import React, { useEffect } from "react";
+import { useAuth } from "@/components/auth/AuthProvider";
 import MainLayout from "@/components/layouts/MainLayout";
-import React from "react";
 import { IconButton } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
 function CreatePostClassic() {
+  const { authUser, loading } = useAuth();
+  const { uid } = authUser || {};
+
   const step = 0;
 
-  const { back } = useRouter();
+  const { back, push } = useRouter();
+
+  useEffect(() => {
+    if (!authUser && !loading) {
+      push("/auth/signin");
+    }
+    // TODO: loading, show skeleton
+  }, [authUser, loading]);
 
   const handleBack = () => {
     back();

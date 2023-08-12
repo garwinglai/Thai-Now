@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useAuth } from "@/components/auth/AuthProvider";
 import MainLayout from "@/components/layouts/MainLayout";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { useRouter } from "next/router";
@@ -10,7 +11,9 @@ import HousingFormFour from "@/components/business-center/housing/HousingFormFou
 import { Alert, IconButton } from "@mui/material";
 
 function EditHousingClassic({ pid }) {
-  console.log(pid);
+  const { authUser, loading } = useAuth();
+  const { uid } = authUser || {};
+
   const [isPublish, setIsPublish] = useState(false);
   const [step, setStep] = useState(1);
   const [housingType, setHousingType] = useState("Apartment");
@@ -51,7 +54,14 @@ function EditHousingClassic({ pid }) {
   const { title, description, location } = housingPostValues;
   const { exactPrice, priceRange } = housingPrice;
 
-  const { back } = useRouter();
+  const { back, push } = useRouter();
+
+  useEffect(() => {
+    if (!authUser && !loading) {
+      push("/auth/signin");
+    }
+    // TODO: loading, show skeleton
+  }, [authUser, loading]);
 
   const handlePriceOption = (e) => {
     const { value } = e.target;

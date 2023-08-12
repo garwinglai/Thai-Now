@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import MainLayout from "@/components/layouts/MainLayout";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { useRouter } from "next/router";
@@ -14,10 +14,51 @@ import UserPosts from "@/components/business-center/UserPosts";
 import BusinessCenterReview from "@/components/business-center/BusinessCenterReview";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import BusinessCenterDesktopBreadcrumbs from "@/components/menus/BusinessCenterDesktopBreadcrumbs";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { db } from "@/firebase/fireConfig";
+import { collection, doc, onSnapshot } from "firebase/firestore";
 
 function ClassicPublicPage() {
+  const { authUser, loading } = useAuth();
+  const { uid } = authUser || {};
+  const [userData, setUserData] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [housingPosts, setHousingPosts] = useState([]);
+
   // create this page similar to BusinessPublicPage
   const { back } = useRouter();
+
+  useEffect(() => {
+    if (!uid) return;
+
+    setIsLoading(true);
+    const housingCollectionRef = collection(db, "users", uid, "housingPosts");
+    const unsubHousingListener = onSnapshot(
+      housingCollectionRef,
+      (snapshot) => {
+        const housingPostsArr = [];
+        snapshot.forEach((doc) => {
+          const data = doc.data();
+          data.id = doc.id;
+          housingPostsArr.push(data);
+        });
+        setHousingPosts(housingPostsArr);
+        setIsLoading(false);
+      }
+    );
+
+    const unsubUserListener = onSnapshot(doc(db, "users", uid), (snapshot) => {
+      const userData = snapshot.data();
+      setUserData(userData);
+    });
+
+    setIsLoading(false);
+
+    return () => {
+      unsubHousingListener();
+      unsubUserListener();
+    };
+  }, [uid]);
 
   const handleBack = () => {
     back();
@@ -37,15 +78,16 @@ function ClassicPublicPage() {
           <div className="hidden lg:block">
             <BusinessCenterDesktopBreadcrumbs />
           </div>
-          <PostProfile isPublicPage={true} />
+          <PostProfile isPublicPage={true} userData={userData} />
         </div>
         <div className="lg:flex lg:flex-row-reverse lg:bg-white lg:gap-4">
           <div className="lg:w-1/3 lg:border lg:h-fit lg:rounded-md lg:shadow-sm ">
-            <PostContactInfo isClassicUser={true} />
+            <PostContactInfo isClassicUser={true} userData={userData} />
           </div>
           <div className="lg:w-2/3">
-            <UserPosts groupPostTitle="Deals" />
-            <UserPosts groupPostTitle="Housing" />
+            {housingPosts.length > 0 && (
+              <UserPosts groupPostTitle="Housing" housingPosts={housingPosts} />
+            )}
             <div className="bg-white p-4 lg:px-0">
               <h4 className="text-[color:var(--deals-primary)]">
                 Lolar Ramsey&apos;s reviews

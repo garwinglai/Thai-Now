@@ -1,14 +1,25 @@
 import MainLayout from "@/components/layouts/MainLayout";
-import React from "react";
+import React, { useEffect } from "react";
 import { IconButton } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 function CreatePostBusiness() {
   const step = 0;
 
-  const { back } = useRouter();
+  const { authUser, loading } = useAuth();
+  const { uid } = authUser || {};
+
+  const { back, push } = useRouter();
+
+  useEffect(() => {
+    if (!authUser && !loading) {
+      push("/auth/signin");
+    }
+    // TODO: loading, show skeleton
+  }, [authUser, loading]);
 
   const handleBack = () => {
     back();

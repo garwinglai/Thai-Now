@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import CustomModal from "@/components/layouts/CustomModal";
 import PostAmenities from "@/components/posts/PostAmenities";
 import PostContactInfo from "@/components/posts/PostContactInfo";
@@ -6,21 +7,17 @@ import PostLocation from "@/components/posts/PostLocation";
 import PostOfferOptions from "@/components/posts/PostOfferOptions";
 import PostProfile from "@/components/posts/PostProfile";
 import Image from "next/image";
-import React from "react";
 import complete_post from "@/public/static/images/complete_post.png";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import Link from "next/link";
-import { Divider } from "@mui/material";
-import avatar_image from "@/public/static/images/temp_avatar.png";
-import StarOutlinedIcon from "@mui/icons-material/StarOutlined";
 import StarOutlineOutlinedIcon from "@mui/icons-material/StarOutlineOutlined";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
-import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 import { IconButton } from "@mui/material";
-import Drawer from "@mui/material/Drawer";
-import CloseIcon from "@mui/icons-material/Close";
 import OutlinedFlagSharpIcon from "@mui/icons-material/OutlinedFlagSharp";
 import AboutBusiness from "../AboutBusiness";
+import PrimaryButtonLink from "@/components/buttons/PrimaryButtonLink";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/firebase/fireConfig";
 
 function HousingFormFour({
   isBusinessUser,
@@ -36,8 +33,10 @@ function HousingFormFour({
   priceOption,
   isPublish,
   closeModal,
+  postId,
+  authUser,
 }) {
-  const { title, description, location } = housingPostValues;
+  const { title, postDescription, location } = housingPostValues;
   const houseValues = {
     housingType,
     housingPrice,
@@ -47,6 +46,29 @@ function HousingFormFour({
     parkingCount,
     bathroomCount,
   };
+
+  console.log("post values", housingPostValues);
+
+  const [userData, setUserData] = useState({
+    email: "",
+    lName: "",
+    fName: "",
+  });
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const userRef = doc(db, "users", authUser.uid);
+      const userSnap = await getDoc(userRef);
+      if (userSnap.exists()) {
+        const userData = userSnap.data();
+        setUserData(userData);
+      } else {
+        console.log("No such document!");
+      }
+    };
+
+    fetchUser();
+  }, [authUser]);
 
   return (
     <form className="w-full lg:w-9/12 lg:mx-auto">
@@ -110,11 +132,19 @@ function HousingFormFour({
             <AboutBusiness isBusinessUser={isBusinessUser} />
           </div>
 
-          <PostContactInfo isClassicUser={true} />
+          <PostContactInfo isClassicUser={true} userData={userData} />
         </div>
         <div className="lg:w-2/3">
-          <PostOfferOptions postType="housing" values={houseValues} />
-          <PostDescription description={description} isLoggedIn={true} />
+          <PostOfferOptions
+            postType="housing"
+            values={houseValues}
+            isPostReview={true}
+          />
+          <PostDescription
+            description={postDescription}
+            isLoggedIn={true}
+            authUser={authUser}
+          />
           <PostAmenities amenities={amenities} />
           <PostLocation location={location} />
         </div>
@@ -124,7 +154,10 @@ function HousingFormFour({
           <Image src={complete_post} alt="complete post image" />
           <h4>Complete</h4>
           <p className="font-light">Your post has been posted.</p>
-          <PrimaryButton type="button" name="View your Post" />
+          <PrimaryButtonLink
+            route={`/housing/${postId}`}
+            name="View your Post"
+          />
           <Link
             href={` ${
               isBusinessUser

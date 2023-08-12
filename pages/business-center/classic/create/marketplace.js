@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MainLayout from "@/components/layouts/MainLayout";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { useRouter } from "next/router";
@@ -13,7 +13,7 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { Timestamp } from "firebase/firestore";
 
 function MarketPlacePost() {
-  const { authUser } = useAuth();
+  const { authUser, loading } = useAuth();
   const { uid, email, displayName } = authUser || {};
 
   const [isPublish, setIsPublish] = useState(false);
@@ -58,7 +58,14 @@ function MarketPlacePost() {
   const { isSnackBarOpen, snackMessage } = snackBar;
   const { exactPrice, priceRange } = offerPrice;
 
-  const { back } = useRouter();
+  const { back, push } = useRouter();
+
+  useEffect(() => {
+    if (!authUser && !loading) {
+      push("/auth/signin");
+    }
+    // TODO: loading, show skeleton
+  }, [authUser, loading]);
 
   const handleBack = () => {
     if (step === 1) {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MainLayout from "@/components/layouts/MainLayout";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { useRouter } from "next/router";
@@ -11,9 +11,11 @@ import { Alert, IconButton } from "@mui/material";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { Timestamp } from "firebase/firestore";
 import { createHousingClassic } from "@/helper/client/housing";
+import getLatLngFromAddress, { createGeoHash } from "@/helper/client/geo";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function HousingPost() {
-  const { authUser } = useAuth();
+  const { authUser, loading } = useAuth();
   const { uid, email, displayName } = authUser || {};
 
   const [isPublish, setIsPublish] = useState(false);
@@ -57,6 +59,8 @@ function HousingPost() {
     isSnackBarOpen: false,
     snackMessage: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [postId, setPostId] = useState("");
 
   const { isSnackBarOpen, snackMessage } = snackBar;
   const {
@@ -71,26 +75,31 @@ function HousingPost() {
   } = housingPostValues;
   const { exactPrice, priceRange } = housingPrice;
 
-  const { back } = useRouter();
+  const { back, push } = useRouter();
+
+  useEffect(() => {
+    if (!authUser && !loading) {
+      push("/auth/signin");
+    }
+    // TODO: loading, show skeleton
+  }, [authUser, loading]);
 
   const handlePriceOption = (e) => {
     const { value } = e.target;
-    console.log(value);
+
     setPriceOption(value);
   };
 
   const handleChangePrice = (e) => {
     const { name, value } = e.target;
-    console.log(priceOption);
+
     if (priceOption === "exact") {
-      console.log("hi");
       setHousingPrice((prev) => ({
         exactPrice: { ...prev.exactPrice, [name]: value },
         priceRange: { minPrice: "", maxPrice: "", interval: "week" },
       }));
     }
     if (priceOption === "range") {
-      console.log(name, value);
       setHousingPrice((prev) => ({
         exactPrice: { price: "", interval: "week" },
         priceRange: { ...prev.priceRange, [name]: value },
@@ -115,7 +124,7 @@ function HousingPost() {
     }
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (step === 1) {
       if (postTitle === "") {
         setSnackBar((prev) => ({
@@ -190,8 +199,9 @@ function HousingPost() {
     }
 
     if (step === 4) {
-      publishPost();
-      // setIsPublish(true);
+      setIsLoading(true);
+      await publishPost();
+      setIsLoading(false);
       return;
     }
 
@@ -199,18 +209,44 @@ function HousingPost() {
   };
 
   const publishPost = async () => {
-    const housingPostData = structureHousingPostData();
-    const { success, error } = await createHousingClassic(housingPostData, uid);
+    const housingPostData = await structureHousingPostData();
 
+    const { success, error, postId } = await createHousingClassic(
+      housingPostData,
+      uid
+    );
+    console.log("postId", postId);
     if (success) {
       setIsPublish(true);
+      setPostId(postId);
     }
     // TODO: handle housing post error
   };
 
-  const structureHousingPostData = () => {
+  const structureHousingPostData = async () => {
     const postAddress =
       addy1 + " " + addy2 + " " + city + " " + state + " " + zip;
+
+    let lat;
+    let lng;
+    let geohash;
+
+    try {
+      const { lat: latitude, lng: longitude } = await getLatLngFromAddress(
+        postAddress
+      );
+      lat = latitude;
+      lng = longitude;
+    } catch (error) {
+      console.log("getAddylatlng", error);
+    }
+
+    try {
+      const geoHash = await createGeoHash(lat, lng);
+      geohash = geoHash;
+    } catch (error) {
+      console.log("geohash", error);
+    }
 
     // instantiate 0 = day
     let pricePer = 0;
@@ -283,15 +319,19 @@ function HousingPost() {
     let amenitiesDisplay = "";
     const amenitiesIntArr = [];
     let i = 0;
+    let j = 0; //amenitiesIntArr index
 
     for (const [key, value] of Object.entries(amenities)) {
       if (value) {
-        i === 0
-          ? (amenitiesDisplay = key)
-          : (amenitiesDisplay = amenitiesDisplay.concat(", " + key));
-        amenitiesIntArr.push(i);
+        if (i === 0) {
+          amenitiesDisplay = key;
+        } else {
+          amenitiesDisplay = amenitiesDisplay.concat(", " + key);
+        }
+        amenitiesIntArr.push(j);
+        i++;
       }
-      i++;
+      j++;
     }
 
     i = 0;
@@ -312,11 +352,11 @@ function HousingPost() {
       userName: displayName,
       // userProfilePic: "",
       posterType: 0,
-      // geoHash,
-      // postCoord: {
-      //   lat: 0,
-      //   lng: 0,
-      // },
+      geohash,
+      postCoord: {
+        lat,
+        lng,
+      },
       price: priceOption === "exact" && "$" + exactPrice.price,
       pricePer,
       pricePerDisplay,
@@ -330,10 +370,9 @@ function HousingPost() {
       amenitiesDisplay,
       rating: 0,
       reviewNum: 0,
-      // photos: uploadedPhotos, || store in firebase storage
+      uploadedPhotos,
     };
 
-    console.log(housingData);
     return housingData;
   };
 
@@ -348,10 +387,17 @@ function HousingPost() {
 
     const fileName = selectedImage.name;
     const imgUrl = URL.createObjectURL(selectedImage);
-    const imgData = { imgUrl, fileName };
+    const imgData = { imgUrl, fileName, imageFile: selectedImage };
 
     if (!uploadedPhotos.includes(imgData))
       setUploadedPhotos((prev) => [...prev, imgData]);
+  };
+
+  const handleRemoveImage = (imgUrl) => () => {
+    const filteredPhotos = uploadedPhotos.filter(
+      (photo) => photo.imgUrl !== imgUrl
+    );
+    setUploadedPhotos(filteredPhotos);
   };
 
   // Form Two
@@ -407,6 +453,7 @@ function HousingPost() {
           uploadedPhotos={uploadedPhotos}
           handleHousingValuesChange={handleHousingValuesChange}
           housingPostValues={housingPostValues}
+          handleRemoveImage={handleRemoveImage}
         />
       );
 
@@ -447,6 +494,8 @@ function HousingPost() {
           priceOption={priceOption}
           isPublish={isPublish}
           closeModal={closeModal}
+          postId={postId}
+          authUser={authUser}
         />
       );
   };
@@ -524,12 +573,18 @@ function HousingPost() {
           <button className="rounded w-1/2 text-[color:var(--deals-primary-med)] border border-[color:var(--deals-primary-med)] lg:w-fit lg:px-4">
             Save & Exit
           </button>
-          <button
-            onClick={handleNext}
-            className="rounded w-1/2 text-white bg-[color:var(--secondary)] py-2 lg:w-fit lg:px-8"
-          >
-            {step === 4 ? "Publish" : "Next"}
-          </button>
+          {isLoading ? (
+            <div className="w-1/2 flex justify-center items-center lg:w-fit ">
+              <CircularProgress color="warning" />
+            </div>
+          ) : (
+            <button
+              onClick={handleNext}
+              className="rounded w-1/2 text-white bg-[color:var(--secondary)] py-2 lg:w-fit lg:px-8"
+            >
+              {step === 4 ? "Publish" : "Next"}
+            </button>
+          )}
         </div>
       </div>
     </React.Fragment>

@@ -33,8 +33,14 @@ function HousingFormTwo({
     cookingBasics,
   } = amenities;
 
+  const formRef = useRef(null);
+
+  useEffect(() => {
+    formRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, []);
+
   return (
-    <form className="p-4 lg:w-1/2 lg:mx-auto">
+    <form ref={formRef} className="p-4 lg:w-1/2 lg:mx-auto">
       <h4 className="pt-4">Tell guest what your place has to offer.</h4>
       <h5 className=" text-[color:var(--deals-primary)] py-4">
         How many guests are you looking for?
