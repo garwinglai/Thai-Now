@@ -16,6 +16,9 @@ import { createGeoHash } from "@/firebase/fireConfig";
 import CircularProgress from "@mui/material/CircularProgress";
 import Geocode from "react-geocode";
 
+Geocode.setApiKey(process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY);
+Geocode.setLanguage("en");
+
 function HousingPost() {
   const { authUser, loading } = useAuth();
   const { uid, email, displayName } = authUser || {};
