@@ -289,9 +289,13 @@ function DirectoryHeader({
       {breadcrumbTitle}
     </p>,
   ];
-
+  console.log("directory", directory);
   return (
-    <div className="pt-6 pb-4 px-4 md:px-0">
+    <div
+      className={`pt-6 pb-4 px-4 ${
+        directory === "Thai help" ? `md:px-0` : `md:px-4`
+      }`}
+    >
       <div
         className={`flex flex-nowrap w-full bg-white overflow-x-scroll ${
           slug === "guide-book" ? "mt-4 mb-4 md:mb-0 md:mt-6" : ""

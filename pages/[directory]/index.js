@@ -16,8 +16,10 @@ import JobsCard from "@/components/directories/cards/JobsCard";
 import { db } from "@/firebase/fireConfig";
 import { collection, doc, onSnapshot } from "firebase/firestore";
 import { useAuth } from "@/components/auth/AuthProvider";
+import Map from "@/components/directories/Map";
 
 const tempCount = [1, 2, 3, 4, 5];
+const address = "1600 Amphitheatre Parkway, Mountain View, CA";
 
 function Directory({ directory }) {
   const { authUser, loading } = useAuth();
@@ -105,24 +107,26 @@ function Directory({ directory }) {
   }
 
   return (
-    <div className="flex ">
-      <div className="hidden lg:block">{displayFilter(directory)}</div>
-      <div className="flex-grow lg:mt-4">
+    <div className="flex">
+      <div className="hidden lg:block lg:overflow-y-scroll">
+        {displayFilter(directory)}
+      </div>
+      <div className="flex-grow">
         <DirectoryHeader directory={directory} />
         <div className=" min-h-[0.5rem] bg-[color:var(--divider)] lg:hidden"></div>
         <div className="px-4">{cardType(directory)}</div>
-        <div className="fixed bottom-5 left-[50%] -translate-x-[50%] lg:hidden">
-          <Fab variant="extended" color="primary" aria-label="map view">
+        <div className="fixed bottom-5 z-50 left-[50%] -translate-x-[50%] lg:hidden">
+          <button className="flex items-center shadow-md rounded-full bg-[color:var(--map-btn)] text-white px-4 py-2">
             <MapIcon sx={{ mr: 1 }} />
-            View on Map
-          </Fab>
+            <p className="text-white font-extralight">View on Map</p>
+          </button>
         </div>
         <div className="flex justify-center pt-8 pb-16">
           <Pagination count={10} color="primary" />
         </div>
       </div>
-      <div className="hidden lg:block lg:mt-4 lg:w-2/5 lg:bg-blue-50">
-        <h4>Map section</h4>
+      <div className="hidden lg:block lg:w-2/5">
+        <Map address={address} />
       </div>
     </div>
   );
