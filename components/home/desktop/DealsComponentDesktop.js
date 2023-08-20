@@ -5,7 +5,8 @@ import LandingPagePagination from "../LandingPagePagination";
 import DealsCard from "../cards/DealsCard";
 import { dealsOfWeek } from "@/helper/db/staticData";
 
-function DealsComponentDesktop() {
+function DealsComponentDesktop({ allHousingPosts }) {
+  
   return (
     <div className={`${styles.deals_of_week_container}`}>
       <div className={`${styles.deals_of_week_heading}`}>
@@ -23,8 +24,9 @@ function DealsComponentDesktop() {
         </div>
       </div>
       <div className={`${styles.deals_card_container} ${styles.flexRow}`}>
-        {dealsOfWeek.map((deal, idx) => {
-          return <DealsCard key={idx} deal={deal} />;
+        {allHousingPosts.map((deal, idx) => {
+          const { id } = deal;
+          return <DealsCard key={id} deal={deal} />;
         })}
       </div>
     </div>

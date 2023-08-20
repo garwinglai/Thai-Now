@@ -11,7 +11,7 @@ import { doc, deleteDoc, writeBatch, increment } from "firebase/firestore";
 import CircularProgress from "@mui/material/CircularProgress";
 import Link from "next/link";
 
-function UserPostDesktopRow({ even, post }) {
+function UserPostDesktopRow({ even, post, isDraft }) {
   const { authUser, loading } = useAuth();
   const { uid } = authUser || {};
 
@@ -58,9 +58,24 @@ function UserPostDesktopRow({ even, post }) {
 
   const handleDeletePost = async () => {
     setIsLoading(true);
-    await deleteFirestorePost();
-    await removeImagesFromStorage(photos);
+    if (isDraft) {
+      const photoKeys = Object.keys(photos);
+      const photoKeysLen = photoKeys.length;
+
+      if (photoKeysLen > 0) {
+        await removeImagesFromStorage(photos);
+      }
+      await deleteFirestoreDraftPost();
+    } else {
+      await deleteFirestorePost();
+      await removeImagesFromStorage(photos);
+    }
     setIsLoading(false);
+  };
+
+  const deleteFirestoreDraftPost = async () => {
+    const draftRef = doc(db, "users", uid, "drafts", id);
+    await deleteDoc(draftRef);
   };
 
   const deleteFirestorePost = async () => {
@@ -95,7 +110,14 @@ function UserPostDesktopRow({ even, post }) {
 
     for (let i = 0; i < fileNames.length; i++) {
       const fileName = fileNames[i];
-      const photoRef = ref(storage, `users/${uid}/housing/${id}/${fileName}`);
+      let photoRef;
+
+      if (isDraft) {
+        photoRef = ref(storage, `users/${uid}/drafts/${id}/${fileName}`);
+      } else {
+        photoRef = ref(storage, `users/${uid}/housing/${id}/${fileName}`);
+      }
+
       try {
         await deleteObject(photoRef);
       } catch (error) {
@@ -144,9 +166,11 @@ function UserPostDesktopRow({ even, post }) {
       </td>
       <td className="text-xs font-light text-center py-2 w-2/12">
         <div className="flex justify-center">
-          <IconButton>
-            <EditIcon fontSize="small" />
-          </IconButton>
+          <Link href={`/business-center/classic/edit/housing/${id}`}>
+            <IconButton>
+              <EditIcon fontSize="small" />
+            </IconButton>
+          </Link>
           {isLoading ? (
             <CircularProgress color="warning" />
           ) : (
@@ -154,11 +178,13 @@ function UserPostDesktopRow({ even, post }) {
               <DeleteIcon fontSize="small" />
             </IconButton>
           )}
-          <Link href={`/housing/${id}`}>
-            <IconButton>
-              <VisibilityIcon fontSize="small" />
-            </IconButton>
-          </Link>
+          {!isDraft && (
+            <Link href={`/housing/${id}`}>
+              <IconButton>
+                <VisibilityIcon fontSize="small" />
+              </IconButton>
+            </Link>
+          )}
         </div>
       </td>
     </tr>

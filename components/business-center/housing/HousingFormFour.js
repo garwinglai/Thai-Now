@@ -47,8 +47,6 @@ function HousingFormFour({
     bathroomCount,
   };
 
-  console.log("post values", housingPostValues);
-
   const [userData, setUserData] = useState({
     email: "",
     lName: "",
@@ -145,7 +143,7 @@ function HousingFormFour({
             isLoggedIn={true}
             authUser={authUser}
           />
-          <PostAmenities amenities={amenities} />
+          <PostAmenities amenities={amenities} isOwner={true} />
           <PostLocation location={location} />
         </div>
       </div>

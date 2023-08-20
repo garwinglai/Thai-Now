@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "../../../styles/components/home/cards/deals-card.module.css";
 import gStyles from "../../../styles/global.module.css";
 import Image from "next/image";
@@ -8,12 +8,13 @@ import { yellow } from "@mui/material/colors";
 function DealsCard({ deal, title }) {
   const {
     discount,
-    reviewScore,
-    reviewCount,
+    rating,
+    reviewNum,
     description,
     bizName,
     location,
-    image,
+    postTitle,
+    photos,
   } = deal;
 
   const footerTag = () => {
@@ -58,20 +59,26 @@ function DealsCard({ deal, title }) {
 
   return (
     <div className={`${styles.deals_card}`}>
-      <Image
-        src={image}
-        alt="business image"
-        className={`${styles.card_image}`}
-      />
+      {photos && (
+        <div className="relative w-full h-40">
+          <Image
+            src={photos["0-1"]}
+            alt="business image"
+            fill
+            className="object-cover rounded-t-md"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+        </div>
+      )}
       <div className={`${styles.card_bottom}`}>
         <div className="flex gap-2 items-end">
           <StarIcon sx={{ color: yellow[700] }} fontSize="small" />
           <span className="flex gap-1 items-center">
-            <p className="text-sm font-light">{reviewScore}</p>
-            <p className="text-xs font-light">({reviewCount} Reviews)</p>
+            <p className="text-sm font-light">{rating}</p>
+            <p className="text-xs font-light">({reviewNum} Reviews)</p>
           </span>
         </div>
-        <h5>{description}</h5>
+        <h5>{postTitle}</h5>
         <p className={`${styles.biz_name_location}`}>
           {bizName} - {location}
         </p>

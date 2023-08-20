@@ -53,7 +53,6 @@ function PostDetail() {
     const housingDocRef = doc(db, "users", uid, postCollection, pid);
     const unsubPostListener = onSnapshot(housingDocRef, (doc) => {
       const postData = doc.data();
-      console.log("postData", postData);
       setPostData(postData);
       setIsLoading(false);
     });

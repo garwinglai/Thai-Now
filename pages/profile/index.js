@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import MainLayout from "@/components/layouts/MainLayout";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
@@ -6,10 +6,14 @@ import { useRouter } from "next/router";
 import EditProfile from "@/components/profile/EditProfile";
 import AccountPrivateMenu from "@/components/menus/AccountPrivateMenu";
 import PrivateProfileBreadcrumbs from "@/components/menus/PrivateProfileBreadcrumbs";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/firebase/fireConfig";
 
 function Profile() {
   const { authUser, loading } = useAuth();
   const { uid } = authUser || {};
+
+  const [userProfile, setUserProfile] = useState(null);
 
   const { back, push } = useRouter();
 
@@ -42,7 +46,7 @@ function Profile() {
             <AccountPrivateMenu currentRoute="profile" />
           </div>
           <div className="lg:bg-white lg:rounded-md lg:shadow-md lg:flex-grow lg:pl-4 lg:pb-16 lg:pr-[20rem]">
-            <EditProfile />
+            <EditProfile uid={uid} userProfile={userProfile} />
           </div>
         </div>
       </div>

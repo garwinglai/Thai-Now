@@ -25,6 +25,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import thai_now_logo from "@/public/static/images/logos/thai_now_logo_blck.png";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import { deleteLocalStorage, getLocalStorage } from "@/utils/clientStorage";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/firebase/fireConfig";
 
 const style = {
   position: "absolute",
@@ -38,7 +40,7 @@ const style = {
   p: 4,
 };
 
-export default function Home() {
+export default function Home({ allHousingPosts }) {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [lastScrollYMobile, setLastScrollYMobile] = useState(0);
   // Search drawer state
@@ -113,7 +115,7 @@ export default function Home() {
 
   // * Displays
   function offersSectionDesktop() {
-    return <DealsComponentDesktop />;
+    return <DealsComponentDesktop allHousingPosts={allHousingPosts} />;
   }
 
   function offersSectionMobile(offersMobileRef) {
@@ -126,7 +128,11 @@ export default function Home() {
     return (
       <div ref={offersMobileRef}>
         {titles.map((title, idx) => (
-          <DealsComponentMobile key={idx} title={title} />
+          <DealsComponentMobile
+            key={idx}
+            title={title}
+            allHousingPosts={allHousingPosts}
+          />
         ))}
       </div>
     );
@@ -269,3 +275,29 @@ export default function Home() {
 Home.getLayout = function getLayout(page) {
   return <MainLayout>{page}</MainLayout>;
 };
+
+export async function getServerSideProps(ctx) {
+  const allHousingRef = collection(db, "allHousing");
+  const snapshot = await getDocs(allHousingRef).catch((error) => {
+    return { error };
+  });
+  const { error } = snapshot;
+
+  if (error) return;
+
+  const housingPosts = [];
+
+  snapshot.forEach((doc) => {
+    const data = doc.data();
+    data.id = doc.id;
+    housingPosts.push(data);
+  });
+
+  const serializedHousingPosts = JSON.parse(JSON.stringify(housingPosts));
+
+  return {
+    props: {
+      allHousingPosts: serializedHousingPosts,
+    },
+  };
+}

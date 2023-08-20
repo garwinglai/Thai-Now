@@ -85,6 +85,7 @@ function BusinessCenter() {
   const [isLoading, setIsLoading] = useState(false);
   const [housingPosts, setHousingPosts] = useState([]);
   const [userData, setUserData] = useState({});
+  const [drafts, setDrafts] = useState([]);
 
   const { push } = useRouter();
 
@@ -100,6 +101,8 @@ function BusinessCenter() {
 
     setIsLoading(true);
     const housingCollectionRef = collection(db, "users", uid, "housingPosts");
+    const draftsRef = collection(db, "users", uid, "drafts");
+
     const unsubHousingListener = onSnapshot(
       housingCollectionRef,
       (snapshot) => {
@@ -119,11 +122,23 @@ function BusinessCenter() {
       setUserData(userData);
     });
 
+    const unsubDraftListener = onSnapshot(draftsRef, (snapshot) => {
+      const draftsArr = [];
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        data.id = doc.id;
+        draftsArr.push(data);
+      });
+      setDrafts(draftsArr);
+      setIsLoading(false);
+    });
+
     setIsLoading(false);
 
     return () => {
       unsubHousingListener();
       unsubUserListener();
+      unsubDraftListener();
     };
   }, [uid]);
 
@@ -155,14 +170,24 @@ function BusinessCenter() {
               post={post}
             />
           ))}
-          {/* <HousingCard isBusinessCenter={true} directory="housing" /> */}
         </TabPanel>
         <TabPanel value={value} index={1}>
           <MarketplaceCard isBusinessCenter={true} directory="marketplace" />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          <MarketplaceCard isBusinessCenter={true} directory="marketplace" />
-          <HousingCard isBusinessCenter={true} directory="housing" />
+          {drafts.map((post) => {
+            const { postType, id } = post;
+            if (postType === 3)
+              return (
+                <HousingCard
+                  key={post.id}
+                  isBusinessCenter={true}
+                  directory="housing"
+                  post={post}
+                  isDraft={true}
+                />
+              );
+          })}
         </TabPanel>
         <TabPanel value={value} index={3}>
           <BusinessCenterReview />
@@ -172,96 +197,385 @@ function BusinessCenter() {
     );
   }
 
-  function getDesktopViewDisplayPosts() {
+  function getDesktopViewDisplayPosts(value) {
     return (
       <div className="hidden lg:p-4 lg:block">
-        <div className="flex justify-between items-center">
-          <h4 className="">10 Listings</h4>
-          <Link
-            href="/business-center/classic/create"
-            className="text-white bg-[color:var(--secondary)] rounded px-3 py-2 font-light text-xs"
-          >
-            Create your post
-          </Link>
-        </div>
-        <div className="hidden lg:block my-4">
-          <table className="w-full">
-            <thead className="w-full pb-20 border-b">
-              <tr className="">
-                <th className="text-center pb-2 w-1/12">
-                  <input
-                    type="checkbox"
-                    className="form-checkbox checked:accent-[color:var(--deals-primary-med)] w-4 h-4 rounded border-[color:var(--placeholder-color)] focus:ring-0"
-                  />
-                </th>
-                <th className="text-left font-medium text-xs pb-2 w-3/12">
-                  Name
-                </th>
-                <th className="text-left font-medium text-xs pb-2 w-1/12">
-                  Type
-                </th>
-                <th className="text-left font-medium text-xs pb-2 w-1/12">
-                  Price
-                </th>
-                <th className="text-left font-medium text-xs pb-2 w-3/12">
-                  Location
-                </th>
-                <th className="text-center font-medium text-xs pb-2 whitespace-nowrap ">
-                  Last Modified
-                </th>
-                <th className="text-center font-medium text-xs pb-2">Author</th>
-              </tr>
-            </thead>
-            {housingPosts.length > 0 && (
-              <tbody className="w-full">
-                {housingPosts.map((post, index) => {
-                  const isEven = index % 2 === 0;
-                  return (
-                    <UserPostDesktopRow
-                      key={post.id}
-                      post={post}
-                      even={isEven}
+        <TabPanel value={value} index={0}>
+          <div className="flex justify-between items-center">
+            <h4 className="">10 Listings</h4>
+            <Link
+              href="/business-center/classic/create"
+              className="text-white bg-[color:var(--secondary)] rounded px-3 py-2 font-light text-xs"
+            >
+              Create your post
+            </Link>
+          </div>
+          <div className="hidden lg:block my-4">
+            <table className="w-full">
+              <thead className="w-full pb-20 border-b">
+                <tr className="">
+                  <th className="text-center pb-2 w-1/12">
+                    <input
+                      type="checkbox"
+                      className="form-checkbox checked:accent-[color:var(--deals-primary-med)] w-4 h-4 rounded border-[color:var(--placeholder-color)] focus:ring-0"
                     />
-                  );
-                })}
-              </tbody>
-            )}
-          </table>
-        </div>
-        {housingPosts.length === 0 ? (
-          <div className="w-full">
-            <p className=" font-extralight text-sm whitespace-nowrap text-center">
-              No posts
-            </p>
+                  </th>
+                  <th className="text-left font-medium text-xs pb-2 w-3/12">
+                    Name
+                  </th>
+                  <th className="text-left font-medium text-xs pb-2 w-1/12">
+                    Type
+                  </th>
+                  <th className="text-left font-medium text-xs pb-2 w-1/12">
+                    Price
+                  </th>
+                  <th className="text-left font-medium text-xs pb-2 w-3/12">
+                    Location
+                  </th>
+                  <th className="text-center font-medium text-xs pb-2 whitespace-nowrap ">
+                    Last Modified
+                  </th>
+                  <th className="text-center font-medium text-xs pb-2">
+                    Author
+                  </th>
+                </tr>
+              </thead>
+
+              {housingPosts.length > 0 && (
+                <tbody className="w-full">
+                  {housingPosts.map((post, index) => {
+                    const isEven = index % 2 === 0;
+                    return (
+                      <UserPostDesktopRow
+                        key={post.id}
+                        post={post}
+                        even={isEven}
+                      />
+                    );
+                  })}
+                </tbody>
+              )}
+            </table>
           </div>
-        ) : (
-          <div className="flex justify-between items-center pt-4">
-            <div className="flex items-center gap-4">
-              <input
-                type="checkbox"
-                name="select-all"
-                id="select-all"
-                className=""
-              />
-              <p className="text-sm font-light opacity-70">Select All</p>
-              <button className="text-[color:var(--deals-primary)]  border-[color:var(--deals-primary)] border border-opacity-50 rounded px-2 ">
-                Delete
-              </button>
-            </div>
-            <div className="flex gap-2 items-center">
-              <IconButton>
-                <NavigateBeforeIcon />
-              </IconButton>
-              <p className="mr-4 font-light text-[color:var(--secondary)] ">
-                1
+
+          {housingPosts.length === 0 ? (
+            <div className="w-full">
+              <p className=" font-extralight text-sm whitespace-nowrap text-center">
+                No posts
               </p>
-              <p className=" font-light">2</p>
-              <IconButton>
-                <NavigateNextIcon />
-              </IconButton>
             </div>
+          ) : (
+            <div className="flex justify-between items-center pt-4">
+              <div className="flex items-center gap-4">
+                <input
+                  type="checkbox"
+                  name="select-all"
+                  id="select-all"
+                  className=""
+                />
+                <p className="text-sm font-light opacity-70">Select All</p>
+                <button className="text-[color:var(--deals-primary)]  border-[color:var(--deals-primary)] border border-opacity-50 rounded px-2 ">
+                  Delete
+                </button>
+              </div>
+              <div className="flex gap-2 items-center">
+                <IconButton>
+                  <NavigateBeforeIcon />
+                </IconButton>
+                <p className="mr-4 font-light text-[color:var(--secondary)] ">
+                  1
+                </p>
+                <p className=" font-light">2</p>
+                <IconButton>
+                  <NavigateNextIcon />
+                </IconButton>
+              </div>
+            </div>
+          )}
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <div className="flex justify-between items-center">
+            <h4 className="">10 Listings</h4>
+            <Link
+              href="/business-center/classic/create"
+              className="text-white bg-[color:var(--secondary)] rounded px-3 py-2 font-light text-xs"
+            >
+              Create your post
+            </Link>
           </div>
-        )}
+          <div className="hidden lg:block my-4">
+            <table className="w-full">
+              <thead className="w-full pb-20 border-b">
+                <tr className="">
+                  <th className="text-center pb-2 w-1/12">
+                    <input
+                      type="checkbox"
+                      className="form-checkbox checked:accent-[color:var(--deals-primary-med)] w-4 h-4 rounded border-[color:var(--placeholder-color)] focus:ring-0"
+                    />
+                  </th>
+                  <th className="text-left font-medium text-xs pb-2 w-3/12">
+                    Name
+                  </th>
+                  <th className="text-left font-medium text-xs pb-2 w-1/12">
+                    Type
+                  </th>
+                  <th className="text-left font-medium text-xs pb-2 w-1/12">
+                    Price
+                  </th>
+                  <th className="text-left font-medium text-xs pb-2 w-3/12">
+                    Location
+                  </th>
+                  <th className="text-center font-medium text-xs pb-2 whitespace-nowrap ">
+                    Last Modified
+                  </th>
+                  <th className="text-center font-medium text-xs pb-2">
+                    Author
+                  </th>
+                </tr>
+              </thead>
+
+              {/* {housingPosts.length > 0 && (
+                <tbody className="w-full">
+                  {housingPosts.map((post, index) => {
+                    const isEven = index % 2 === 0;
+                    return (
+                      <UserPostDesktopRow
+                        key={post.id}
+                        post={post}
+                        even={isEven}
+                      />
+                    );
+                  })}
+                </tbody>
+              )} */}
+            </table>
+          </div>
+
+          {housingPosts.length !== 0 ? (
+            <div className="w-full">
+              <p className=" font-extralight text-sm whitespace-nowrap text-center">
+                No posts
+              </p>
+            </div>
+          ) : (
+            <div className="flex justify-between items-center pt-4">
+              <div className="flex items-center gap-4">
+                <input
+                  type="checkbox"
+                  name="select-all"
+                  id="select-all"
+                  className=""
+                />
+                <p className="text-sm font-light opacity-70">Select All</p>
+                <button className="text-[color:var(--deals-primary)]  border-[color:var(--deals-primary)] border border-opacity-50 rounded px-2 ">
+                  Delete
+                </button>
+              </div>
+              <div className="flex gap-2 items-center">
+                <IconButton>
+                  <NavigateBeforeIcon />
+                </IconButton>
+                <p className="mr-4 font-light text-[color:var(--secondary)] ">
+                  1
+                </p>
+                <p className=" font-light">2</p>
+                <IconButton>
+                  <NavigateNextIcon />
+                </IconButton>
+              </div>
+            </div>
+          )}
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          <div className="flex justify-between items-center">
+            <h4 className="">10 Listings</h4>
+            <Link
+              href="/business-center/classic/create"
+              className="text-white bg-[color:var(--secondary)] rounded px-3 py-2 font-light text-xs"
+            >
+              Create your post
+            </Link>
+          </div>
+          <div className="hidden lg:block my-4">
+            <table className="w-full">
+              <thead className="w-full pb-20 border-b">
+                <tr className="">
+                  <th className="text-center pb-2 w-1/12">
+                    <input
+                      type="checkbox"
+                      className="form-checkbox checked:accent-[color:var(--deals-primary-med)] w-4 h-4 rounded border-[color:var(--placeholder-color)] focus:ring-0"
+                    />
+                  </th>
+                  <th className="text-left font-medium text-xs pb-2 w-3/12">
+                    Name
+                  </th>
+                  <th className="text-left font-medium text-xs pb-2 w-1/12">
+                    Type
+                  </th>
+                  <th className="text-left font-medium text-xs pb-2 w-1/12">
+                    Price
+                  </th>
+                  <th className="text-left font-medium text-xs pb-2 w-3/12">
+                    Location
+                  </th>
+                  <th className="text-center font-medium text-xs pb-2 whitespace-nowrap ">
+                    Last Modified
+                  </th>
+                  <th className="text-center font-medium text-xs pb-2">
+                    Author
+                  </th>
+                </tr>
+              </thead>
+
+              {drafts.length > 0 && (
+                <tbody className="w-full">
+                  {drafts.map((post, index) => {
+                    const { id, postType } = post;
+                    const isEven = index % 2 === 0;
+                    if (postType === 3) {
+                      return (
+                        <UserPostDesktopRow
+                          key={id}
+                          post={post}
+                          even={isEven}
+                          isDraft={true}
+                        />
+                      );
+                    }
+                  })}
+                </tbody>
+              )}
+            </table>
+          </div>
+
+          {drafts.length === 0 ? (
+            <div className="w-full">
+              <p className=" font-extralight text-sm whitespace-nowrap text-center">
+                No drafts
+              </p>
+            </div>
+          ) : (
+            <div className="flex justify-between items-center pt-4">
+              <div className="flex items-center gap-4">
+                <input
+                  type="checkbox"
+                  name="select-all"
+                  id="select-all"
+                  className=""
+                />
+                <p className="text-sm font-light opacity-70">Select All</p>
+                <button className="text-[color:var(--deals-primary)]  border-[color:var(--deals-primary)] border border-opacity-50 rounded px-2 ">
+                  Delete
+                </button>
+              </div>
+              <div className="flex gap-2 items-center">
+                <IconButton>
+                  <NavigateBeforeIcon />
+                </IconButton>
+                <p className="mr-4 font-light text-[color:var(--secondary)] ">
+                  1
+                </p>
+                <p className=" font-light">2</p>
+                <IconButton>
+                  <NavigateNextIcon />
+                </IconButton>
+              </div>
+            </div>
+          )}
+        </TabPanel>
+        <TabPanel value={value} index={3}>
+          <div className="flex justify-between items-center">
+            <h4 className="">10 Listings</h4>
+            <Link
+              href="/business-center/classic/create"
+              className="text-white bg-[color:var(--secondary)] rounded px-3 py-2 font-light text-xs"
+            >
+              Create your post
+            </Link>
+          </div>
+          <div className="hidden lg:block my-4">
+            <table className="w-full">
+              <thead className="w-full pb-20 border-b">
+                <tr className="">
+                  <th className="text-center pb-2 w-1/12">
+                    <input
+                      type="checkbox"
+                      className="form-checkbox checked:accent-[color:var(--deals-primary-med)] w-4 h-4 rounded border-[color:var(--placeholder-color)] focus:ring-0"
+                    />
+                  </th>
+                  <th className="text-left font-medium text-xs pb-2 w-3/12">
+                    Name
+                  </th>
+                  <th className="text-left font-medium text-xs pb-2 w-1/12">
+                    Type
+                  </th>
+                  <th className="text-left font-medium text-xs pb-2 w-1/12">
+                    Price
+                  </th>
+                  <th className="text-left font-medium text-xs pb-2 w-3/12">
+                    Location
+                  </th>
+                  <th className="text-center font-medium text-xs pb-2 whitespace-nowrap ">
+                    Last Modified
+                  </th>
+                  <th className="text-center font-medium text-xs pb-2">
+                    Author
+                  </th>
+                </tr>
+              </thead>
+
+              {/* {housingPosts.length > 0 && (
+                <tbody className="w-full">
+                  {housingPosts.map((post, index) => {
+                    const isEven = index % 2 === 0;
+                    return (
+                      <UserPostDesktopRow
+                        key={post.id}
+                        post={post}
+                        even={isEven}
+                      />
+                    );
+                  })}
+                </tbody>
+              )} */}
+            </table>
+          </div>
+
+          {housingPosts.length !== 0 ? (
+            <div className="w-full">
+              <p className=" font-extralight text-sm whitespace-nowrap text-center">
+                No reviews
+              </p>
+            </div>
+          ) : (
+            <div className="flex justify-between items-center pt-4">
+              <div className="flex items-center gap-4">
+                <input
+                  type="checkbox"
+                  name="select-all"
+                  id="select-all"
+                  className=""
+                />
+                <p className="text-sm font-light opacity-70">Select All</p>
+                <button className="text-[color:var(--deals-primary)]  border-[color:var(--deals-primary)] border border-opacity-50 rounded px-2 ">
+                  Delete
+                </button>
+              </div>
+              <div className="flex gap-2 items-center">
+                <IconButton>
+                  <NavigateBeforeIcon />
+                </IconButton>
+                <p className="mr-4 font-light text-[color:var(--secondary)] ">
+                  1
+                </p>
+                <p className=" font-light">2</p>
+                <IconButton>
+                  <NavigateNextIcon />
+                </IconButton>
+              </div>
+            </div>
+          )}
+        </TabPanel>
       </div>
     );
   }
@@ -305,7 +619,7 @@ function BusinessCenter() {
                 </div>
               </div> */}
               {getMobileViewDisplayPosts(value)}
-              {getDesktopViewDisplayPosts()}
+              {getDesktopViewDisplayPosts(value)}
               <div className="py-5 px-4 bg-white border-t border-gray-100 fixed w-full bottom-0 lg:hidden">
                 <button
                   className="bg-orange-600 text-white text-sm rounded-md py-3 px-4 w-full"

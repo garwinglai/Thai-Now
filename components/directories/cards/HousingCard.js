@@ -8,12 +8,18 @@ import { IconButton } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import CloseIcon from "@mui/icons-material/Close";
 import Link from "next/link";
-import { doc, writeBatch, increment } from "firebase/firestore";
+import { doc, writeBatch, increment, deleteDoc } from "firebase/firestore";
 import { ref, deleteObject } from "firebase/storage";
 import { storage, db } from "@/firebase/fireConfig";
 import { useAuth } from "@/components/auth/AuthProvider";
 
-function HousingCard({ isBusinessCenter, isBusinessUser, directory, post }) {
+function HousingCard({
+  isBusinessCenter,
+  isBusinessUser,
+  directory,
+  post,
+  isDraft,
+}) {
   const { authUser, loading } = useAuth();
   const { uid } = authUser || {};
 
@@ -88,9 +94,24 @@ function HousingCard({ isBusinessCenter, isBusinessUser, directory, post }) {
 
   const handleDeletePost = async () => {
     setIsLoading(true);
-    await deleteFirestorePost();
-    await removeImagesFromStorage(photos);
+    if (isDraft) {
+      const photoKeys = Object.keys(photos);
+      const photoKeysLen = photoKeys.length;
+
+      if (photoKeysLen > 0) {
+        await removeImagesFromStorage(photos);
+      }
+      await deleteFirestoreDraftPost();
+    } else {
+      await deleteFirestorePost();
+      await removeImagesFromStorage(photos);
+    }
     setIsLoading(false);
+  };
+
+  const deleteFirestoreDraftPost = async () => {
+    const draftRef = doc(db, "users", uid, "drafts", id);
+    await deleteDoc(draftRef);
   };
 
   const deleteFirestorePost = async () => {
@@ -125,7 +146,14 @@ function HousingCard({ isBusinessCenter, isBusinessUser, directory, post }) {
 
     for (let i = 0; i < fileNames.length; i++) {
       const fileName = fileNames[i];
-      const photoRef = ref(storage, `users/${uid}/housing/${id}/${fileName}`);
+
+      let photoRef;
+
+      if (isDraft) {
+        photoRef = ref(storage, `users/${uid}/drafts/${id}/${fileName}`);
+      } else {
+        photoRef = ref(storage, `users/${uid}/housing/${id}/${fileName}`);
+      }
       try {
         await deleteObject(photoRef);
       } catch (error) {
@@ -138,7 +166,10 @@ function HousingCard({ isBusinessCenter, isBusinessUser, directory, post }) {
     <div className="relative">
       <Link
         href={`/${directory}/${id}`}
-        className={`${styles.jobs_card_container} ${styles.flex}`}
+        passHref
+        className={`${styles.jobs_card_container} ${styles.flex} ${
+          isDraft && styles.draft_card_disabled
+        }}`}
       >
         {defaultImage ? (
           <div className="w-1/3 h-[33vw] relative md:h-[25vw] md:w-1/4 lg:w-1/3 lg:h-[14vw]">
@@ -152,7 +183,7 @@ function HousingCard({ isBusinessCenter, isBusinessUser, directory, post }) {
           </div>
         ) : (
           <div className="w-1/3 h-[calc(33vw)] rounded bg-gray-200 text-xs font-extralight flex justify-center items-center">
-            .img
+            No image
           </div>
         )}
         <div className={`${styles.card_context_box} ${styles.flexCol}`}>

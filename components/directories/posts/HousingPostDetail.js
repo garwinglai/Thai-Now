@@ -14,6 +14,7 @@ import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import { IconButton } from "@mui/material";
 import OutlinedFlagSharpIcon from "@mui/icons-material/OutlinedFlagSharp";
 import Skeleton from "@mui/material/Skeleton";
+import PostAmenities from "@/components/posts/PostAmenities";
 
 function HousingPostDetail({ postData, userData, authUser }) {
   const isLoggedIn = true;
@@ -26,7 +27,9 @@ function HousingPostDetail({ postData, userData, authUser }) {
     postAddressDetails,
     postAddress,
     photos,
+    amenitiesDisplay,
   } = postData ? postData : {};
+  console.log("postData", postData);
 
   const { city } = postAddressDetails ? postAddressDetails : {};
 
@@ -134,6 +137,7 @@ function HousingPostDetail({ postData, userData, authUser }) {
               description={postDescription}
               authUser={authUser}
             />
+            {amenitiesDisplay && <PostAmenities amenities={amenitiesDisplay} />}
             {authUser && <PostLocation location={postAddress} />}
             <PostReview />
             {/* <span className="h-32 bg-white"></span> */}

@@ -7,7 +7,7 @@ function SearchBarMobile({ handleClick }) {
 			onClick={handleClick}
 			className="absolute w-full -bottom-6 px-4 hover:cursor-text"
 		>
-			<div className="bg-[color:var(--input-bg-secondary)] rounded flex items-center gap-2 py-4 shadow-lg pl-4">
+			<div className="bg-[color:var(--input-bg-secondary)] rounded flex items-center gap-2 py-4 shadow-lg pl-4 md:w-4/5 md:mx-auto lg:w-3/5">
 				<SearchIcon fontSize="small" sx={{ color: "var(--label-color)" }} />
 				<p className="font-light text-sm text-[color:var(--label-color)] ">
 					Search for Deals, Jobs, House ...

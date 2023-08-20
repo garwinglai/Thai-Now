@@ -10,7 +10,10 @@ import HousingFormFour from "@/components/business-center/housing/HousingFormFou
 import { Alert, IconButton } from "@mui/material";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { Timestamp } from "firebase/firestore";
-import { createHousingClassic } from "@/helper/client/housing";
+import {
+  createHousingClassic,
+  saveHousingClassicDraft,
+} from "@/helper/client/housing";
 // import { getLatLngFromAddress } from "@/helper/client/geo";
 import { createGeoHash } from "@/firebase/fireConfig";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -37,7 +40,6 @@ function HousingPost() {
     state: "",
     zip: "",
   });
-  const [geoHash, setGeoHash] = useState("");
   const [guestCount, setGuestCount] = useState(0);
   const [bedroomCount, setBedroomCount] = useState(0);
   const [parkingCount, setParkingCount] = useState(0);
@@ -220,7 +222,7 @@ function HousingPost() {
       housingPostData,
       uid
     );
-    console.log("postId", postId);
+
     if (success) {
       setIsPublish(true);
       setPostId(postId);
@@ -228,29 +230,51 @@ function HousingPost() {
     // TODO: handle housing post error
   };
 
+  const handleSaveAndExit = async () => {
+    setIsLoading(true);
+    const housingPostData = await structureHousingPostData();
+    // 0: jobs 1:deals, 2:marketplace, 3:housing
+    housingPostData.postType = 3;
+
+    const { success, error } = await saveHousingClassicDraft(
+      housingPostData,
+      uid
+    );
+    console.log("done", success, error);
+
+    if (success) {
+      setIsLoading(false);
+      push("/business-center/classic");
+    }
+  };
+
   const structureHousingPostData = async () => {
-    const postAddress =
-      addy1 + " " + addy2 + " " + city + " " + state + " " + zip;
+    let postAddress = "";
+    let lat = "";
+    let lng = "";
+    let geohash = "";
 
-    let lat;
-    let lng;
-    let geohash;
-
-    try {
-      const { lat: latitude, lng: longitude } = await getLatLngFromAddress(
-        postAddress
-      );
-      lat = latitude;
-      lng = longitude;
-    } catch (error) {
-      console.log("getAddylatlng", error);
+    if (addy1 !== "" && city !== "" && state !== "" && zip !== "") {
+      postAddress = addy1 + " " + addy2 + " " + city + " " + state + " " + zip;
+      try {
+        const { lat: latitude, lng: longitude } = await getLatLngFromAddress(
+          postAddress
+        );
+        lat = latitude;
+        lng = longitude;
+        console.log("lat", lat);
+      } catch (error) {
+        console.log("getAddylatlng", error);
+      }
     }
 
-    try {
-      const geoHash = await createGeoHash(lat, lng);
-      geohash = geoHash;
-    } catch (error) {
-      console.log("geohash", error);
+    if (lat !== "" && lng !== "") {
+      try {
+        const geoHash = await createGeoHash(lat, lng);
+        geohash = geoHash;
+      } catch (error) {
+        console.log("geohash", error);
+      }
     }
 
     // instantiate 0 = day
@@ -331,7 +355,15 @@ function HousingPost() {
         if (i === 0) {
           amenitiesDisplay = key;
         } else {
-          amenitiesDisplay = amenitiesDisplay.concat(", " + key);
+          if (key === "hairDryer") {
+            amenitiesDisplay = amenitiesDisplay.concat(", " + "hair dryer");
+          } else if (key === "smokeAlarm") {
+            amenitiesDisplay = amenitiesDisplay.concat(", " + "smoke alarm");
+          } else if (key === "cookingBasics") {
+            amenitiesDisplay = amenitiesDisplay.concat(", " + "cooking basics");
+          } else {
+            amenitiesDisplay = amenitiesDisplay.concat(", " + key);
+          }
         }
         amenitiesIntArr.push(j);
         i++;
@@ -375,7 +407,8 @@ function HousingPost() {
       amenitiesDisplay,
       rating: 0,
       reviewNum: 0,
-      uploadedPhotos,
+      newAddedPhotos: uploadedPhotos,
+      oldPhotos: [],
     };
 
     return housingData;
@@ -588,23 +621,27 @@ function HousingPost() {
             }`}
           ></span>
         </div>
-        <div className="flex gap-4 p-4 lg:justify-between lg:px-16">
-          <button className="rounded w-1/2 text-[color:var(--deals-primary-med)] border border-[color:var(--deals-primary-med)] lg:w-fit lg:px-4">
-            Save & Exit
-          </button>
-          {isLoading ? (
-            <div className="w-1/2 flex justify-center items-center lg:w-fit ">
-              <CircularProgress color="warning" />
-            </div>
-          ) : (
+        {isLoading ? (
+          <div className="w-full p-4 flex justify-center items-center ">
+            <CircularProgress color="warning" />
+          </div>
+        ) : (
+          <div className="flex gap-4 p-4 lg:justify-between lg:px-16">
+            <button
+              onClick={handleSaveAndExit}
+              className="rounded w-1/2 text-[color:var(--deals-primary-med)] border border-[color:var(--deals-primary-med)] lg:w-fit lg:px-4"
+            >
+              Save & Exit
+            </button>
+
             <button
               onClick={handleNext}
               className="rounded w-1/2 text-white bg-[color:var(--secondary)] py-2 lg:w-fit lg:px-8"
             >
               {step === 4 ? "Publish" : "Next"}
             </button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </React.Fragment>
   );

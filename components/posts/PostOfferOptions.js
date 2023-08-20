@@ -47,7 +47,7 @@ function PostOfferOptions({
           parkingCount,
           bathroomCount,
         } = values;
-        console.log("values", values);
+
         propertyType = housingType;
         guestNumber = guestCount;
         bedroomNumber = bedroomCount;

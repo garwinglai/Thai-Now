@@ -125,6 +125,7 @@ function HousingFormOne({
           type="file"
           name="photos"
           id="photos"
+          value=""
           className="hidden"
           onChange={handlePhotoFileChange}
         />
@@ -163,7 +164,7 @@ function HousingFormOne({
                         }}
                       />
                     </IconButton>
-                    <IconButton onClick={handleRemoveImage(imgUrl)}>
+                    <IconButton onClick={handleRemoveImage(file)}>
                       <DeleteForeverOutlinedIcon
                         fontSize="small"
                         sx={{ color: "white" }}
