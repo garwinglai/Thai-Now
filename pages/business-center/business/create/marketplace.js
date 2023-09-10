@@ -10,19 +10,38 @@ import MarketFormFive from "@/components/business-center/marketplace/MarketFormF
 import Snackbar from "@mui/material/Snackbar";
 import { Alert, IconButton } from "@mui/material";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { createGeoHash } from "@/firebase/fireConfig";
+import CircularProgress from "@mui/material/CircularProgress";
+import Geocode from "react-geocode";
+import { Timestamp } from "firebase/firestore";
+import { db } from "@/firebase/fireConfig";
+import { doc, getDocs, collection } from "firebase/firestore";
+import {
+  createMarketBusiness,
+  saveMarketBusinessDraft,
+} from "@/helper/client/marketplace";
+import { getLocalStorage } from "@/utils/clientStorage";
+
+Geocode.setApiKey(process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY);
+Geocode.setLanguage("en");
 
 function MarketplacePostBusinessUser() {
   const { authUser, loading } = useAuth();
-  const { uid } = authUser || {};
+  const { uid, email, displayName } = authUser || {};
 
   const [isPublish, setIsPublish] = useState(false);
   const [step, setStep] = useState(1);
   const [marketPostType, setMarketPostType] = useState("Product");
   const [productDetails, setProductDetails] = useState({
-    title: "",
+    postTitle: "",
+    postDescription: "",
+    postAddress: "",
     productType: "Food",
-    description: "",
-    location: "",
+    addy1: "",
+    addy2: "",
+    city: "",
+    state: "",
+    zip: "",
   });
   const [isProductPhysical, setIsProductPhysical] = useState("Yes");
   const [productCondition, setProductCondition] = useState("Used");
@@ -37,8 +56,23 @@ function MarketplacePostBusinessUser() {
     isSnackBarOpen: false,
     snackMessage: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [postId, setPostId] = useState("");
+  const [bizId, setBizId] = useState("");
+  const [bizName, setBizName] = useState("");
+  const [bizProfPic, setBizProfPic] = useState("");
 
-  const { title, description, location, productType } = productDetails;
+  const {
+    postTitle,
+    postDescription,
+    postAddress,
+    productType,
+    addy1,
+    addy2,
+    city,
+    state,
+    zip,
+  } = productDetails;
   const { isSnackBarOpen, snackMessage } = snackBar;
   const { exactPrice, priceRange } = offerPrice;
 
@@ -48,6 +82,12 @@ function MarketplacePostBusinessUser() {
     if (!authUser && !loading) {
       push("/auth/signin");
     }
+
+    const bizUser = JSON.parse(getLocalStorage("bizUser"));
+    const { id: bizId, name, profPic } = bizUser;
+    setBizId(bizId);
+    setBizName(name);
+    setBizProfPic(profPic["0-1"]);
     // TODO: loading, show skeleton
   }, [authUser, loading]);
 
@@ -59,9 +99,9 @@ function MarketplacePostBusinessUser() {
     }
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (step === 2) {
-      if (title === "") {
+      if (postTitle === "") {
         setSnackBar((prev) => ({
           isSnackBarOpen: true,
           snackMessage: "Missing title.",
@@ -77,7 +117,7 @@ function MarketplacePostBusinessUser() {
         return;
       }
 
-      if (description === "") {
+      if (postDescription === "") {
         setSnackBar((prev) => ({
           isSnackBarOpen: true,
           snackMessage: "Missing description.",
@@ -85,7 +125,7 @@ function MarketplacePostBusinessUser() {
         return;
       }
 
-      if (location === "") {
+      if (addy1 === "" || city === "" || state === "" || zip === "") {
         setSnackBar((prev) => ({
           isSnackBarOpen: true,
           snackMessage: "Location required.",
@@ -116,11 +156,172 @@ function MarketplacePostBusinessUser() {
     }
 
     if (step === 5) {
-      setIsPublish(true);
+      setIsLoading(true);
+      await publishPost();
+      setIsLoading(false);
       return;
     }
 
     setStep((prev) => (prev += 1));
+  };
+
+  const publishPost = async () => {
+    const marketPostData = await structureMarketPostData();
+    console.log("marketPostData", marketPostData);
+
+    const { success, error, postId } = await createMarketBusiness(
+      marketPostData,
+      uid,
+      bizId
+    );
+    console.log("success", success);
+    console.log("error", error);
+
+    if (success) {
+      setIsPublish(true);
+      setPostId(postId);
+    }
+    // TODO: handle housing post error
+  };
+
+  const handleSaveAndExit = async () => {
+    setIsLoading(true);
+    const housingPostData = await structureMarketPostData();
+    // 0: jobs 1:deals, 2:marketplace, 3:housing
+
+    const { success, error } = await saveMarketBusinessDraft(
+      housingPostData,
+      uid,
+      bizId
+    );
+
+    if (success) {
+      push("/business-center/business");
+      setIsLoading(false);
+    }
+  };
+
+  const getLatLngFromAddress = (address) => {
+    return Geocode.fromAddress(address).then(
+      (response) => {
+        const { lat, lng } = response.results[0].geometry.location;
+
+        return { lat, lng };
+      },
+      (error) => {
+        console.error(error);
+        // return { error };
+      }
+    );
+  };
+
+  const structureMarketPostData = async () => {
+    let postAddress = "";
+    let lat = "";
+    let lng = "";
+    let geohash = "";
+
+    if (addy1 !== "" && city !== "" && state !== "" && zip !== "") {
+      postAddress = addy1 + " " + addy2 + " " + city + " " + state + " " + zip;
+      try {
+        const { lat: latitude, lng: longitude } = await getLatLngFromAddress(
+          postAddress
+        );
+        lat = latitude;
+        lng = longitude;
+      } catch (error) {
+        console.log("getAddylatlng", error);
+      }
+    }
+
+    if (lat !== "" && lng !== "") {
+      try {
+        const geoHash = await createGeoHash(lat, lng);
+        geohash = geoHash;
+      } catch (error) {
+        console.log("geohash", error);
+      }
+    }
+
+    let offerType = marketPostType === "Product" ? 0 : 1;
+
+    // 0 = Food
+    let productTypeInt = 0;
+
+    switch (productType) {
+      case "Handmade":
+        break;
+      case "Vehicles":
+        productTypeInt = 1;
+        break;
+      case "Home & Garden":
+        productTypeInt = 2;
+        break;
+      case "Freelance":
+        productTypeInt = 3;
+        break;
+      case "Handyman":
+        productTypeInt = 4;
+        break;
+      case "Taxi":
+        productTypeInt = 5;
+        break;
+      case "Other":
+        productTypeInt = 6;
+        break;
+      default:
+        break;
+    }
+
+    let physicalProduct = isProductPhysical === "Yes" ? 1 : 0;
+    let condition = productCondition === "Used" ? 0 : 1;
+    let includeTax = offerIncludesTax === "Yes" ? 0 : 1;
+
+    const marketplaceData = {
+      postTitle,
+      postDescription,
+      createdAt: Timestamp.now(),
+      postAddress,
+      postAddressDetails: {
+        addy1,
+        addy2,
+        city,
+        state,
+        zip,
+      },
+      geohash,
+      postCoord: {
+        lat,
+        lng,
+      },
+      userId: uid,
+      userName: displayName,
+      bizUserId: bizId,
+      bizName,
+      bizProfPic,
+      posterType: 0,
+      // standoutAmenities: [],
+      offerType,
+      offerTypeDisplay: marketPostType,
+      productType: productTypeInt,
+      productTypeDisplay: productType,
+      physicalProduct,
+      condition,
+      conditionDisplay: productCondition,
+      price: priceOption === "exact" && "$" + exactPrice.price,
+      // pricePer,
+      // pricePerDisplay, don't think i need these for marketplace /week,month, etc.
+      includeTax,
+      rating: 0,
+      postType: 2,
+      reviewNum: 0,
+      newAddedPhotos: uploadedPhotos,
+      oldPhotos: [],
+    };
+
+    // TODO: add standout amenities?! should they have amenities... dont think so
+
+    return marketplaceData;
   };
 
   const closeModal = () => {
@@ -179,12 +380,22 @@ function MarketplacePostBusinessUser() {
 
   const handlePhotoFileChange = (e) => {
     const selectedImage = e.target.files[0];
+
+    if (!selectedImage) return;
+
     const fileName = selectedImage.name;
     const imgUrl = URL.createObjectURL(selectedImage);
-    const imgData = { imgUrl, fileName };
+    const imgData = { imgUrl, fileName, imageFile: selectedImage };
 
     if (!uploadedPhotos.includes(imgData))
       setUploadedPhotos((prev) => [...prev, imgData]);
+  };
+
+  const handleRemoveImage = (imgUrl) => () => {
+    const filteredPhotos = uploadedPhotos.filter(
+      (photo) => photo.imgUrl !== imgUrl
+    );
+    setUploadedPhotos(filteredPhotos);
   };
 
   const displayHousingPostForms = (step) => {
@@ -202,6 +413,7 @@ function MarketplacePostBusinessUser() {
           handleProductValueChange={handleProductValueChange}
           uploadedPhotos={uploadedPhotos}
           handlePhotoFileChange={handlePhotoFileChange}
+          handleRemoveImage={handleRemoveImage}
         />
       );
     if (step === 3)
@@ -238,6 +450,8 @@ function MarketplacePostBusinessUser() {
           offerIncludesTax={offerIncludesTax}
           isPublish={isPublish}
           closeModal={closeModal}
+          authUser={authUser}
+          postId={postId}
         />
       );
   };
@@ -307,17 +521,26 @@ function MarketplacePostBusinessUser() {
             }`}
           ></span>
         </div>
-        <div className="flex gap-4 p-4 lg:justify-between lg:px-16">
-          <button className="rounded w-1/2 text-[color:var(--deals-primary-med)] border border-[color:var(--deals-primary-med)] lg:w-fit lg:px-4">
-            Save & Exit
-          </button>
-          <button
-            onClick={handleNext}
-            className="rounded w-1/2 text-white bg-[color:var(--secondary)] py-2 lg:w-fit lg:px-8"
-          >
-            {step === 4 ? "Publish" : "Next"}
-          </button>
-        </div>
+        {isLoading ? (
+          <div className="w-full p-4 flex justify-center items-center ">
+            <CircularProgress color="warning" />
+          </div>
+        ) : (
+          <div className="flex gap-4 p-4 lg:justify-between lg:px-16">
+            <button
+              onClick={handleSaveAndExit}
+              className="rounded w-1/2 text-[color:var(--deals-primary-med)] border border-[color:var(--deals-primary-med)] lg:w-fit lg:px-4"
+            >
+              Save & Exit
+            </button>
+            <button
+              onClick={handleNext}
+              className="rounded w-1/2 text-white bg-[color:var(--secondary)] py-2 lg:w-fit lg:px-8"
+            >
+              {step === 4 ? "Publish" : "Next"}
+            </button>
+          </div>
+        )}
       </div>
     </React.Fragment>
   );

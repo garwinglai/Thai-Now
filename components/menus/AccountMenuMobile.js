@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styles from "@/styles/components/layouts/account-menu-mobile.module.css";
 import Divider from "@mui/material/Divider";
 import Paper from "@mui/material/Paper";
@@ -20,6 +20,7 @@ import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import { IconButton } from "@mui/material";
 import avatar_image from "../../public/static/images/temp_avatar.png";
 import avatar_image_2 from "@/public/static/images/temp_avatar_2.jpeg";
+import Image from "next/image";
 import Avatar from "@mui/material/Avatar";
 import Link from "next/link";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -27,8 +28,29 @@ import { signOut } from "@firebase/auth";
 import { useRouter } from "next/router";
 import { auth } from "@/firebase/fireConfig";
 
-function AccountMenuMobile({ onClose }) {
+function AccountMenuMobile({ onClose, bizUser, classicUser }) {
+  const [loggedInUserName, setLoggedInUserName] = useState("");
+  const [profPic, setProfPic] = useState("");
+
   const { push } = useRouter();
+
+  useEffect(() => {
+    if (bizUser) {
+      const { name, profPic } = bizUser;
+      const profileImage = profPic ? profPic["0-1"] : "";
+      setProfPic(profileImage);
+      setLoggedInUserName(name);
+      return;
+    }
+
+    if (classicUser) {
+      const { fName, lName, profPic } = classicUser;
+      const profileImage = profPic ? profPic["0-1"] : "";
+      const fullName = `${fName} ${lName}`;
+      setLoggedInUserName(fullName);
+      setProfPic(profileImage);
+    }
+  }, [classicUser, bizUser]);
 
   const handleLogOut = () => {
     signOut(auth)
@@ -50,14 +72,20 @@ function AccountMenuMobile({ onClose }) {
         </IconButton>
       </div>
       <div className={`${styles.header} ${styles.flex}`}>
-        <Avatar
-          sx={{ width: 54, height: 54 }}
-          // src={avatar_image_2}
-          alt="profile image"
-        />
+        {profPic && (
+          <Avatar className="w-10 h-10">
+            <Image
+              src={profPic}
+              fill
+              alt="profile image"
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+          </Avatar>
+        )}
         <div className={`${styles.header_context}`}>
           <p>Welcome</p>
-          <h4>Lolar Ramsey</h4>
+          <h4>{loggedInUserName}</h4>
         </div>
       </div>
       <MenuList onClick={onClose("right", false)}>
@@ -76,7 +104,7 @@ function AccountMenuMobile({ onClose }) {
         <Divider sx={{ width: "90%", margin: "0 auto" }} />
         <div className={`${styles.section_box}`}>
           <p>Account</p>
-          <Link href="/profile">
+          <Link href={`/profile`}>
             <MenuItem sx={{ padding: "0 2rem" }}>
               <ListItemIcon>
                 <PersonOutlineOutlinedIcon fontSize="small" />
@@ -111,7 +139,7 @@ function AccountMenuMobile({ onClose }) {
         <Divider sx={{ width: "90%", margin: "0 auto" }} />
         <div className={`${styles.section_box}`}>
           <p>Your Business</p>
-          <Link href="/business-center/classic">
+          <Link href={`/business-center/${bizUser ? "business" : "classic"}`}>
             <MenuItem sx={{ padding: "0 2rem" }}>
               <ListItemIcon>
                 <StoreOutlinedIcon fontSize="small" />

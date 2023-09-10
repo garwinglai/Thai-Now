@@ -9,19 +9,47 @@ import HousingFormThree from "@/components/business-center/housing/HousingFormTh
 import HousingFormFour from "@/components/business-center/housing/HousingFormFour";
 import { Alert, IconButton } from "@mui/material";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { db } from "@/firebase/fireConfig";
+import { doc, getDoc } from "firebase/firestore";
+import { createGeoHash } from "@/firebase/fireConfig";
+import CircularProgress from "@mui/material/CircularProgress";
+import Geocode from "react-geocode";
+import { Timestamp } from "firebase/firestore";
+import {
+  publishDraftBusinessHousingPost,
+  saveHousingBusinessDraft,
+  updateHousingBusinessDraft,
+  updateHousingBusinessPost,
+} from "@/helper/client/housing";
+import { getLocalStorage } from "@/utils/clientStorage";
 
-function EditHousingBusiness({ pid }) {
+Geocode.setApiKey(process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY);
+Geocode.setLanguage("en");
+
+function EditHousingBusiness() {
   const { authUser, loading } = useAuth();
-  const { uid } = authUser || {};
+  const { uid, email, displayName } = authUser || {};
 
+  const [bizId, setBizId] = useState("");
+  const [isDraft, setIsDraft] = useState(false);
+  const [postId, setPostId] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [isPublish, setIsPublish] = useState(false);
   const [step, setStep] = useState(1);
   const [housingType, setHousingType] = useState("Apartment");
   const [uploadedPhotos, setUploadedPhotos] = useState([]);
+  const [removedPhotos, setRemovedPhotos] = useState([]);
+  const [newAddedPhotos, setNewAddedPhotos] = useState([]);
+  const [oldPhotos, setOldPhotos] = useState([]);
   const [housingPostValues, setHousingPostValues] = useState({
-    title: "",
-    description: "",
-    location: "",
+    postTitle: "",
+    postDescription: "",
+    postAddress: "",
+    addy1: "",
+    addy2: "",
+    city: "",
+    state: "",
+    zip: "",
   });
   const [guestCount, setGuestCount] = useState(0);
   const [bedroomCount, setBedroomCount] = useState(0);
@@ -49,12 +77,15 @@ function EditHousingBusiness({ pid }) {
     isSnackBarOpen: false,
     snackMessage: "",
   });
+  const [postData, setPostData] = useState({});
 
   const { isSnackBarOpen, snackMessage } = snackBar;
-  const { title, description, location } = housingPostValues;
+  const { postTitle, postDescription, addy1, addy2, city, state, zip } =
+    housingPostValues;
   const { exactPrice, priceRange } = housingPrice;
 
-  const { back, push } = useRouter();
+  const { back, push, query } = useRouter();
+  const { pid } = query;
 
   useEffect(() => {
     if (!authUser && !loading) {
@@ -63,15 +94,209 @@ function EditHousingBusiness({ pid }) {
     // TODO: loading, show skeleton
   }, [authUser, loading]);
 
+  useEffect(() => {
+    if (!uid) return;
+    const bizData = JSON.parse(getLocalStorage("bizUser"));
+    const { id: bizId } = bizData;
+    setBizId(bizId);
+
+    const fetchHousingPost = async () => {
+      const postRef = doc(db, "users", uid, "biz", bizId, "housingPosts", pid);
+      const postSnap = await getDoc(postRef);
+
+      if (!postSnap.exists()) {
+        return;
+      }
+
+      const postData = postSnap.data();
+      const postId = postSnap.id;
+
+      const {
+        amenitiesDisplay,
+        bathroomNum,
+        bedroomNum,
+        guestNum,
+        parkingNum,
+        postAddressDetails,
+        postCoord,
+        postDescription,
+        propertyTypeDisplay,
+        postTitle,
+        price,
+        pricePer,
+        geohash,
+        photos,
+      } = postData;
+
+      const { addy1, addy2, city, state, zip } = postAddressDetails;
+      const amenitiesArr = amenitiesDisplay.split(",");
+      const photoArr = [];
+
+      for (const key in photos) {
+        if (photos.hasOwnProperty(key)) {
+          const imgUrl = photos[key];
+          const fileName = key;
+          const imgData = { imgUrl, fileName };
+          photoArr.push(imgData);
+        }
+      }
+
+      const exactPrice = price.slice(1);
+      const exactPriceInterval =
+        pricePer === 0
+          ? "day"
+          : pricePer === 1
+          ? "week"
+          : pricePer === 2
+          ? "month"
+          : "year";
+
+      setPostId(postId);
+      setHousingPrice((prev) => ({
+        ...prev,
+        exactPrice: { price: exactPrice, interval: exactPriceInterval },
+      }));
+      setUploadedPhotos(photoArr);
+      setOldPhotos(photoArr);
+      setPostData(postData);
+      setHousingPostValues((prev) => ({
+        ...prev,
+        postTitle,
+        postDescription,
+        addy1,
+        addy2,
+        city,
+        state,
+        zip,
+      }));
+
+      setHousingType(propertyTypeDisplay);
+      setGuestCount(guestNum);
+      setBedroomCount(bedroomNum);
+      setParkingCount(parkingNum);
+      setBathroomCount(bathroomNum);
+
+      setAmenities((prev) => ({
+        ...prev,
+        kitchen: amenitiesArr.includes("kitchen"),
+        wifi: amenitiesArr.includes("wifi"),
+        tv: amenitiesArr.includes("tv"),
+        washer: amenitiesArr.includes("washer"),
+        hairDryer: amenitiesArr.includes("hair dryer"),
+        refridgerator: amenitiesArr.includes("refridgerator"),
+        microwave: amenitiesArr.includes("microwave"),
+        workspace: amenitiesArr.includes("workspace"),
+        dryer: amenitiesArr.includes("dryer"),
+        smokeAlarm: amenitiesArr.includes("smoke alarm"),
+        cookingBasics: amenitiesArr.includes("cooking basics"),
+      }));
+    };
+
+    const fetchDrafts = async () => {
+      const draftsRef = doc(db, "users", uid, "biz", bizId, "drafts", pid);
+      const draftSnap = await getDoc(draftsRef);
+
+      if (!draftSnap.exists()) {
+        return;
+      }
+
+      const draftData = draftSnap.data();
+      const postId = draftSnap.id;
+
+      const {
+        amenitiesDisplay,
+        bathroomNum,
+        bedroomNum,
+        guestNum,
+        parkingNum,
+        postAddressDetails,
+        postCoord,
+        postDescription,
+        propertyTypeDisplay,
+        postTitle,
+        price,
+        pricePer,
+        geohash,
+        photos,
+      } = draftData;
+
+      const { addy1, addy2, city, state, zip } = postAddressDetails;
+      const amenitiesArr = amenitiesDisplay.split(",");
+      const photoArr = [];
+
+      for (const key in photos) {
+        if (photos.hasOwnProperty(key)) {
+          const imgUrl = photos[key];
+          const fileName = key;
+          const imgData = { imgUrl, fileName };
+          photoArr.push(imgData);
+        }
+      }
+
+      const exactPrice = price.slice(1);
+      const exactPriceInterval =
+        pricePer === 0
+          ? "day"
+          : pricePer === 1
+          ? "week"
+          : pricePer === 2
+          ? "month"
+          : "year";
+
+      setIsDraft(true);
+      setPostId(postId);
+      setHousingPrice((prev) => ({
+        ...prev,
+        exactPrice: { price: exactPrice, interval: exactPriceInterval },
+      }));
+      setUploadedPhotos(photoArr);
+      setOldPhotos(photoArr);
+      setPostData(postData);
+      setHousingPostValues((prev) => ({
+        ...prev,
+        postTitle,
+        postDescription,
+        addy1,
+        addy2,
+        city,
+        state,
+        zip,
+      }));
+
+      setHousingType(propertyTypeDisplay);
+      setGuestCount(guestNum);
+      setBedroomCount(bedroomNum);
+      setParkingCount(parkingNum);
+      setBathroomCount(bathroomNum);
+
+      setAmenities((prev) => ({
+        ...prev,
+        kitchen: amenitiesArr.includes("kitchen"),
+        wifi: amenitiesArr.includes("wifi"),
+        tv: amenitiesArr.includes("tv"),
+        washer: amenitiesArr.includes("washer"),
+        hairDryer: amenitiesArr.includes("hair dryer"),
+        refridgerator: amenitiesArr.includes("refridgerator"),
+        microwave: amenitiesArr.includes("microwave"),
+        workspace: amenitiesArr.includes("workspace"),
+        dryer: amenitiesArr.includes("dryer"),
+        smokeAlarm: amenitiesArr.includes("smoke alarm"),
+        cookingBasics: amenitiesArr.includes("cooking basics"),
+      }));
+    };
+
+    fetchHousingPost();
+    fetchDrafts();
+  }, [uid, pid]);
+
   const handlePriceOption = (e) => {
     const { value } = e.target;
-    console.log(value);
     setPriceOption(value);
   };
 
   const handleChangePrice = (e) => {
     const { name, value } = e.target;
-    console.log(priceOption);
+
     if (priceOption === "exact") {
       console.log("hi");
       setHousingPrice((prev) => ({
@@ -105,9 +330,9 @@ function EditHousingBusiness({ pid }) {
     }
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (step === 1) {
-      if (title === "") {
+      if (postTitle === "") {
         setSnackBar((prev) => ({
           isSnackBarOpen: true,
           snackMessage: "Missing title.",
@@ -123,7 +348,7 @@ function EditHousingBusiness({ pid }) {
         return;
       }
 
-      if (description === "") {
+      if (postDescription === "") {
         setSnackBar((prev) => ({
           isSnackBarOpen: true,
           snackMessage: "Missing description.",
@@ -131,7 +356,7 @@ function EditHousingBusiness({ pid }) {
         return;
       }
 
-      if (location === "") {
+      if (addy1 === "" || city === "" || state === "" || zip === "") {
         setSnackBar((prev) => ({
           isSnackBarOpen: true,
           snackMessage: "Location required.",
@@ -180,11 +405,255 @@ function EditHousingBusiness({ pid }) {
     }
 
     if (step === 4) {
-      setIsPublish(true);
+      setIsLoading(true);
+      await publishPost();
+      setIsLoading(false);
       return;
     }
 
     setStep((prev) => (prev += 1));
+  };
+
+  const publishPost = async () => {
+    const housingPostData = await structureHousingPostData();
+
+    if (isDraft) {
+      // console.log("housingPostData", housingPostData);
+      // return;
+      const { success, error, postId } = await publishDraftBusinessHousingPost(
+        housingPostData,
+        uid,
+        bizId
+      );
+
+      if (success) {
+        setIsPublish(true);
+        setPostId(postId);
+      }
+    } else {
+      const { success, error, postId } = await updateHousingBusinessPost(
+        housingPostData,
+        uid,
+        bizId
+      );
+
+      if (success) {
+        setIsPublish(true);
+        setPostId(postId);
+      }
+      // TODO: handle housing post error
+    }
+  };
+
+  const structureHousingPostData = async () => {
+    let postAddress = "";
+    let lat = "";
+    let lng = "";
+    let geohash = "";
+
+    if (addy1 !== "" && city !== "" && state !== "" && zip !== "") {
+      postAddress = addy1 + " " + addy2 + " " + city + " " + state + " " + zip;
+      try {
+        const { lat: latitude, lng: longitude } = await getLatLngFromAddress(
+          postAddress
+        );
+        lat = latitude;
+        lng = longitude;
+      } catch (error) {
+        console.log("getAddylatlng", error);
+      }
+    }
+
+    if (lat !== "" && lng !== "") {
+      try {
+        const geoHash = await createGeoHash(lat, lng);
+        geohash = geoHash;
+      } catch (error) {
+        console.log("geohash", error);
+      }
+    }
+
+    // instantiate 0 = day
+    let pricePer = 0;
+    let pricePerDisplay = "per Day";
+
+    switch (exactPrice.interval) {
+      case "week":
+        pricePer = 1;
+        break;
+      case "month":
+        pricePer = 2;
+        break;
+      case "year":
+        pricePer = 3;
+      default:
+        break;
+    }
+
+    switch (pricePer) {
+      case 1:
+        pricePerDisplay = "per Week";
+        break;
+      case 2:
+        pricePerDisplay = "per Month";
+        break;
+      case 3:
+        pricePerDisplay = "per Year";
+      default:
+        break;
+    }
+
+    // instantiate 0 = apartment
+    let propertyType = 0;
+    let propertyTypeDisplay = "Apartment";
+
+    switch (housingType) {
+      case "Room":
+        propertyType = 1;
+        break;
+      case "Condo":
+        propertyType = 2;
+        break;
+      case "House":
+        propertyType = 3;
+        break;
+      case "Other":
+        propertyType = 4;
+        break;
+      default:
+        break;
+    }
+
+    switch (propertyType) {
+      case 1:
+        propertyTypeDisplay = "Room";
+        break;
+      case 2:
+        propertyTypeDisplay = "Condo";
+        break;
+      case 3:
+        propertyTypeDisplay = "House";
+        break;
+      case 4:
+        propertyTypeDisplay = "Other";
+        break;
+      default:
+        break;
+    }
+
+    let amenitiesDisplay = "";
+    const amenitiesIntArr = [];
+    let i = 0;
+    let j = 0; //amenitiesIntArr index
+
+    for (const [key, value] of Object.entries(amenities)) {
+      if (value) {
+        if (i === 0) {
+          amenitiesDisplay = key;
+        } else {
+          if (key === "hairDryer") {
+            amenitiesDisplay = amenitiesDisplay.concat(", " + "hair dryer");
+          } else if (key === "smokeAlarm") {
+            amenitiesDisplay = amenitiesDisplay.concat(", " + "smoke alarm");
+          } else if (key === "cookingBasics") {
+            amenitiesDisplay = amenitiesDisplay.concat(", " + "cooking basics");
+          } else {
+            amenitiesDisplay = amenitiesDisplay.concat(", " + key);
+          }
+        }
+        amenitiesIntArr.push(j);
+        i++;
+      }
+      j++;
+    }
+
+    i = 0;
+
+    const housingData = {
+      postId,
+      createdAt: Timestamp.now(),
+      postTitle,
+      postDescription,
+      postAddress,
+      postAddressDetails: {
+        addy1,
+        addy2,
+        city,
+        state,
+        zip,
+      },
+      userId: uid,
+      userName: displayName,
+      // userProfilePic: "",
+      posterType: 0,
+      geohash,
+      postCoord: {
+        lat,
+        lng,
+      },
+      price: priceOption === "exact" && "$" + exactPrice.price,
+      pricePer,
+      pricePerDisplay,
+      propertyType,
+      propertyTypeDisplay,
+      guestNum: guestCount,
+      bedroomNum: bedroomCount,
+      parkingNum: parkingCount,
+      bathroomNum: bathroomCount,
+      amenities: amenitiesIntArr,
+      amenitiesDisplay,
+      rating: 0,
+      reviewNum: 0,
+      removedPhotos,
+      newAddedPhotos,
+      oldPhotos,
+      postType: 3, // 0: jobs 1:deals, 2:marketplace, 3:housing
+    };
+
+    return housingData;
+  };
+
+  const getLatLngFromAddress = (address) => {
+    return Geocode.fromAddress(address).then(
+      (response) => {
+        const { lat, lng } = response.results[0].geometry.location;
+
+        return { lat, lng };
+      },
+      (error) => {
+        console.error(error);
+        // return { error };
+      }
+    );
+  };
+
+  const handleSaveAndExit = async () => {
+    setIsLoading(true);
+    const housingPostData = await structureHousingPostData();
+
+    if (isDraft) {
+      const { success, error } = await updateHousingBusinessDraft(
+        housingPostData,
+        uid,
+        bizId
+      );
+
+      if (success) {
+        setIsLoading(false);
+        push("/business-center/business");
+      }
+    } else {
+      const { success, error } = await saveHousingBusinessDraft(
+        housingPostData,
+        uid,
+        bizId
+      );
+
+      if (success) {
+        setIsLoading(false);
+        push("/business-center/business");
+      }
+    }
   };
 
   const handleCloseSnackBar = () => {
@@ -193,12 +662,33 @@ function EditHousingBusiness({ pid }) {
 
   const handlePhotoFileChange = (e) => {
     const selectedImage = e.target.files[0];
+    if (!selectedImage) return;
+
     const fileName = selectedImage.name;
     const imgUrl = URL.createObjectURL(selectedImage);
-    const imgData = { imgUrl, fileName };
+    const imgData = { imgUrl, fileName, imageFile: selectedImage };
 
-    if (!uploadedPhotos.includes(imgData))
+    if (!uploadedPhotos.includes(imgData)) {
       setUploadedPhotos((prev) => [...prev, imgData]);
+      setNewAddedPhotos((prev) => [...prev, imgData]);
+    }
+  };
+
+  const handleRemoveImage = (file, fileName) => () => {
+    const { imgUrl } = file;
+    const filteredPhotos = uploadedPhotos.filter(
+      (photo) => photo.fileName != fileName
+    );
+
+    const existedFileToRemove = oldPhotos.find(
+      (photo) => photo.fileName != fileName
+    );
+    setUploadedPhotos(filteredPhotos);
+    setOldPhotos(filteredPhotos);
+
+    if (existedFileToRemove) {
+      setRemovedPhotos((prev) => [...prev, existedFileToRemove]);
+    }
   };
 
   // Form Two
@@ -254,6 +744,7 @@ function EditHousingBusiness({ pid }) {
           uploadedPhotos={uploadedPhotos}
           handleHousingValuesChange={handleHousingValuesChange}
           housingPostValues={housingPostValues}
+          handleRemoveImage={handleRemoveImage}
         />
       );
 
@@ -295,6 +786,8 @@ function EditHousingBusiness({ pid }) {
           priceOption={priceOption}
           isPublish={isPublish}
           closeModal={closeModal}
+          authUser={authUser}
+          postId={postId}
         />
       );
   };
@@ -318,7 +811,7 @@ function EditHousingBusiness({ pid }) {
           {snackMessage}
         </Alert>
       </Snackbar>
-      <div className="pb-28">
+      <div className="pb-28 lg:pt-20">
         <button
           onClick={handleBack}
           className="flex items-center gap-1 bg-transparent pl-4 pt-4"
@@ -364,17 +857,26 @@ function EditHousingBusiness({ pid }) {
             }`}
           ></span>
         </div>
-        <div className="flex gap-4 p-4">
-          <button className="rounded w-1/2 text-[color:var(--deals-primary-med)] border border-[color:var(--deals-primary-med)]">
-            Save & Exit
-          </button>
-          <button
-            onClick={handleNext}
-            className="rounded w-1/2 text-white bg-[color:var(--secondary)] py-2"
-          >
-            {step === 4 ? "Publish" : "Next"}
-          </button>
-        </div>
+        {isLoading ? (
+          <div className="w-full p-4 flex justify-center items-center ">
+            <CircularProgress color="warning" />
+          </div>
+        ) : (
+          <div className="flex gap-4 p-4 lg:justify-between lg:px-16">
+            <button
+              onClick={handleSaveAndExit}
+              className="rounded w-1/2 text-[color:var(--deals-primary-med)] border border-[color:var(--deals-primary-med)] lg:w-fit lg:px-4"
+            >
+              Save & Exit
+            </button>
+            <button
+              onClick={handleNext}
+              className="rounded w-1/2 text-white bg-[color:var(--secondary)] py-2 lg:w-fit lg:px-8"
+            >
+              {step === 4 ? "Publish" : "Next"}
+            </button>
+          </div>
+        )}
       </div>
     </React.Fragment>
   );
@@ -385,15 +887,3 @@ export default EditHousingBusiness;
 EditHousingBusiness.getLayout = function getLayout(page) {
   return <MainLayout route="business-center">{page}</MainLayout>;
 };
-
-export async function getServerSideProps(ctx) {
-  console.log(ctx);
-  const { pid } = ctx.query;
-  console.log(pid);
-
-  return {
-    props: {
-      pid,
-    },
-  };
-}

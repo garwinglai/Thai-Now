@@ -151,53 +151,90 @@ function PostOfferOptions({
     }
 
     if (postType === "marketplace") {
-      const {
-        marketPostType,
-        isProductPhysical,
-        productCondition,
-        priceOption,
-        offerPrice,
-        offerIncludesTax,
-      } = postData;
-      const { exactPrice, priceRange } = offerPrice;
+      let postType;
+      let productPhysicalOrNot;
+      let conditionOfProduct;
+      let priceOptions;
+      let postPrice;
+      let isTaxRequired;
+      let exactRange;
+      let priceRange;
+
+      if (isPostReview) {
+        const {
+          marketPostType,
+          isProductPhysical,
+          productCondition,
+          priceOption,
+          offerPrice,
+          offerIncludesTax,
+        } = values;
+
+        postType = marketPostType;
+        productPhysicalOrNot = isProductPhysical;
+        conditionOfProduct = productCondition;
+        priceOptions = priceOption;
+        postPrice = offerPrice;
+        isTaxRequired = offerIncludesTax;
+        exactRange = offerPrice.exactPrice;
+        priceRange = offerPrice.priceRange;
+      } else {
+        const {
+          offerTypeDisplay,
+          physicalProduct,
+          conditionDisplay,
+          price,
+          includeTax,
+        } = postData;
+        postType = offerTypeDisplay;
+        productPhysicalOrNot = physicalProduct === 1 ? "Yes" : "No";
+        conditionOfProduct = conditionDisplay;
+        postPrice = price;
+        isTaxRequired = includeTax === 0 ? "Yes" : "No";
+      }
 
       return (
         <div className="flex flex-col gap-2">
           <span className="flex items-center gap-2">
             <MapsHomeWorkIcon sx={{ color: "var(--secondary)" }} />
             <h6 className="text-sm">Type :</h6>
-            <p className="font-extralight text-sm">{marketPostType}</p>
+            <p className="font-extralight text-sm">{postType}</p>
           </span>
           <span className="flex items-center gap-2">
             <PersonIcon sx={{ color: "var(--secondary)" }} />
             <h6 className="text-sm">Condition :</h6>
-            <p className="font-extralight text-sm">{productCondition}</p>
+            <p className="font-extralight text-sm">{conditionOfProduct}</p>
           </span>
           <span className="flex items-center gap-2">
             <BedIcon sx={{ color: "var(--secondary)" }} />
             <h6 className="text-sm">Physical Product :</h6>
-            <p className="font-extralight text-sm">{isProductPhysical}</p>
+            <p className="font-extralight text-sm">{productPhysicalOrNot}</p>
           </span>
-          {priceOption === "exact" && (
+          {isPostReview ? (
+            <div>
+              {priceOptions === "exact" ? (
+                <span className="flex mt-4">
+                  <h4 className="text-[color:var(--secondary)] ">
+                    ${exactRange.price}
+                  </h4>
+                </span>
+              ) : (
+                <span className="flex mt-4">
+                  <h4 className="text-[color:var(--secondary)] ">
+                    ${priceRange.minPrice}
+                    <span className="font-extralight"> - </span>$
+                    {priceRange.maxPrice}
+                  </h4>
+                </span>
+              )}
+            </div>
+          ) : (
             <span className="flex mt-4">
-              <h4 className="text-[color:var(--secondary)] ">
-                ${exactPrice.price}
-                <span className="font-extralight">/{exactPrice.interval}</span>
-              </h4>
-            </span>
-          )}
-          {priceOption === "range" && (
-            <span className="flex mt-4">
-              <h4 className="text-[color:var(--secondary)] ">
-                ${priceRange.minPrice}
-                <span className="font-extralight"> - </span>$
-                {priceRange.maxPrice}
-                <span className="font-extralight">/{priceRange.interval}</span>
-              </h4>
+              <h4 className="text-[color:var(--secondary)] ">{postPrice}</h4>
             </span>
           )}
           <p className="font-extralight text-xs">
-            {offerIncludesTax === "Yes" ? "Includes tax" : "Tax not included"}
+            {isTaxRequired === "Yes" ? "Includes tax" : "Tax not included"}
           </p>
         </div>
       );

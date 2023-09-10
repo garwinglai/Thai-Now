@@ -76,7 +76,11 @@ function EmailSignUp() {
           numHousing: 0,
           numMarket: 0,
           numReviews: 0,
+          numJobs: 0,
+          numDeals: 0,
           reviewScore: 0,
+          userType: 0, // 0 = classic user, 1 = business user
+          userTypeId: uid,
         };
         const { success, value, error } = await createUser(userNoPassword, uid);
 

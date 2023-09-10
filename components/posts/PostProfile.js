@@ -11,7 +11,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import Link from "next/link";
 
 function PostProfile({ isPublicPage, isCreatePostDesktop, userData, city }) {
-  const { email, fName, lName, profileImgUrl } = userData ? userData : {};
+  const { email, fName, lName, profPic, name } = userData ? userData : {};
 
   const [state, setState] = useState({
     bottom: false,
@@ -31,13 +31,19 @@ function PostProfile({ isPublicPage, isCreatePostDesktop, userData, city }) {
     <div className="p-4 bg-white lg:px-0">
       <div className="flex justify-between items-center">
         <span className="flex items-center gap-3 mb-2">
-          <Image
-            src={avatar_image}
-            alt="profile image"
-            className="border-4 border-[color:var(--label-color)] rounded-full  w-16"
-          />
+          {profPic && (
+            <div className="relative w-16 h-16 aspect-square">
+              <Image
+                src={profPic["0-1"]}
+                alt="profile image"
+                fill
+                className="border-4 border-[color:var(--label-color)] rounded-full w-full object-cover"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              />
+            </div>
+          )}
           <h4 className=" text-lg">
-            Hosted by {fName} {lName}
+            Hosted by {name ? name : `${fName} ${lName}`}
           </h4>
         </span>
         {isPublicPage && (

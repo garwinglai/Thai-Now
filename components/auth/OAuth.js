@@ -81,6 +81,8 @@ function OAuth() {
             numHousing: 0,
             numMarket: 0,
             numReviews: 0,
+            numJobs: 0,
+            numDeals: 0,
             reviewScore: 0,
           };
 

@@ -164,7 +164,7 @@ function HousingFormOne({
                         }}
                       />
                     </IconButton>
-                    <IconButton onClick={handleRemoveImage(file)}>
+                    <IconButton onClick={handleRemoveImage(imgUrl, fileName)}>
                       <DeleteForeverOutlinedIcon
                         fontSize="small"
                         sx={{ color: "white" }}

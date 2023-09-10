@@ -84,6 +84,7 @@ function BusinessCenter() {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [housingPosts, setHousingPosts] = useState([]);
+  const [marketplacePosts, setMarketplacePosts] = useState([]);
   const [userData, setUserData] = useState({});
   const [drafts, setDrafts] = useState([]);
 
@@ -101,7 +102,14 @@ function BusinessCenter() {
 
     setIsLoading(true);
     const housingCollectionRef = collection(db, "users", uid, "housingPosts");
+    const marketplaceCollectionRef = collection(
+      db,
+      "users",
+      uid,
+      "marketPosts"
+    );
     const draftsRef = collection(db, "users", uid, "drafts");
+    const userRef = doc(db, "users", uid);
 
     const unsubHousingListener = onSnapshot(
       housingCollectionRef,
@@ -117,7 +125,21 @@ function BusinessCenter() {
       }
     );
 
-    const unsubUserListener = onSnapshot(doc(db, "users", uid), (snapshot) => {
+    const unsubMarketplaceListener = onSnapshot(
+      marketplaceCollectionRef,
+      (snapshot) => {
+        const marketPostsArr = [];
+        snapshot.forEach((doc) => {
+          const data = doc.data();
+          data.id = doc.id;
+          marketPostsArr.push(data);
+        });
+        setMarketplacePosts(marketPostsArr);
+        setIsLoading(false);
+      }
+    );
+
+    const unsubUserListener = onSnapshot(userRef, (snapshot) => {
       const userData = snapshot.data();
       setUserData(userData);
     });
@@ -137,6 +159,7 @@ function BusinessCenter() {
 
     return () => {
       unsubHousingListener();
+      unsubMarketplaceListener();
       unsubUserListener();
       unsubDraftListener();
     };
@@ -165,6 +188,7 @@ function BusinessCenter() {
           {housingPosts.map((post) => (
             <HousingCard
               key={post.id}
+              isBusinessUser={false}
               isBusinessCenter={true}
               directory="housing"
               post={post}
@@ -172,11 +196,34 @@ function BusinessCenter() {
           ))}
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <MarketplaceCard isBusinessCenter={true} directory="marketplace" />
+          {marketplacePosts.map((post) => (
+            <MarketplaceCard
+              key={post.id}
+              isBusinessCenter={true}
+              isBusinessUser={false}
+              directory="marketplace"
+              post={post}
+              isDraft={false}
+              userData={userData}
+            />
+          ))}
         </TabPanel>
         <TabPanel value={value} index={2}>
           {drafts.map((post) => {
             const { postType, id } = post;
+            if (postType === 2) {
+              return (
+                <MarketplaceCard
+                  key={post.id}
+                  isBusinessCenter={true}
+                  isBusinessUser={false}
+                  directory="marketplace"
+                  post={post}
+                  isDraft={true}
+                  userData={userData}
+                />
+              );
+            }
             if (postType === 3)
               return (
                 <HousingCard
@@ -248,6 +295,7 @@ function BusinessCenter() {
                     return (
                       <UserPostDesktopRow
                         key={post.id}
+                        userType={0}
                         post={post}
                         even={isEven}
                       />
@@ -334,24 +382,27 @@ function BusinessCenter() {
                 </tr>
               </thead>
 
-              {/* {housingPosts.length > 0 && (
+              {marketplacePosts.length > 0 && (
                 <tbody className="w-full">
-                  {housingPosts.map((post, index) => {
+                  {marketplacePosts.map((post, index) => {
                     const isEven = index % 2 === 0;
                     return (
                       <UserPostDesktopRow
                         key={post.id}
                         post={post}
                         even={isEven}
+                        postType={2}
+                        userType={0}
+                        userData={userData}
                       />
                     );
                   })}
                 </tbody>
-              )} */}
+              )}
             </table>
           </div>
 
-          {housingPosts.length !== 0 ? (
+          {marketplacePosts.length !== 0 ? (
             <div className="w-full">
               <p className=" font-extralight text-sm whitespace-nowrap text-center">
                 No posts
@@ -432,6 +483,19 @@ function BusinessCenter() {
                   {drafts.map((post, index) => {
                     const { id, postType } = post;
                     const isEven = index % 2 === 0;
+                    if (postType === 2) {
+                      return (
+                        <UserPostDesktopRow
+                          key={id}
+                          postType={postType}
+                          userType={0}
+                          post={post}
+                          even={isEven}
+                          isDraft={true}
+                          userData={userData}
+                        />
+                      );
+                    }
                     if (postType === 3) {
                       return (
                         <UserPostDesktopRow

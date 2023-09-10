@@ -1,17 +1,14 @@
 import React from "react";
 
-function AboutBusiness({ isBusinessUser }) {
+function AboutBusiness({ isBusinessUser, userData }) {
+  console.log("userData", userData);
+  const { bizAboutUs } = isBusinessUser ? (userData ? userData : {}) : {};
   return (
     <div className="">
       {isBusinessUser && (
         <div className="mb-4">
           <h5>About Business</h5>
-          <p className="text-sm font-extralight">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Necessitatibus provident modi rem, velit culpa eos consequatur nam
-            labore. Vero possimus inventore necessitatibus maxime quaerat beatae
-            voluptate non adipisci assumenda enim?
-          </p>
+          <p className="text-sm font-extralight">{bizAboutUs}</p>
         </div>
       )}
       <button

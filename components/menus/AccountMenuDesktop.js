@@ -23,6 +23,7 @@ function AccountMenuDesktop({
   open,
   onClose,
   handleOpenAccountMenu,
+  bizUser,
 }) {
   const handleLogOut = () => {
     signOut(auth)
@@ -99,7 +100,7 @@ function AccountMenuDesktop({
         </div>
         <Divider sx={{ width: "90%", margin: "0 auto" }} />
         <div className="">
-          <Link href="/business-center/classic">
+          <Link href={`/business-center/${bizUser ? "business" : "classic"}`}>
             <MenuItem sx={{ padding: "0 2rem" }}>
               <ListItemIcon>
                 <StoreOutlinedIcon fontSize="small" />

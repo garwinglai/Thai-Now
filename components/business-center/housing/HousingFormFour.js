@@ -36,7 +36,7 @@ function HousingFormFour({
   postId,
   authUser,
 }) {
-  const { title, postDescription, location } = housingPostValues;
+  const { postTitle, postDescription, postAddress } = housingPostValues;
   const houseValues = {
     housingType,
     housingPrice,
@@ -73,7 +73,7 @@ function HousingFormFour({
       <h4 className="pt-4 px-4">Finish up and publish.</h4>
       <div className="lg:flex lg:justify-between">
         <h3 className="text-[color:var(--deals-primary)] font-normal px-4 py-2">
-          {title}
+          {postTitle}
         </h3>
         <span className={`flex lg:gap-2`}>
           <div className="flex items-center">
@@ -123,14 +123,17 @@ function HousingFormFour({
       <div className="flex flex-col gap-[1px] bg-[color:var(--border)] lg:flex-row-reverse lg:bg-white lg:pt-4 lg:gap-4">
         <div className="lg:w-1/3 lg:border lg:h-fit lg:rounded-md lg:shadow-sm ">
           <div className="lg:mx-4 lg:border-b">
-            <PostProfile isCreatePostDesktop={true} />
+            <PostProfile isCreatePostDesktop={true} userData={userData} />
           </div>
 
           <div className="hidden lg:block lg:mx-4 lg:py-4">
             <AboutBusiness isBusinessUser={isBusinessUser} />
           </div>
 
-          <PostContactInfo isClassicUser={true} userData={userData} />
+          <PostContactInfo
+            isBusinessUser={isBusinessUser}
+            userData={userData}
+          />
         </div>
         <div className="lg:w-2/3">
           <PostOfferOptions
@@ -144,7 +147,7 @@ function HousingFormFour({
             authUser={authUser}
           />
           <PostAmenities amenities={amenities} isOwner={true} />
-          <PostLocation location={location} />
+          <PostLocation location={postAddress} />
         </div>
       </div>
       <CustomModal isPublish={isPublish}>

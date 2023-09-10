@@ -6,71 +6,38 @@ import styles from "@/styles/components/profile/account-switch-component.module.
 import AddIcon from "@mui/icons-material/Add";
 import Link from "next/link";
 import { useAuth } from "../auth/AuthProvider";
-import { db } from "@/firebase/fireConfig";
-import { doc, getDoc } from "firebase/firestore";
 
-function AccountSwitchComponent({ isActiveProfile }) {
+function AccountSwitchComponent({
+  isActiveProfile,
+  name,
+  profPic,
+  accountType,
+  id,
+  accountTypeDisplay,
+  isActiveAccount,
+  handleSwitchAccount,
+}) {
   const { authUser, loading } = useAuth();
   const { uid, email } = authUser || {};
 
-  const [profileValues, setProfileValues] = useState({
-    fName: "",
-    lName: "",
-    phoneNum: "",
-    email: "",
-    profPic: "",
-    // addressDetails: {
-    //   addy1: "",
-    //   addy2: "",
-    //   city: "",
-    //   state: "",
-    //   zip: "",
-    // },
-  });
-
-  const { fName, lName, phoneNum, profPic } = profileValues;
-
-  useEffect(() => {
-    if (!uid) return;
-
-    const getUserProfile = async () => {
-      const docRef = doc(db, "users", uid);
-      const docSnap = await getDoc(docRef);
-      console.log("uid", uid);
-
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        // destructure data
-        const { fName, lName, phoneNum, email, profPic, addressDetails } = data;
-
-        setProfileValues({
-          fName: fName || "",
-          lName: lName || "",
-          phoneNum: phoneNum || "",
-          email: email || "",
-          profPic: profPic["0-1"] || "",
-          // addressDetails,
-        });
-      } else {
-        // doc.data() will be undefined in this case
-        console.log("No such document!");
-      }
-    };
-
-    getUserProfile();
-  }, [uid]);
   return (
-    <div className={`${styles.flex} ${styles.account_box}`}>
-      <div className={`${styles.account_right_box} ${styles.flex}`}>
+    <div className="px-4 flex items-center justify-between">
+      <div className="">
         {isActiveProfile ? (
-          <div className="flex gap-4 items-center">
+          <button
+            onClick={handleSwitchAccount(accountType, id)}
+            disabled={isActiveAccount}
+            className={`flex gap-4 items-center  ${
+              isActiveAccount ? "" : "hover:cursor-pointer"
+            } `}
+          >
             {profPic !== "" ? (
-              <div className="relative w-20 aspect-square mx-auto rounded-full">
+              <div className="relative w-16 h-16 aspect-square mx-auto rounded-full">
                 <Image
                   className="rounded-full object-cover"
                   src={profPic}
                   alt="profile image"
-                  priority={true}
+                  priority
                   fill
                   placeholder="blur"
                   blurDataURL={"/img/logo.png"}
@@ -78,17 +45,15 @@ function AccountSwitchComponent({ isActiveProfile }) {
                 />
               </div>
             ) : (
-              <div className="rounded-full w-16 h-16mx-auto lg:ml-0 flex justify-center items-center text-center bg-[color:var(--filter-bg)]">
+              <div className="rounded-full w-16 h-16 mx-auto lg:ml-0 flex justify-center items-center text-center bg-[color:var(--filter-bg)]">
                 <p className="text-xs font-extralight">No profile image</p>
               </div>
             )}
-            <div className={`${styles.text_group}`}>
-              <h4>
-                {fName} {lName}
-              </h4>
-              <p>Classic Account</p>
+            <div className="text-left ">
+              <h4>{name}</h4>
+              <p>{accountTypeDisplay}</p>
             </div>
-          </div>
+          </button>
         ) : (
           <Link
             href="/auth/signin"
@@ -103,7 +68,7 @@ function AccountSwitchComponent({ isActiveProfile }) {
           </Link>
         )}
       </div>
-      {isActiveProfile ? (
+      {isActiveProfile && isActiveAccount ? (
         <CheckCircleIcon color="primary" fontSize="large" />
       ) : (
         <span style={{ visibility: "hidden" }}>x</span>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styles from "../../styles/components/layouts/nav-mobile.module.css";
-import logo_black from "../../public/static/images/logos/logo_black.svg";
+import logo_black from "../../public/static/images/logos/logo_black.png";
 import Image from "next/image";
 import SearchIcon from "@mui/icons-material/Search";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
@@ -14,7 +14,7 @@ import AccountMenuMobile from "../menus/AccountMenuMobile";
 import SearchDrawer from "../search/page/SearchDrawer";
 import { useAuth } from "../auth/AuthProvider";
 
-function NavMobile({ auth, route }) {
+function NavMobile({ auth, route, classicUser, bizUser }) {
   const { authUser, loading } = useAuth();
 
   const [navScroll, setNavScroll] = useState(false);
@@ -26,9 +26,31 @@ function NavMobile({ auth, route }) {
   const [searchDrawerState, setSearchDrawerState] = useState({
     right: false,
   });
+  const [loggedInUserName, setLoggedInUserName] = useState("");
+  const [profPic, setProfPic] = useState("");
 
   const router = useRouter();
   const { directory } = router.query;
+
+  useEffect(() => {
+    if (!authUser) return;
+
+    if (bizUser) {
+      const { name, profPic } = bizUser;
+      const profileImage = profPic ? profPic["0-1"] : "";
+      setProfPic(profileImage);
+      setLoggedInUserName(name);
+      return;
+    }
+
+    if (classicUser) {
+      const { fName, lName, profPic } = classicUser;
+      const profileImage = profPic ? profPic["0-1"] : "";
+      const fullName = `${fName} ${lName}`;
+      setLoggedInUserName(fullName);
+      setProfPic(profileImage);
+    }
+  }, [classicUser, bizUser]);
 
   useEffect(() => {
     const detectScroll = () => {
@@ -125,7 +147,17 @@ function NavMobile({ auth, route }) {
           {authUser ? (
             <React.Fragment>
               <IconButton onClick={toggleDrawer("right", true)}>
-                <Avatar sx={{ width: 25, height: 25 }} color="action" />
+                {profPic && (
+                  <Avatar className="w-8 h-8">
+                    <Image
+                      src={profPic}
+                      alt="profile image"
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+                  </Avatar>
+                )}
               </IconButton>
               <SwipeableDrawer
                 anchor={"right"}
@@ -133,7 +165,11 @@ function NavMobile({ auth, route }) {
                 onClose={toggleDrawer("right", false)}
                 onOpen={toggleDrawer("right", true)}
               >
-                <AccountMenuMobile onClose={toggleDrawer} />
+                <AccountMenuMobile
+                  onClose={toggleDrawer}
+                  bizUser={bizUser}
+                  classicUser={classicUser}
+                />
               </SwipeableDrawer>
             </React.Fragment>
           ) : (

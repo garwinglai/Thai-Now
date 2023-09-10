@@ -19,9 +19,12 @@ function HousingCard({
   directory,
   post,
   isDraft,
+  userType,
+  userData,
 }) {
   const { authUser, loading } = useAuth();
   const { uid } = authUser || {};
+  const { bizId } = userData || {};
 
   // pricePer | 0:day, 1:week, 2:month, 3:year
   const {
@@ -94,17 +97,28 @@ function HousingCard({
 
   const handleDeletePost = async () => {
     setIsLoading(true);
+    const photoKeys = Object.keys(photos);
+    const photoKeysLen = photoKeys.length;
     if (isDraft) {
-      const photoKeys = Object.keys(photos);
-      const photoKeysLen = photoKeys.length;
-
-      if (photoKeysLen > 0) {
+      if (isBusinessUser) {
+        if (photoKeysLen > 0) {
+          await deleteBizFirestoreDraftPost(photos);
+        }
+        await deleteFirestoreDraftPost();
+      } else {
+        if (photoKeysLen > 0) {
+          await removeImagesFromStorage(photos);
+        }
+        await deleteFirestoreDraftPost();
+      }
+    } else {
+      if (isBusinessUser) {
+        await deleteFireStoreBizPost();
+        await removeImagesFromStorage(photos);
+      } else {
+        await deleteFirestorePost();
         await removeImagesFromStorage(photos);
       }
-      await deleteFirestoreDraftPost();
-    } else {
-      await deleteFirestorePost();
-      await removeImagesFromStorage(photos);
     }
     setIsLoading(false);
   };
@@ -112,6 +126,31 @@ function HousingCard({
   const deleteFirestoreDraftPost = async () => {
     const draftRef = doc(db, "users", uid, "drafts", id);
     await deleteDoc(draftRef);
+  };
+
+  const deleteBizFirestoreDraftPost = async () => {
+    const draftRef = doc(db, "users", uid, "biz", bizId, "drafts", id);
+    await deleteDoc(draftRef);
+  };
+
+  const deleteFireStoreBizPost = async () => {
+    const housingRef = doc(db, "users", uid, "biz", bizId, "housingPosts", id);
+    const allHousingRef = doc(db, "allHousing", id);
+    const bizRef = doc(db, "users", uid, "biz", bizId);
+
+    const batch = writeBatch(db);
+
+    try {
+      batch.delete(housingRef);
+      batch.delete(allHousingRef);
+      batch.update(bizRef, {
+        numHousing: increment(-1),
+      });
+
+      await batch.commit();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const deleteFirestorePost = async () => {
@@ -150,9 +189,23 @@ function HousingCard({
       let photoRef;
 
       if (isDraft) {
-        photoRef = ref(storage, `users/${uid}/drafts/${id}/${fileName}`);
+        if (isBusinessUser) {
+          photoRef = ref(
+            storage,
+            `users/${uid}/biz/${bizId}/drafts/${id}/${fileName}`
+          );
+        } else {
+          photoRef = ref(storage, `users/${uid}/drafts/${id}/${fileName}`);
+        }
       } else {
-        photoRef = ref(storage, `users/${uid}/housing/${id}/${fileName}`);
+        if (isBusinessUser) {
+          photoRef = ref(
+            storage,
+            `users/${uid}/biz/${bizId}/housing/${id}/${fileName}`
+          );
+        } else {
+          photoRef = ref(storage, `users/${uid}/housing/${id}/${fileName}`);
+        }
       }
       try {
         await deleteObject(photoRef);
@@ -166,18 +219,17 @@ function HousingCard({
     <div className="relative">
       <Link
         href={`/${directory}/${id}`}
-        passHref
         className={`${styles.jobs_card_container} ${styles.flex} ${
           isDraft && styles.draft_card_disabled
         }}`}
       >
         {defaultImage ? (
-          <div className="w-1/3 h-[33vw] relative md:h-[25vw] md:w-1/4 lg:w-1/3 lg:h-[14vw]">
+          <div className=" w-1/3 aspect-square relative md:h-[25vw] md:w-1/4 lg:w-1/3 lg:h-[14vw]">
             <Image
               src={defaultImage}
               alt="post image"
               fill
-              className="object-cover rounded-md aspect-square"
+              className="object-cover rounded-md "
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           </div>
@@ -220,6 +272,7 @@ function HousingCard({
           <IconButton onClick={toggleDrawer("bottom", true)}>
             <MoreVertIcon />
           </IconButton>
+
           <Drawer
             anchor={"bottom"}
             open={state["bottom"]}

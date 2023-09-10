@@ -10,6 +10,9 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { useRouter } from "next/router";
 import { db } from "@/firebase/fireConfig";
 import { doc, onSnapshot } from "firebase/firestore";
+import { getLocalStorage } from "@/utils/clientStorage";
+
+// TODO: get post from fetch post
 
 function PostDetail() {
   const { authUser, loading } = useAuth();
@@ -18,6 +21,7 @@ function PostDetail() {
   const [userData, setUserData] = useState(null);
   const [postData, setPostData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [isBusinessUser, setIsBusinessUser] = useState(false);
 
   const { query } = useRouter();
   const { directory, pid } = query;
@@ -36,23 +40,26 @@ function PostDetail() {
       unsubPostListener();
       unsubUserListener();
     };
-  }, [uid]);
+  }, [uid, pid]);
 
   const fetchPosts = (uid, directory, pid) => {
     const postCollection =
       directory === "housing"
-        ? "housingPosts"
+        ? "allHousing"
         : directory === "jobs"
-        ? "jobPosts"
+        ? "allJobs"
         : directory === "marketplace"
-        ? "marketPosts"
+        ? "allMarketplace"
         : directory === "thai-help"
         ? "thaiHelpPosts"
         : null;
 
-    const housingDocRef = doc(db, "users", uid, postCollection, pid);
-    const unsubPostListener = onSnapshot(housingDocRef, (doc) => {
+    const allPostRef = doc(db, postCollection, pid);
+
+    // const housingDocRef = doc(db, "users", uid, postCollection, pid);
+    const unsubPostListener = onSnapshot(allPostRef, (doc) => {
       const postData = doc.data();
+      console.log("postDat", postData);
       setPostData(postData);
       setIsLoading(false);
     });
@@ -61,13 +68,24 @@ function PostDetail() {
   };
 
   const fetchUsers = (uid) => {
-    const userListener = onSnapshot(doc(db, "users", uid), (doc) => {
+    const bizUser = JSON.parse(getLocalStorage("bizUser"));
+    let userRef = doc(db, "users", uid);
+
+    if (bizUser) {
+      const { id: bizId } = bizUser;
+      userRef = doc(db, "users", uid, "biz", bizId);
+      setIsBusinessUser(true);
+    } else {
+      setIsBusinessUser(false);
+    }
+    const userListener = onSnapshot(userRef, (doc) => {
       const userData = doc.data();
       setUserData(userData);
     });
 
     return userListener;
   };
+  console.log("userData", userData);
 
   const breadcrumbs = [
     <Link
@@ -95,10 +113,20 @@ function PostDetail() {
 
   function displayPostDetail(directory, pid) {
     if (directory === "jobs") return <JobPostDetail />;
-    if (directory === "marketplace") return <MarketplacePostDetail />;
+    if (directory === "marketplace")
+      return (
+        <MarketplacePostDetail
+          postData={postData}
+          pid={pid}
+          userData={userData}
+          authUser={authUser}
+          isBusinessUser={isBusinessUser}
+        />
+      );
     if (directory === "housing")
       return (
         <HousingPostDetail
+          pid={pid}
           postData={postData}
           userData={userData}
           authUser={authUser}

@@ -7,7 +7,17 @@ import StarIcon from "@mui/icons-material/Star";
 import Link from "next/link";
 
 function BusinessCenterPageHeader({ isBusinessUser, userData }) {
-  const { fName, lName, numReviews, reviewScore, city } = userData || {};
+  const {
+    name: bizName,
+    fName,
+    lName,
+    numReviews,
+    reviewScore,
+    city,
+    addressDetails,
+    rating,
+    reviewNum,
+  } = userData || {};
 
   const { back } = useRouter();
 
@@ -30,9 +40,13 @@ function BusinessCenterPageHeader({ isBusinessUser, userData }) {
           />
           <div className="flex flex-col">
             <p>Welcome</p>
-            <h4>
-              {fName} {lName}
-            </h4>
+            {bizName ? (
+              <h4>{bizName}</h4>
+            ) : (
+              <h4>
+                {fName} {lName}
+              </h4>
+            )}
           </div>
         </div>
         <Link
@@ -48,9 +62,12 @@ function BusinessCenterPageHeader({ isBusinessUser, userData }) {
       </div>
       <div className="flex items-center gap-2">
         <StarIcon fontSize="small" sx={{ color: "orange" }} />
-        <p className="font-light">{reviewScore}</p>
+        <p className="font-light">{isBusinessUser ? rating : reviewScore}</p>
         <p className=" font-extralight text-gray-600">
-          ({numReviews} Reviews) - {city ? city : "No location provided"}
+          ({isBusinessUser ? reviewNum : numReviews} Reviews) -{" "}
+          {addressDetails
+            ? addressDetails.city + ", " + addressDetails.state
+            : "No location provided"}
         </p>
       </div>
       {isBusinessUser && (

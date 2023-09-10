@@ -12,7 +12,6 @@
   border-bottom: 1px solid #f6f4f0;
   gap: 12px;
   align-items: flex-start;
-  pointer-events: none;
 }
 
 .draft_card_disabled {

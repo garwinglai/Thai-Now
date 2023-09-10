@@ -4,6 +4,7 @@ import gStyles from "../../../styles/global.module.css";
 import Image from "next/image";
 import StarIcon from "@mui/icons-material/Star";
 import { yellow } from "@mui/material/colors";
+import Link from "next/link";
 
 function DealsCard({ deal, title }) {
   const {
@@ -15,6 +16,7 @@ function DealsCard({ deal, title }) {
     location,
     postTitle,
     photos,
+    id,
   } = deal;
 
   const footerTag = () => {
@@ -58,7 +60,7 @@ function DealsCard({ deal, title }) {
   };
 
   return (
-    <div className={`${styles.deals_card}`}>
+    <Link href={`/housing/${id}`} className={`${styles.deals_card}`}>
       {photos && (
         <div className="relative w-full h-40">
           <Image
@@ -84,7 +86,7 @@ function DealsCard({ deal, title }) {
         </p>
         {footerTag()}
       </div>
-    </div>
+    </Link>
   );
 }
 

@@ -11,6 +11,16 @@ import Snackbar from "@mui/material/Snackbar";
 import { Alert, IconButton } from "@mui/material";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { Timestamp } from "firebase/firestore";
+import { createGeoHash } from "@/firebase/fireConfig";
+import CircularProgress from "@mui/material/CircularProgress";
+import Geocode from "react-geocode";
+import {
+  createMarketClassic,
+  saveMarketClassicDraft,
+} from "@/helper/client/marketplace";
+
+Geocode.setApiKey(process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY);
+Geocode.setLanguage("en");
 
 function MarketPlacePost() {
   const { authUser, loading } = useAuth();
@@ -20,10 +30,10 @@ function MarketPlacePost() {
   const [step, setStep] = useState(1);
   const [marketPostType, setMarketPostType] = useState("Product");
   const [productDetails, setProductDetails] = useState({
-    title: "",
+    postTitle: "",
+    postDescription: "",
+    postAddress: "",
     productType: "Food",
-    description: "",
-    location: "",
     addy1: "",
     addy2: "",
     city: "",
@@ -43,11 +53,13 @@ function MarketPlacePost() {
     isSnackBarOpen: false,
     snackMessage: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [postId, setPostId] = useState("");
 
   const {
-    title,
-    description,
-    location,
+    postTitle,
+    postDescription,
+    postAddress,
     productType,
     addy1,
     addy2,
@@ -75,9 +87,9 @@ function MarketPlacePost() {
     }
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (step === 2) {
-      if (title === "") {
+      if (postTitle === "") {
         setSnackBar((prev) => ({
           isSnackBarOpen: true,
           snackMessage: "Missing title.",
@@ -93,7 +105,7 @@ function MarketPlacePost() {
         return;
       }
 
-      if (description === "") {
+      if (postDescription === "") {
         setSnackBar((prev) => ({
           isSnackBarOpen: true,
           snackMessage: "Missing description.",
@@ -132,8 +144,9 @@ function MarketPlacePost() {
     }
 
     if (step === 5) {
-      publishPost();
-      // setIsPublish(true);
+      setIsLoading(true);
+      await publishPost();
+      setIsLoading(false);
       return;
     }
 
@@ -141,18 +154,79 @@ function MarketPlacePost() {
   };
 
   const publishPost = async () => {
-    const housingPostData = structureHousingPostData();
-    // const { success, error } = await createHousingClassic(housingPostData, uid);
+    const marketPostData = await structureMarketPostData();
+
+    const { success, error, postId } = await createMarketClassic(
+      marketPostData,
+      uid
+    );
+
+    console.log("error", error);
 
     if (success) {
       setIsPublish(true);
+      setPostId(postId);
     }
     // TODO: handle housing post error
   };
 
-  const structureHousingPostData = () => {
-    const postAddress =
-      addy1 + " " + addy2 + " " + city + " " + state + " " + zip;
+  const handleSaveAndExit = async () => {
+    setIsLoading(true);
+    const housingPostData = await structureMarketPostData();
+    // 0: jobs 1:deals, 2:marketplace, 3:housing
+
+    const { success, error } = await saveMarketClassicDraft(
+      housingPostData,
+      uid
+    );
+
+    if (success) {
+      push("/business-center/classic");
+      setIsLoading(false);
+    }
+  };
+
+  const getLatLngFromAddress = (address) => {
+    return Geocode.fromAddress(address).then(
+      (response) => {
+        const { lat, lng } = response.results[0].geometry.location;
+
+        return { lat, lng };
+      },
+      (error) => {
+        console.error(error);
+        // return { error };
+      }
+    );
+  };
+
+  const structureMarketPostData = async () => {
+    let postAddress = "";
+    let lat = "";
+    let lng = "";
+    let geohash = "";
+
+    if (addy1 !== "" && city !== "" && state !== "" && zip !== "") {
+      postAddress = addy1 + " " + addy2 + " " + city + " " + state + " " + zip;
+      try {
+        const { lat: latitude, lng: longitude } = await getLatLngFromAddress(
+          postAddress
+        );
+        lat = latitude;
+        lng = longitude;
+      } catch (error) {
+        console.log("getAddylatlng", error);
+      }
+    }
+
+    if (lat !== "" && lng !== "") {
+      try {
+        const geoHash = await createGeoHash(lat, lng);
+        geohash = geoHash;
+      } catch (error) {
+        console.log("geohash", error);
+      }
+    }
 
     let offerType = marketPostType === "Product" ? 0 : 1;
 
@@ -217,11 +291,11 @@ function MarketPlacePost() {
         break;
     }
 
-    let includeTax = offerIncludesTax === "Yes" ? 1 : 0;
+    let includeTax = offerIncludesTax === "Yes" ? 0 : 1;
 
     const marketplaceData = {
-      postTitle: title,
-      postDescription: description,
+      postTitle,
+      postDescription,
       createdAt: Timestamp.now(),
       postAddress,
       postAddressDetails: {
@@ -231,15 +305,15 @@ function MarketPlacePost() {
         state,
         zip,
       },
-      // geoHash: "",
-      // postCoord: {
-      //   lat: 0,
-      //   lng: 0,
-      // },
+      geohash,
+      postCoord: {
+        lat,
+        lng,
+      },
       userId: uid,
       userName: displayName,
-      poserType: 0,
-      // photos: uploadedPhotos,
+      posterType: 0,
+      // standoutAmenities: [],
       offerType,
       offerTypeDisplay: marketPostType,
       productType: productTypeInt,
@@ -248,12 +322,17 @@ function MarketPlacePost() {
       condition,
       conditionDisplay: productCondition,
       price: priceOption === "exact" && "$" + exactPrice.price,
-      pricePer,
-      pricePerDisplay,
+      // pricePer,
+      // pricePerDisplay,
       includeTax,
+      rating: 0,
+      reviewNum: 0,
+      postType: 2,
+      newAddedPhotos: uploadedPhotos,
+      oldPhotos: [],
     };
 
-    // TODO: add standout amenities
+    // TODO: add standout amenities?! should they have amenities... dont think so
 
     return marketplaceData;
   };
@@ -295,9 +374,8 @@ function MarketPlacePost() {
 
   const handleChangePrice = (e) => {
     const { name, value } = e.target;
-    console.log(priceOption);
+
     if (priceOption === "exact") {
-      console.log("hi");
       setOfferPrice((prev) => ({
         exactPrice: { ...prev.exactPrice, [name]: value },
         priceRange: { minPrice: "", maxPrice: "", interval: "week" },
@@ -314,12 +392,22 @@ function MarketPlacePost() {
 
   const handlePhotoFileChange = (e) => {
     const selectedImage = e.target.files[0];
+
+    if (!selectedImage) return;
+
     const fileName = selectedImage.name;
     const imgUrl = URL.createObjectURL(selectedImage);
-    const imgData = { imgUrl, fileName };
+    const imgData = { imgUrl, fileName, imageFile: selectedImage };
 
     if (!uploadedPhotos.includes(imgData))
       setUploadedPhotos((prev) => [...prev, imgData]);
+  };
+
+  const handleRemoveImage = (imgUrl) => () => {
+    const filteredPhotos = uploadedPhotos.filter(
+      (photo) => photo.imgUrl !== imgUrl
+    );
+    setUploadedPhotos(filteredPhotos);
   };
 
   const displayHousingPostForms = (step) => {
@@ -337,6 +425,7 @@ function MarketPlacePost() {
           handleProductValueChange={handleProductValueChange}
           uploadedPhotos={uploadedPhotos}
           handlePhotoFileChange={handlePhotoFileChange}
+          handleRemoveImage={handleRemoveImage}
         />
       );
     if (step === 3)
@@ -372,6 +461,8 @@ function MarketPlacePost() {
           offerIncludesTax={offerIncludesTax}
           isPublish={isPublish}
           closeModal={closeModal}
+          authUser={authUser}
+          postId={postId}
         />
       );
   };
@@ -440,18 +531,27 @@ function MarketPlacePost() {
                 : "bg-gray-100 "
             }`}
           ></span>
-        </div>
-        <div className="flex gap-4 p-4 lg:justify-between lg:px-16">
-          <button className="rounded w-1/2 text-[color:var(--deals-primary-med)] border border-[color:var(--deals-primary-med)] lg:w-fit lg:px-4">
-            Save & Exit
-          </button>
-          <button
-            onClick={handleNext}
-            className="rounded w-1/2 text-white bg-[color:var(--secondary)] py-2 lg:w-fit lg:px-8"
-          >
-            {step === 5 ? "Publish" : "Next"}
-          </button>
-        </div>
+        </div>{" "}
+        {isLoading ? (
+          <div className="w-full p-4 flex justify-center items-center ">
+            <CircularProgress color="warning" />
+          </div>
+        ) : (
+          <div className="flex gap-4 p-4 lg:justify-between lg:px-16">
+            <button
+              onClick={handleSaveAndExit}
+              className="rounded w-1/2 text-[color:var(--deals-primary-med)] border border-[color:var(--deals-primary-med)] lg:w-fit lg:px-4"
+            >
+              Save & Exit
+            </button>
+            <button
+              onClick={handleNext}
+              className="rounded w-1/2 text-white bg-[color:var(--secondary)] py-2 lg:w-fit lg:px-8"
+            >
+              {step === 5 ? "Publish" : "Next"}
+            </button>
+          </div>
+        )}
       </div>
     </React.Fragment>
   );

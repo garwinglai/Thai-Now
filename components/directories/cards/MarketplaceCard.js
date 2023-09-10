@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styles from "../../../styles/components/directory/cards/marketplace-card.module.css";
 import massageImage from "../../../public/static/images/directory/massage_large.png";
 import Image from "next/image";
@@ -9,16 +9,65 @@ import { IconButton } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import CloseIcon from "@mui/icons-material/Close";
 import Link from "next/link";
+import { doc, writeBatch, increment, deleteDoc } from "firebase/firestore";
+import { ref, deleteObject } from "firebase/storage";
+import { storage, db } from "@/firebase/fireConfig";
+import { useAuth } from "@/components/auth/AuthProvider";
 
-const pid = "pid-marketplace";
+function MarketplaceCard({
+  isBusinessCenter,
+  isBusinessUser,
+  directory,
+  post,
+  userData,
+  isDraft,
+}) {
+  const { authUser, loading } = useAuth();
+  const { uid } = authUser || {};
+  const { bizId } = userData || {};
 
-function MarketplaceCard({ isBusinessCenter, isBusinessUser, directory }) {
-  const [state, setState] = React.useState({
+  const {
+    id,
+    price,
+    pricePer,
+    createdAt,
+    postTitle,
+    postAddressDetails,
+    rating,
+    reviewNum,
+    productTypeDisplay,
+    photos,
+  } = post || {};
+
+  const { city } = postAddressDetails || {};
+
+  const [state, setState] = useState({
     top: false,
     left: false,
     bottom: false,
     right: false,
   });
+  const [defaultImage, setDefaultImage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (photos) {
+      // loop through photos object to find the first photo
+      for (const key in photos) {
+        if (photos.hasOwnProperty(key)) {
+          const defaultImage = photos[key];
+          setDefaultImage(defaultImage);
+          break;
+        }
+      }
+    }
+  }, [photos]);
+
+  const postCreatedDate = createdAt ? createdAt.toDate() : new Date();
+  const today = new Date();
+  const postedDaysAgo = Math.floor(
+    (today - postCreatedDate) / (1000 * 60 * 60 * 24)
+  );
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (
@@ -30,38 +79,167 @@ function MarketplaceCard({ isBusinessCenter, isBusinessUser, directory }) {
 
     setState({ ...state, [anchor]: open });
   };
+
+  const handleDeletePost = async () => {
+    setIsLoading(true);
+    const photoKeys = Object.keys(photos);
+    const photoKeysLen = photoKeys.length;
+    if (isDraft) {
+      if (isBusinessUser) {
+        if (photoKeysLen > 0) {
+          await removeImagesFromStorage(photos);
+        }
+        await deleteBizFirestoreDraftPost();
+      } else {
+        if (photoKeysLen > 0) {
+          await removeImagesFromStorage(photos);
+        }
+        await deleteFirestoreDraftPost();
+      }
+    } else {
+      if (isBusinessUser) {
+        await deleteFireStoreBizPost();
+        await removeImagesFromStorage(photos);
+      } else {
+        await deleteFirestorePost();
+        await removeImagesFromStorage(photos);
+      }
+    }
+    setIsLoading(false);
+  };
+
+  const deleteFirestoreDraftPost = async () => {
+    const draftRef = doc(db, "users", uid, "drafts", id);
+    await deleteDoc(draftRef);
+  };
+
+  const deleteBizFirestoreDraftPost = async () => {
+    const draftRef = doc(db, "users", uid, "biz", bizId, "drafts", id);
+    await deleteDoc(draftRef);
+  };
+
+  const deleteFireStoreBizPost = async () => {
+    const marketRef = doc(db, "users", uid, "biz", bizId, "marketPosts", id);
+    const allMarketRef = doc(db, "allMarketplace", id);
+    const bizRef = doc(db, "users", uid, "biz", bizId);
+
+    const batch = writeBatch(db);
+
+    try {
+      batch.delete(marketRef);
+      batch.delete(allMarketRef);
+      batch.update(bizRef, {
+        numMarket: increment(-1),
+      });
+
+      await batch.commit();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteFirestorePost = async () => {
+    const marketRef = doc(db, "users", uid, "marketPosts", id);
+    const allMarketRef = doc(db, "allMarketplace", id);
+    const userRef = doc(db, "users", uid);
+
+    const batch = writeBatch(db);
+
+    try {
+      batch.delete(marketRef);
+      batch.delete(allMarketRef);
+      batch.update(userRef, {
+        numMarket: increment(-1),
+      });
+
+      await batch.commit();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const removeImagesFromStorage = async (photos) => {
+    const fileNames = [];
+
+    for (const key in photos) {
+      if (photos.hasOwnProperty(key)) {
+        const fileName = key + ".jpg";
+        fileNames.push(fileName);
+      }
+    }
+
+    for (let i = 0; i < fileNames.length; i++) {
+      const fileName = fileNames[i];
+
+      let photoRef;
+
+      if (isDraft) {
+        if (isBusinessUser) {
+          photoRef = ref(
+            storage,
+            `users/${uid}/biz/${bizId}/drafts/${id}/${fileName}`
+          );
+        } else {
+          photoRef = ref(storage, `users/${uid}/drafts/${id}/${fileName}`);
+        }
+      } else {
+        if (isBusinessUser) {
+          photoRef = ref(
+            storage,
+            `users/${uid}/biz/${bizId}/marketplace/${id}/${fileName}`
+          );
+        } else {
+          photoRef = ref(storage, `users/${uid}/marketplace/${id}/${fileName}`);
+        }
+      }
+      try {
+        await deleteObject(photoRef);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
   return (
     <div className="relative">
       <Link
-        href={`/${directory}/${pid}`}
+        href={`/${directory}/${id}`}
         className={`${styles.jobs_card_container} ${styles.flex}`}
       >
-        <div className={`${styles.image_box}`}>
-          <Image
-            src={massageImage}
-            alt="massage image"
-            className={`${styles.card_image}`}
-          />
-        </div>
+        {defaultImage ? (
+          <div className=" w-1/3 aspect-square relative md:h-[25vw] md:w-1/4 lg:w-1/3 lg:h-[14vw]">
+            <Image
+              src={defaultImage}
+              alt="post image"
+              fill
+              className="object-cover rounded-md "
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+          </div>
+        ) : (
+          <div className="w-1/3 h-[calc(33vw)] rounded bg-gray-200 text-xs font-extralight flex justify-center items-center">
+            No image
+          </div>
+        )}
         <div className={`${styles.card_context_box} ${styles.flexCol}`}>
           <div className={`${styles.context_box_top}`}>
             <div className={`${styles.flex} ${styles.review_box}`}>
               <StarIcon style={{ color: yellow[700] }} fontSize="small" />
-              <p>4.69</p>
+              <p>{price}</p>
               <p className={`${styles.review_count_p}`}>{`(20 Reviews)`}</p>
             </div>
-            <h4>Lorem Ipsum is simply dummy</h4>
-            <p className={`${styles.business_location_p}`}>Los Angeles</p>
+            <h4>{postTitle}</h4>
+            <p className={`${styles.business_location_p}`}>{city}</p>
             <div className={`${styles.business_type} ${styles.flex}`}>
               <span>•</span>
-              <p>Restaurant</p>
+              <p>{productTypeDisplay}</p>
             </div>
-            <div className={`${styles.negotiate_price}`}>
+            {/* <div className={`${styles.negotiate_price}`}>
               <p>Negotiate Price</p>
-            </div>
+            </div> */}
           </div>
           <div className={`${styles.context_box_bottom}`}>
-            <p className={`${styles.days_ago_p}`}>29 days ago</p>
+            <p className={`${styles.days_ago_p}`}>{postedDaysAgo} days ago</p>
           </div>
         </div>
       </Link>
@@ -85,14 +263,17 @@ function MarketplaceCard({ isBusinessCenter, isBusinessUser, directory }) {
               <Link
                 href={`${
                   isBusinessUser
-                    ? `/business-center/business/edit/marketplace/${pid}`
-                    : `/business-center/classic/edit/marketplace/${pid}`
+                    ? `/business-center/business/edit/marketplace/${id}`
+                    : `/business-center/classic/edit/marketplace/${id}`
                 }`}
                 className="font-light text-base text-gray-700 mb-4"
               >
                 Edit post
               </Link>
-              <button className="font-light w-fit text-base text-gray-700">
+              <button
+                onClick={handleDeletePost}
+                className="font-light w-fit text-base text-gray-700"
+              >
                 Delete post
               </button>
             </div>

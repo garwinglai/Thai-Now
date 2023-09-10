@@ -597,6 +597,7 @@ function EditHousingClassic() {
       removedPhotos,
       newAddedPhotos,
       oldPhotos,
+      postType: 3, // 0: jobs 1:deals, 2:marketplace, 3:housing
     };
 
     return housingData;
@@ -621,7 +622,6 @@ function EditHousingClassic() {
     const housingPostData = await structureHousingPostData();
 
     // 0: jobs 1:deals, 2:marketplace, 3:housing
-    housingPostData.postType = 3;
 
     if (isDraft) {
       const { success, error } = await updateHousingClassicDraft(
@@ -669,11 +669,11 @@ function EditHousingClassic() {
   const handleRemoveImage = (file) => () => {
     const { imgUrl } = file;
     const filteredPhotos = uploadedPhotos.filter(
-      (photo) => photo.imgUrl !== imgUrl
+      (photo) => photo.fileName != fileName
     );
 
     const existedFileToRemove = oldPhotos.find(
-      (photo) => photo.imgUrl === imgUrl
+      (photo) => photo.fileName != fileName
     );
     setUploadedPhotos(filteredPhotos);
     setOldPhotos(filteredPhotos);

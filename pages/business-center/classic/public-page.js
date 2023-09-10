@@ -82,7 +82,7 @@ function ClassicPublicPage() {
         </div>
         <div className="lg:flex lg:flex-row-reverse lg:bg-white lg:gap-4">
           <div className="lg:w-1/3 lg:border lg:h-fit lg:rounded-md lg:shadow-sm ">
-            <PostContactInfo isClassicUser={true} userData={userData} />
+            <PostContactInfo isBusinessUser={false} userData={userData} />
           </div>
           <div className="lg:w-2/3">
             {housingPosts.length > 0 && (

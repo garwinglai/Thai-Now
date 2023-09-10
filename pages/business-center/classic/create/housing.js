@@ -14,7 +14,6 @@ import {
   createHousingClassic,
   saveHousingClassicDraft,
 } from "@/helper/client/housing";
-// import { getLatLngFromAddress } from "@/helper/client/geo";
 import { createGeoHash } from "@/firebase/fireConfig";
 import CircularProgress from "@mui/material/CircularProgress";
 import Geocode from "react-geocode";
@@ -234,7 +233,6 @@ function HousingPost() {
     setIsLoading(true);
     const housingPostData = await structureHousingPostData();
     // 0: jobs 1:deals, 2:marketplace, 3:housing
-    housingPostData.postType = 3;
 
     const { success, error } = await saveHousingClassicDraft(
       housingPostData,
@@ -405,6 +403,7 @@ function HousingPost() {
       bathroomNum: bathroomCount,
       amenities: amenitiesIntArr,
       amenitiesDisplay,
+      postType: 3,
       rating: 0,
       reviewNum: 0,
       newAddedPhotos: uploadedPhotos,

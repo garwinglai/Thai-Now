@@ -42,7 +42,6 @@ function EditProfile({ uid }) {
     const getUserProfile = async () => {
       const docRef = doc(db, "users", uid);
       const docSnap = await getDoc(docRef);
-      console.log("uid", uid);
 
       if (docSnap.exists()) {
         const data = docSnap.data();
@@ -166,6 +165,8 @@ function EditProfile({ uid }) {
       } catch (error) {
         console.log("download", error);
       }
+    } else {
+      delete profileData.profPic;
     }
 
     const userRef = doc(db, "users", uid);

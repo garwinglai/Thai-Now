@@ -22,7 +22,7 @@ function CreatePostBusiness() {
   }, [authUser, loading]);
 
   const handleBack = () => {
-    back();
+    push("/business-center/business");
   };
 
   return (

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import MenuList from "@mui/material/MenuList";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -7,8 +7,24 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import StarOutlineOutlinedIcon from "@mui/icons-material/StarOutlineOutlined";
 import StoreOutlinedIcon from "@mui/icons-material/StoreOutlined";
 import Link from "next/link";
+import { useAuth } from "../auth/AuthProvider";
+import { getLocalStorage } from "@/utils/clientStorage";
 
 function AccountPrivateMenu({ currentRoute }) {
+  const { authUser, loading } = useAuth();
+  const { uid, email } = authUser || {};
+
+  const [bizUser, setBizUser] = useState(null);
+
+  useEffect(() => {
+    const bizUser = getLocalStorage("bizUser");
+    const bizUserParsed = bizUser ? JSON.parse(bizUser) : null;
+
+    if (bizUserParsed) {
+      setBizUser(bizUserParsed);
+    }
+  }, [authUser]);
+
   return (
     <MenuList>
       <div className="">
@@ -77,7 +93,7 @@ function AccountPrivateMenu({ currentRoute }) {
         </Link>
       </div>
       <div className="">
-        <Link href="/business-center/classic">
+        <Link href={`/business-center/${bizUser ? "business" : "classic"}`}>
           <MenuItem sx={{ padding: "0 1rem" }}>
             <ListItemIcon>
               <StoreOutlinedIcon

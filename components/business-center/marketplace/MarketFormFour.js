@@ -68,20 +68,6 @@ function MarketFormFour({
                   className="pl-4 rounded bg-[color:var(--input-bg-secondary)] text-[color:var(--deals-primary)] w-full indent-4 py-3 h-full "
                 />
               </div>
-              <div>
-                <select
-                  name="interval"
-                  id="interval"
-                  onChange={handleChangePrice}
-                  value={exactPrice.interval}
-                  className="rounded bg-[color:var(--input-bg-secondary)] text-[color:var(--deals-primary)] w-24 p-2 h-full "
-                >
-                  <option value="day">Day</option>
-                  <option value="week">Week</option>
-                  <option value="month">Month</option>
-                  <option value="year">Year</option>
-                </select>
-              </div>
             </div>
           </div>
           <div>
@@ -135,20 +121,6 @@ function MarketFormFour({
                   onChange={handleChangePrice}
                   className="pl-4 rounded bg-[color:var(--input-bg-secondary)] text-[color:var(--deals-primary)] w-full indent-4 py-3 h-full "
                 />
-              </div>
-              <div>
-                <select
-                  name="interval"
-                  id="interval"
-                  value={priceRange.interval}
-                  onChange={handleChangePrice}
-                  className="rounded bg-[color:var(--input-bg-secondary)] text-[color:var(--deals-primary)] w-24 p-2 h-full "
-                >
-                  <option value="day">Day</option>
-                  <option value="week">Week</option>
-                  <option value="month">Month</option>
-                  <option value="year">Year</option>
-                </select>
               </div>
             </div>
           </div>

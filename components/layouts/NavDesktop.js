@@ -16,16 +16,38 @@ import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import AccountMenuDesktop from "../menus/AccountMenuDesktop";
 import { useAuth } from "../auth/AuthProvider";
 
-function NavDesktop({ route }) {
+function NavDesktop({ route, classicUser, bizUser }) {
   const { authUser, loading } = useAuth();
+  // const { uid } = authUser;
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [navScroll, setNavScroll] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [loggedInUserName, setLoggedInUserName] = useState("");
+  const [profPic, setProfPic] = useState("");
 
   const router = useRouter();
   const { directory } = router.query;
   const open = Boolean(anchorEl); //account menu open
+
+  useEffect(() => {
+    if (!authUser) return;
+    if (bizUser) {
+      const { name, profPic } = bizUser;
+      const profileImage = profPic ? profPic["0-1"] : "";
+      setProfPic(profileImage);
+      setLoggedInUserName(name);
+      return;
+    }
+
+    if (classicUser) {
+      const { fName, lName, profPic } = classicUser;
+      const profileImage = profPic ? profPic["0-1"] : "";
+      const fullName = `${fName} ${lName}`;
+      setLoggedInUserName(fullName);
+      setProfPic(profileImage);
+    }
+  }, [classicUser, bizUser]);
 
   useEffect(() => {
     const detectScroll = () => {
@@ -148,7 +170,17 @@ function NavDesktop({ route }) {
                 className="flex gap-2 items-center pl-4"
                 onClick={handleOpenAccountMenu}
               >
-                <Avatar sx={{ width: 30, height: 30 }} color="action" />
+                {profPic && (
+                  <Avatar className="w-10 h-10">
+                    <Image
+                      src={profPic}
+                      alt="profile image"
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+                  </Avatar>
+                )}
                 <p
                   className={`font-normal ${
                     directory || navScroll || route
@@ -156,7 +188,7 @@ function NavDesktop({ route }) {
                       : `text-white`
                   }`}
                 >
-                  Lolar Ramsey
+                  {loggedInUserName}
                 </p>
                 {open ? (
                   <ExpandLessIcon
@@ -180,6 +212,7 @@ function NavDesktop({ route }) {
                 isDesktop={true}
                 anchorEl={anchorEl}
                 open={open}
+                bizUser={bizUser}
                 onClose={handleCloseAccountMenu}
                 handleOpenAccountMenu={handleOpenAccountMenu}
               />

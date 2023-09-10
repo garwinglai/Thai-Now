@@ -27,13 +27,10 @@ function Directory({ directory }) {
 
   const [isLoading, setIsLoading] = useState(false);
   const [housingPosts, setHousingPosts] = useState([]);
-  const [userData, setUserData] = useState({});
 
   useEffect(() => {
-    if (!uid) return;
-
     setIsLoading(true);
-    const housingCollectionRef = collection(db, "users", uid, "housingPosts");
+    const housingCollectionRef = collection(db, "allHousing");
     const unsubHousingListener = onSnapshot(
       housingCollectionRef,
       (snapshot) => {
@@ -48,16 +45,10 @@ function Directory({ directory }) {
       }
     );
 
-    const unsubUserListener = onSnapshot(doc(db, "users", uid), (snapshot) => {
-      const userData = snapshot.data();
-      setUserData(userData);
-    });
-
     setIsLoading(false);
 
     return () => {
       unsubHousingListener();
-      unsubUserListener();
     };
   }, [uid]);
 
