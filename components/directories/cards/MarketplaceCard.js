@@ -207,7 +207,7 @@ function MarketplaceCard({
         className={`${styles.jobs_card_container} ${styles.flex}`}
       >
         {defaultImage ? (
-          <div className=" w-1/3 aspect-square relative md:h-[25vw] md:w-1/4 lg:w-1/3 lg:h-[14vw]">
+          <div className="min-w-[25%] aspect-square relative md:h-[25vw]  lg:min-w-[33%] lg:h-[14vw]">
             <Image
               src={defaultImage}
               alt="post image"
@@ -225,8 +225,10 @@ function MarketplaceCard({
           <div className={`${styles.context_box_top}`}>
             <div className={`${styles.flex} ${styles.review_box}`}>
               <StarIcon style={{ color: yellow[700] }} fontSize="small" />
-              <p>{price}</p>
-              <p className={`${styles.review_count_p}`}>{`(20 Reviews)`}</p>
+              <p>{reviewNum}</p>
+              <p
+                className={`${styles.review_count_p}`}
+              >{`(${rating} reviews)`}</p>
             </div>
             <h4>{postTitle}</h4>
             <p className={`${styles.business_location_p}`}>{city}</p>

@@ -3,10 +3,6 @@ import MainLayout from "@/components/layouts/MainLayout";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { useRouter } from "next/router";
 import Snackbar from "@mui/material/Snackbar";
-import HousingFormOne from "@/components/business-center/housing/HousingFormOne";
-import HousingFormTwo from "@/components/business-center/housing/HousingFormTwo";
-import HousingFormThree from "@/components/business-center/housing/HousingFormThree";
-import HousingFormFour from "@/components/business-center/housing/HousingFormFour";
 import { Alert, IconButton } from "@mui/material";
 import JobsFormOne from "@/components/business-center/jobs/JobsFormOne";
 import JobsFormTwo from "@/components/business-center/jobs/JobsFormTwo";
@@ -15,16 +11,30 @@ import JobsFormFour from "@/components/business-center/jobs/JobsFormFour";
 import JobsFormFive from "@/components/business-center/jobs/JobsFormFive";
 import JobsFormSix from "@/components/business-center/jobs/JobsFormSix";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { getLocalStorage } from "@/utils/clientStorage";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/firebase/fireConfig";
+import { createGeoHash } from "@/firebase/fireConfig";
+import Geocode from "react-geocode";
+import { Timestamp } from "firebase/firestore";
+import {
+  createJobPostBusiness,
+  saveJobsBusinessDraft,
+} from "@/helper/client/jobs";
+import CircularProgress from "@mui/material/CircularProgress";
+
+Geocode.setApiKey(process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY);
+Geocode.setLanguage("en");
 
 function JobsPostBusinessUser() {
   const { authUser, loading } = useAuth();
-  const { uid } = authUser || {};
+  const { uid, email, displayName } = authUser || {};
 
   const [isPublish, setIsPublish] = useState(false);
   const [step, setStep] = useState(1);
   const [jobValues, setJobValues] = useState({
-    title: "",
-    description: "",
+    postTitle: "",
+    postDescription: "",
     jobType: "Full-time",
     jobLocation: "On-site",
     workExperience: "No experience",
@@ -44,11 +54,23 @@ function JobsPostBusinessUser() {
     isSnackBarOpen: false,
     snackMessage: "",
   });
-
-  const { title, description } = jobValues;
+  const [isLoading, setIsLoading] = useState(false);
+  const [postId, setPostId] = useState("");
+  const [userData, setUserData] = useState({});
+  const [bizId, setBizId] = useState("");
+  const [bizName, setBizName] = useState("");
+  const [bizProfPic, setBizProfPic] = useState("");
   const [uploadedPhotos, setUploadedPhotos] = useState([]);
-  const { minPrice, maxPrice } = salaryRange;
 
+  const {
+    postTitle,
+    postDescription,
+    jobType,
+    jobLocation,
+    skills,
+    workExperience,
+  } = jobValues;
+  const { minPrice, maxPrice, interval } = salaryRange;
   const { isSnackBarOpen, snackMessage } = snackBar;
 
   const { back, push } = useRouter();
@@ -60,12 +82,37 @@ function JobsPostBusinessUser() {
     // TODO: loading, show skeleton
   }, [authUser, loading]);
 
-  const handleNext = () => {
+  useEffect(() => {
+    if (!uid) return;
+    const fetchUser = async () => {
+      const bizUser = JSON.parse(getLocalStorage("bizUser"));
+      const { id: bizId, name, profPic } = bizUser;
+      setBizId(bizId);
+      setBizName(name);
+      setBizProfPic(profPic["0-1"]);
+
+      if (bizId) {
+        const userRef = doc(db, "users", uid, "biz", bizId);
+
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+          const userData = userSnap.data();
+          setUserData(userData);
+        } else {
+          console.log("No such document!");
+        }
+      }
+    };
+
+    fetchUser();
+  }, [authUser]);
+
+  const handleNext = async () => {
     if (step === 1) {
-      if (title === "") {
+      if (postTitle === "") {
         setSnackBar((prev) => ({
           isSnackBarOpen: true,
-          snackMessage: "Missing title.",
+          snackMessage: "Missing job title.",
         }));
         return;
       }
@@ -78,7 +125,7 @@ function JobsPostBusinessUser() {
         return;
       }
 
-      if (description === "") {
+      if (postDescription === "") {
         setSnackBar((prev) => ({
           isSnackBarOpen: true,
           snackMessage: "Missing description.",
@@ -86,45 +133,6 @@ function JobsPostBusinessUser() {
         return;
       }
     }
-
-    // if (step === 2) {
-    // 	if (guestCount === 0) {
-    // 		setSnackBar((prev) => ({
-    // 			isSnackBarOpen: true,
-    // 			snackMessage: "Number of guests required.",
-    // 		}));
-    // 		return;
-    // 	}
-
-    // 	if (bedroomCount === 0) {
-    // 		setSnackBar((prev) => ({
-    // 			isSnackBarOpen: true,
-    // 			snackMessage: "Number of bedrooms required.",
-    // 		}));
-    // 		return;
-    // 	}
-    // }
-
-    // if (step === 3) {
-    // 	if (priceOption === "exact") {
-    // 		if (exactPrice.price === "") {
-    // 			setSnackBar((prev) => ({
-    // 				isSnackBarOpen: true,
-    // 				snackMessage: "Please enter a price.",
-    // 			}));
-    // 			return;
-    // 		}
-    // 	}
-    // 	if (priceOption === "range") {
-    // 		if (priceRange.minPrice === "" || priceRange.maxPrice === "") {
-    // 			setSnackBar((prev) => ({
-    // 				isSnackBarOpen: true,
-    // 				snackMessage: "Please enter a price range.",
-    // 			}));
-    // 			return;
-    // 		}
-    // 	}
-    // }
 
     if (step === 4) {
       if (minPrice === "" || maxPrice === "") {
@@ -137,11 +145,185 @@ function JobsPostBusinessUser() {
     }
 
     if (step === 6) {
-      setIsPublish(true);
+      setIsLoading(true);
+      await publishPost();
+      setIsLoading(false);
       return;
     }
 
     setStep((prev) => (prev += 1));
+  };
+
+  const publishPost = async () => {
+    const jobPostData = await structureJobPostData();
+    console.log("jobPostData", jobPostData);
+
+    const { success, error, postId } = await createJobPostBusiness(
+      jobPostData,
+      uid,
+      bizId
+    );
+    console.log("success", success);
+    console.log("error", error);
+
+    if (success) {
+      setIsPublish(true);
+      setPostId(postId);
+    }
+    // TODO: handle housing post error
+  };
+
+  const handleSaveAndExit = async () => {
+    setIsLoading(true);
+    const jobPostData = await structureJobPostData();
+    // 0: jobs 1:deals, 2:marketplace, 3:housing
+
+    const { success, error } = await saveJobsBusinessDraft(
+      jobPostData,
+      uid,
+      bizId
+    );
+
+    if (success) {
+      push("/business-center/business");
+      setIsLoading(false);
+    }
+  };
+
+  const getLatLngFromAddress = (address) => {
+    return Geocode.fromAddress(address).then(
+      (response) => {
+        const { lat, lng } = response.results[0].geometry.location;
+
+        return { lat, lng };
+      },
+      (error) => {
+        console.error(error);
+        // return { error };
+      }
+    );
+  };
+
+  const structureJobPostData = async () => {
+    const { addressDetails } = userData;
+    const { addy1, addy2, city, state, zip } = addressDetails;
+    let postAddress = "";
+    let lat = "";
+    let lng = "";
+    let geohash = "";
+
+    if (addy1 !== "" && city !== "" && state !== "" && zip !== "") {
+      postAddress = addy1 + " " + addy2 + " " + city + " " + state + " " + zip;
+      try {
+        const { lat: latitude, lng: longitude } = await getLatLngFromAddress(
+          postAddress
+        );
+        lat = latitude;
+        lng = longitude;
+      } catch (error) {
+        console.log("getAddylatlng", error);
+      }
+    }
+
+    if (lat !== "" && lng !== "") {
+      try {
+        const geoHash = await createGeoHash(lat, lng);
+        geohash = geoHash;
+      } catch (error) {
+        console.log("geohash", error);
+      }
+    }
+
+    const jobInt =
+      jobType === "Full-time"
+        ? 0
+        : jobType === "Part-time"
+        ? 1
+        : jobType === "Internship"
+        ? 2
+        : jobType === "On-demand"
+        ? 3
+        : jobType === "Seasonal"
+        ? 4
+        : jobType === "Volunteer"
+        ? 5
+        : 6;
+
+    const jobSiteInt =
+      jobLocation === "On-site" ? 0 : jobLocation === "Remote-accepted" ? 1 : 2;
+
+    const experience =
+      workExperience === "No experience"
+        ? 0
+        : workExperience === "1-2 years"
+        ? 1
+        : workExperience === "3-5 years"
+        ? 2
+        : 3;
+
+    // capitalize interval first letter
+    const intervalFirstLetter = interval.charAt(0).toUpperCase();
+    const intervalRestLower = interval.slice(1);
+    const newInterval = intervalFirstLetter + intervalRestLower;
+    const salaryStart = parseFloat(parseFloat(minPrice).toFixed(2));
+    const salaryEnd = parseFloat(parseFloat(maxPrice).toFixed(2));
+    const salaryBasisIndex =
+      interval === "hour" ? 0 : interval === "month" ? 2 : 1;
+    const salaryDisplay = `$${parseFloat(minPrice).toFixed(2)} - $${parseFloat(
+      maxPrice
+    ).toFixed(2)} per ${newInterval}`;
+
+    const submission = [];
+
+    if (jobContactMethodEmail) submission.push(0);
+    if (jobContactMethodPhone) submission.push(1);
+    if (jobContactMethodInPerson) submission.push(2);
+
+    const jobPostData = {
+      postTitle,
+      postDescription,
+      createdAt: Timestamp.now(),
+      postAddress,
+      postAddressDetails: {
+        addy1,
+        addy2,
+        city,
+        state,
+        zip,
+      },
+      postCoord: {
+        lat,
+        lng,
+      },
+      geohash,
+      userId: uid,
+      userName: displayName,
+      bizUserId: bizId,
+      bizName,
+      bizProfPic,
+      posterType: 1,
+      jobTypeDisplay: jobType,
+      jobType: jobInt, // 0: Full-time, 1: Part-time, 2: Internship, 3: On-demand, 4: Seasonal, 5: Volunteer, 6: Freelance
+      jobSite: jobSiteInt, // 0: On-site, 1: Remote-accepted, 2: Remote-only
+      jobSiteDisplay: jobLocation,
+      experience, // 0: No experience, 1: 1-2 years, 2: 3-5 years, 3: +5 years
+      experienceDisplay: workExperience,
+      skills,
+      requireVisa: !hasJobVisa,
+      salaryStart,
+      salaryEnd,
+      salaryDisplay,
+      salaryBasis: newInterval,
+      salaryBasisIndex, // 0: hour, 1: annual, 2: month
+      submission, //array of submission methods 0: email, 1: phone, 2: in-person
+      rating: 0,
+      postType: 0, // postType | 0: jobs, 1: deals, 2: marketplace, 3: housing
+      reviewNum: 0,
+      newAddedPhotos: uploadedPhotos,
+      oldPhotos: [],
+    };
+
+    return jobPostData;
   };
 
   const closeModal = () => {
@@ -172,12 +354,22 @@ function JobsPostBusinessUser() {
 
   const handlePhotoFileChange = (e) => {
     const selectedImage = e.target.files[0];
+
+    if (!selectedImage) return;
+
     const fileName = selectedImage.name;
     const imgUrl = URL.createObjectURL(selectedImage);
-    const imgData = { imgUrl, fileName };
+    const imgData = { imgUrl, fileName, imageFile: selectedImage };
 
     if (!uploadedPhotos.includes(imgData))
       setUploadedPhotos((prev) => [...prev, imgData]);
+  };
+
+  const handleRemoveImage = (imgUrl) => () => {
+    const filteredPhotos = uploadedPhotos.filter(
+      (photo) => photo.imgUrl !== imgUrl
+    );
+    setUploadedPhotos(filteredPhotos);
   };
 
   const handleSalaryRangeChange = (e) => {
@@ -208,6 +400,7 @@ function JobsPostBusinessUser() {
           uploadedPhotos={uploadedPhotos}
           handleJobValueChange={handleJobValueChange}
           jobValues={jobValues}
+          handleRemoveImage={handleRemoveImage}
         />
       );
     if (step === 2)
@@ -242,6 +435,7 @@ function JobsPostBusinessUser() {
           handleContactEmailChange={handleContactEmailChange}
           handleContactInPersonChange={handleContactInPersonChange}
           handleContactPhoneChange={handleContactPhoneChange}
+          userData={userData}
         />
       );
     if (step === 6)
@@ -257,6 +451,9 @@ function JobsPostBusinessUser() {
           jobContactMethodInPerson={jobContactMethodInPerson}
           jobContactMethodPhone={jobContactMethodPhone}
           isBusinessUser={true}
+          userData={userData}
+          authUser={authUser}
+          postId={postId}
         />
       );
   };
@@ -340,17 +537,26 @@ function JobsPostBusinessUser() {
             }`}
           ></span>
         </div>
-        <div className="flex gap-4 p-4 lg:justify-between lg:px-16">
-          <button className="rounded w-1/2 text-[color:var(--deals-primary-med)] border border-[color:var(--deals-primary-med)] lg:w-fit lg:px-4">
-            Save & Exit
-          </button>
-          <button
-            onClick={handleNext}
-            className="rounded w-1/2 text-white bg-[color:var(--secondary)] py-2 lg:w-fit lg:px-8"
-          >
-            {step === 4 ? "Publish" : "Next"}
-          </button>
-        </div>
+        {isLoading ? (
+          <div className="w-full p-4 flex justify-center items-center ">
+            <CircularProgress color="warning" />
+          </div>
+        ) : (
+          <div className="flex gap-4 p-4 lg:justify-between lg:px-16">
+            <button
+              onClick={handleSaveAndExit}
+              className="rounded w-1/2 text-[color:var(--deals-primary-med)] border border-[color:var(--deals-primary-med)] lg:w-fit lg:px-4"
+            >
+              Save & Exit
+            </button>
+            <button
+              onClick={handleNext}
+              className="rounded w-1/2 text-white bg-[color:var(--secondary)] py-2 lg:w-fit lg:px-8"
+            >
+              {step === 6 ? "Publish" : "Next"}
+            </button>
+          </div>
+        )}
       </div>
     </React.Fragment>
   );

@@ -27,8 +27,12 @@ function JobsFormSix({
   jobContactMethodInPerson,
   jobContactMethodPhone,
   isBusinessUser,
+  userData,
+  authUser,
 }) {
-  const { title, description, location, jobType, jobLocation } = jobValues;
+  const { fullAddress, addressDetails } = userData;
+  const { postTitle, postDescription, location, jobType, jobLocation } =
+    jobValues;
   const { minPrice, maxPrice, interval } = salaryRange;
   const values = { jobValues, salaryRange, hasJobVisa };
 
@@ -37,7 +41,7 @@ function JobsFormSix({
       <h4 className="pt-4 px-4">Finish up and publish.</h4>
       <div className="lg:flex lg:justify-between">
         <h3 className="text-[color:var(--deals-primary)] font-normal px-4 py-2">
-          {title}
+          {postTitle}
         </h3>
         <span className={`flex lg:gap-2`}>
           <div className="flex items-center">
@@ -70,12 +74,14 @@ function JobsFormSix({
         </span>
       </div>
       <div className="relative w-full h-80 inline-block">
-        <Image
-          src={uploadedPhotos[0].imgUrl}
-          alt={uploadedPhotos[0].fileName}
-          fill={true}
-          className=" object-cover "
-        />
+        {uploadedPhotos.length > 0 && (
+          <Image
+            src={uploadedPhotos[0].imgUrl}
+            alt={uploadedPhotos[0].fileName}
+            fill={true}
+            className=" object-cover "
+          />
+        )}
         <button
           type="button"
           className="absolute z-10 bg-opacity-50 bg-black text-white border border-white rounded px-4 py-2 right-4 bottom-4 "
@@ -86,19 +92,41 @@ function JobsFormSix({
       <div className="flex flex-col gap-[1px] bg-[color:var(--border)] lg:flex-row-reverse lg:gap-4 lg:bg-white lg:pt-4">
         <div className="lg:w-1/3 lg:border lg:h-fit lg:rounded-md lg:shadow-sm ">
           <div className="lg:mx-4 lg:border-b">
-            <PostProfile isCreatePostDesktop={true} />
+            <PostProfile isCreatePostDesktop={true} userData={userData} />
           </div>
           {isBusinessUser && (
             <div className="hidden lg:block lg:mx-4 lg:py-4">
-              <AboutBusiness />
+              <AboutBusiness
+                isBusinessUser={isBusinessUser}
+                userData={userData}
+              />
             </div>
           )}
-          <PostContactInfo />
+          <PostContactInfo
+            postType={0}
+            isBusinessUser={isBusinessUser}
+            userData={userData}
+            jobContactMethodEmail={jobContactMethodEmail}
+            jobContactMethodInPerson={jobContactMethodInPerson}
+            jobContactMethodPhone={jobContactMethodPhone}
+          />
         </div>
         <div className="lg:w-2/3">
-          <PostOfferOptions postType="jobs" values={values} />
-          <PostDescription description={description} isLoggedIn={true} />
-          <PostLocation location={location} />
+          <PostOfferOptions
+            postType="jobs"
+            values={values}
+            isPostReview={true}
+          />
+          <PostDescription
+            description={postDescription}
+            isLoggedIn={true}
+            postType={0}
+            authUser={authUser}
+            jobContactMethodEmail={jobContactMethodEmail}
+            jobContactMethodInPerson={jobContactMethodInPerson}
+            jobContactMethodPhone={jobContactMethodPhone}
+          />
+          <PostLocation location={fullAddress} />
         </div>
       </div>
       <CustomModal isPublish={isPublish} onClose={closeModal}>

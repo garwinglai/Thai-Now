@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import biz_temp from "@/public/static/images/home/biz-temp.png";
 import StarIcon from "@mui/icons-material/Star";
 import { yellow } from "@mui/material/colors";
 import Link from "next/link";
-import Skeleton from "@mui/material/Skeleton";
 
 function OfferCards({ groupPostTitle, housingPost }) {
   const directory = groupPostTitle.toLowerCase();

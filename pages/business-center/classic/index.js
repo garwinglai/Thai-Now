@@ -501,6 +501,7 @@ function BusinessCenter() {
                         <UserPostDesktopRow
                           key={id}
                           post={post}
+                          userType={0}
                           even={isEven}
                           isDraft={true}
                         />

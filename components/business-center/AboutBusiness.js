@@ -1,7 +1,6 @@
 import React from "react";
 
 function AboutBusiness({ isBusinessUser, userData }) {
-  console.log("userData", userData);
   const { bizAboutUs } = isBusinessUser ? (userData ? userData : {}) : {};
   return (
     <div className="">

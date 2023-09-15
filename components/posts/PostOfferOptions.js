@@ -241,15 +241,15 @@ function PostOfferOptions({
     }
 
     if (postType === "jobs") {
-      const { jobValues, salaryRange, hasJobVisa } = postData;
-      const { title, jobLocation, experience, skills } = jobValues;
+      const { jobValues, salaryRange, hasJobVisa } = values;
+      const { postTitle, jobLocation, workExperience, skills } = jobValues;
       const { minPrice, maxPrice, interval } = salaryRange;
       return (
         <div className="flex flex-col gap-2">
           <span className="flex items-center gap-2">
             <MapsHomeWorkIcon sx={{ color: "var(--secondary)" }} />
             <h6 className="text-sm">Job Position :</h6>
-            <p className="font-extralight text-sm">{title}</p>
+            <p className="font-extralight text-sm">{postTitle}</p>
           </span>
           <span className="flex items-center gap-2">
             <PersonIcon sx={{ color: "var(--secondary)" }} />
@@ -259,7 +259,7 @@ function PostOfferOptions({
           <span className="flex items-center gap-2">
             <BedIcon sx={{ color: "var(--secondary)" }} />
             <h6 className="text-sm">Experience :</h6>
-            <p className="font-extralight text-sm">{experience}</p>
+            <p className="font-extralight text-sm">{workExperience}</p>
           </span>
           <span className="flex items-center gap-2">
             <BedIcon sx={{ color: "var(--secondary)" }} />
@@ -269,7 +269,9 @@ function PostOfferOptions({
           <span className="flex items-center gap-2">
             <BedIcon sx={{ color: "var(--secondary)" }} />
             <h6 className="text-sm">Visa (US only) :</h6>
-            <p className="font-extralight text-sm">{hasJobVisa}</p>
+            <p className="font-extralight text-sm">
+              {hasJobVisa ? `not required` : `required`}
+            </p>
           </span>
 
           <span className="flex mt-2">

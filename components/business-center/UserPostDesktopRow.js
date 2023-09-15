@@ -73,6 +73,7 @@ function UserPostDesktopRow({
       const photoKeysLen = photoKeys.length;
 
       if (userType === 0) {
+        console.log("delete");
         // classic
         if (photoKeysLen > 0) {
           await removeImagesFromStorage(photos);
@@ -91,7 +92,8 @@ function UserPostDesktopRow({
       if (userType === 0) {
         //classic
         await deleteFirestorePost();
-        await removeImagesFromStorage(photos);
+
+        // await removeImagesFromStorage(photos);
       }
 
       if (userType === 1) {
@@ -116,7 +118,7 @@ function UserPostDesktopRow({
   const deleteFireStoreBizPost = async () => {
     let postDirectory =
       postType === 0
-        ? "jobsPost"
+        ? "jobPosts"
         : postType === 1
         ? "dealsPost"
         : postType === 2
@@ -161,17 +163,44 @@ function UserPostDesktopRow({
   };
 
   const deleteFirestorePost = async () => {
-    const marketRef = doc(db, "users", uid, "marketPosts", id);
-    const allMarketplaceRef = doc(db, "allMarketplace", id);
+    let postDirectory =
+      postType === 0
+        ? "jobPosts"
+        : postType === 1
+        ? "dealsPost"
+        : postType === 2
+        ? "marketPosts"
+        : "housingPosts";
+
+    let allPostDirectory =
+      postType === 0
+        ? "allJobs"
+        : postType === 1
+        ? "allDeals"
+        : postType === 2
+        ? "allMarketplace"
+        : "allHousing";
+
+    let decrementValue =
+      postType === 0
+        ? "numJobs"
+        : postType === 1
+        ? "numDeals"
+        : postType === 2
+        ? "numMarket"
+        : "numHousing";
+
+    const postRef = doc(db, "users", uid, postDirectory, id);
+    const allPostRef = doc(db, allPostDirectory, id);
     const userRef = doc(db, "users", uid);
 
     const batch = writeBatch(db);
 
     try {
-      batch.delete(marketRef);
-      batch.delete(allMarketplaceRef);
+      batch.delete(postRef);
+      batch.delete(allPostRef);
       batch.update(userRef, {
-        numMarket: increment(-1),
+        [decrementValue]: increment(-1),
       });
 
       await batch.commit();

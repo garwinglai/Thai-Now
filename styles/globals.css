@@ -133,7 +133,7 @@ a,
 li,
 label,
 button {
-  font-family: var(--kanit-font), sans-serif;
+  /* font-family: var(--kanit-font), sans-serif; */
   margin: 0;
   padding: 0;
 }

@@ -27,10 +27,18 @@ function Directory({ directory }) {
 
   const [isLoading, setIsLoading] = useState(false);
   const [housingPosts, setHousingPosts] = useState([]);
+  const [marketPosts, setMarketPosts] = useState([]);
+  const [jobPosts, setJobPosts] = useState([]);
+
+  console.log("marketplace", marketPosts);
+  console.log("jobPosts", jobPosts);
 
   useEffect(() => {
     setIsLoading(true);
     const housingCollectionRef = collection(db, "allHousing");
+    const marketCollectionRef = collection(db, "allMarketplace");
+    const jobsCollectionRef = collection(db, "allJobs");
+
     const unsubHousingListener = onSnapshot(
       housingCollectionRef,
       (snapshot) => {
@@ -45,17 +53,46 @@ function Directory({ directory }) {
       }
     );
 
+    const unsubMarketListener = onSnapshot(marketCollectionRef, (snapshot) => {
+      const marketPostsArr = [];
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        data.id = doc.id;
+        marketPostsArr.push(data);
+      });
+      setMarketPosts(marketPostsArr);
+      setIsLoading(false);
+    });
+
+    const unsubJobsListener = onSnapshot(jobsCollectionRef, (snapshot) => {
+      const jobsPostsArr = [];
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        data.id = doc.id;
+        jobsPostsArr.push(data);
+      });
+      setJobPosts(jobsPostsArr);
+      setIsLoading(false);
+    });
+
     setIsLoading(false);
 
     return () => {
       unsubHousingListener();
+      unsubMarketListener();
+      unsubJobsListener();
     };
   }, [uid]);
 
   function cardType(directory) {
     if (directory == "jobs") {
-      return tempCount.map((item) => (
-        <JobsCard key={item} directory={directory} />
+      return jobPosts.map((post) => (
+        <JobsCard
+          key={post.id}
+          isBusinessCenter={false}
+          directory={directory}
+          post={post}
+        />
       ));
     }
 
@@ -77,8 +114,13 @@ function Directory({ directory }) {
     // }
 
     if (directory == "marketplace") {
-      return tempCount.map((item) => (
-        <MarketplaceCard key={item} directory={directory} />
+      return marketPosts.map((post) => (
+        <MarketplaceCard
+          key={post.id}
+          isBusinessCenter={false}
+          directory={directory}
+          post={post}
+        />
       ));
     }
 

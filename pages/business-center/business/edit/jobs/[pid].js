@@ -15,16 +15,39 @@ import JobsFormFour from "@/components/business-center/jobs/JobsFormFour";
 import JobsFormFive from "@/components/business-center/jobs/JobsFormFive";
 import JobsFormSix from "@/components/business-center/jobs/JobsFormSix";
 import { useAuth } from "@/components/auth/AuthProvider";
+import CircularProgress from "@mui/material/CircularProgress";
+import { getLocalStorage } from "@/utils/clientStorage";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/firebase/fireConfig";
+import { createGeoHash } from "@/firebase/fireConfig";
+import Geocode from "react-geocode";
+import { Timestamp } from "firebase/firestore";
+import {
+  publishDraftBusinessjobPost,
+  saveJobsBusinessDraft,
+  updateJobBusinessDraft,
+  updateJobBusinessPost,
+} from "@/helper/client/jobs";
+import { saveMarketBusinessDraft } from "@/helper/client/marketplace";
+
+Geocode.setApiKey(process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY);
+Geocode.setLanguage("en");
 
 function EditJobs({ pid }) {
   const { authUser, loading } = useAuth();
-  const { uid } = authUser || {};
+  const { uid, email, displayName } = authUser || {};
 
+  const [userData, setUserData] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [bizName, setBizName] = useState("");
+  const [bizProfPic, setBizProfPic] = useState("");
+  const [bizId, setBizId] = useState("");
+  const [isDraft, setIsDraft] = useState(false);
   const [isPublish, setIsPublish] = useState(false);
   const [step, setStep] = useState(1);
   const [jobValues, setJobValues] = useState({
-    title: "",
-    description: "",
+    postTitle: "",
+    postDescription: "",
     jobType: "Full-time",
     jobLocation: "On-site",
     workExperience: "No experience",
@@ -44,10 +67,22 @@ function EditJobs({ pid }) {
     isSnackBarOpen: false,
     snackMessage: "",
   });
-
-  const { title, description } = jobValues;
   const [uploadedPhotos, setUploadedPhotos] = useState([]);
-  const { minPrice, maxPrice } = salaryRange;
+  const [removedPhotos, setRemovedPhotos] = useState([]);
+  const [newAddedPhotos, setNewAddedPhotos] = useState([]);
+  const [oldPhotos, setOldPhotos] = useState([]);
+  const [postData, setPostData] = useState({});
+  const [postId, setPostId] = useState("");
+
+  const {
+    postTitle,
+    postDescription,
+    jobType,
+    jobLocation,
+    skills,
+    workExperience,
+  } = jobValues;
+  const { minPrice, maxPrice, interval } = salaryRange;
 
   const { isSnackBarOpen, snackMessage } = snackBar;
 
@@ -60,9 +95,163 @@ function EditJobs({ pid }) {
     // TODO: loading, show skeleton
   }, [authUser, loading]);
 
-  const handleNext = () => {
+  useEffect(() => {
+    if (!uid) return;
+    const bizData = JSON.parse(getLocalStorage("bizUser"));
+    const { id: bizId, name, profPic } = bizData;
+    setBizId(bizId);
+    setBizName(name);
+    setBizProfPic(profPic["0-1"]);
+    setUserData(bizData);
+
+    const fetchJobPosts = async () => {
+      const postRef = doc(db, "users", uid, "biz", bizId, "jobPosts", pid);
+      const postSnap = await getDoc(postRef);
+
+      if (!postSnap.exists()) {
+        return;
+      }
+
+      const postData = postSnap.data();
+      const postId = postSnap.id;
+
+      const {
+        postAddressDetails,
+        postDescription,
+        postTitle,
+        price,
+        photos,
+        salaryStart,
+        salaryEnd,
+        intervalDisplay,
+        jobTypeDisplay,
+        jobSiteDisplay,
+        experienceDisplay,
+        skills,
+        requireVisa,
+        salaryBasis,
+        submission,
+      } = postData;
+
+      const { addy1, addy2, city, state, zip } = postAddressDetails;
+      const photoArr = [];
+
+      for (const key in photos) {
+        if (photos.hasOwnProperty(key)) {
+          const imgUrl = photos[key];
+          const fileName = key;
+          const imgData = { imgUrl, fileName };
+          photoArr.push(imgData);
+        }
+      }
+
+      setPostId(postId);
+      setSalaryRange((prev) => ({
+        ...prev,
+        minPrice: salaryStart,
+        maxPrice: salaryEnd,
+        interval:
+          salaryBasis === 0 ? "hour" : salaryBasis === 1 ? "year" : "month",
+      }));
+      setUploadedPhotos(photoArr);
+      setOldPhotos(photoArr);
+      setPostData(postData);
+      setJobValues((prev) => ({
+        ...prev,
+        postTitle,
+        postDescription,
+        jobType: jobTypeDisplay,
+        jobLocation: jobSiteDisplay,
+        workExperience: experienceDisplay,
+        skills,
+      }));
+      setHasJobVisa(!requireVisa);
+      for (let i = 0; i < submission.length; i++) {
+        const submissionIdx = submission[i];
+        if (submissionIdx === 0) setJobContactMethodEmail(true);
+        if (submissionIdx === 1) setJobContactMethodPhone(true);
+        if (submissionIdx === 2) setJobContactMethodInPerson(true);
+      }
+    };
+
+    const fetchDrafts = async () => {
+      const draftsRef = doc(db, "users", uid, "biz", bizId, "drafts", pid);
+      const draftSnap = await getDoc(draftsRef);
+
+      if (!draftSnap.exists()) {
+        return;
+      }
+
+      const draftData = draftSnap.data();
+      const postId = draftSnap.id;
+
+      const {
+        postAddressDetails,
+        postDescription,
+        postTitle,
+        price,
+        photos,
+        salaryStart,
+        salaryEnd,
+        intervalDisplay,
+        jobTypeDisplay,
+        jobSiteDisplay,
+        experienceDisplay,
+        skills,
+        requireVisa,
+        salaryBasis,
+        submission,
+      } = draftData;
+      console.log("draftData", draftData);
+
+      const photoArr = [];
+
+      for (const key in photos) {
+        if (photos.hasOwnProperty(key)) {
+          const imgUrl = photos[key];
+          const fileName = key;
+          const imgData = { imgUrl, fileName };
+          photoArr.push(imgData);
+        }
+      }
+
+      setIsDraft(true);
+      setPostId(postId);
+      setSalaryRange((prev) => ({
+        ...prev,
+        minPrice: salaryStart,
+        maxPrice: salaryEnd,
+        interval:
+          salaryBasis === 0 ? "hour" : salaryBasis === 1 ? "year" : "month",
+      }));
+      setUploadedPhotos(photoArr);
+      setOldPhotos(photoArr);
+      setPostData(postData);
+      setJobValues((prev) => ({
+        ...prev,
+        postTitle,
+        postDescription,
+        jobType: jobTypeDisplay,
+        jobLocation: jobSiteDisplay,
+        workExperience: experienceDisplay,
+        skills,
+      }));
+      setHasJobVisa(!requireVisa);
+      for (let i = 0; i < submission.length; i++) {
+        const submissionIdx = submission[i];
+        if (submissionIdx === 0) setJobContactMethodEmail(true);
+        if (submissionIdx === 1) setJobContactMethodPhone(true);
+        if (submissionIdx === 2) setJobContactMethodInPerson(true);
+      }
+    };
+
+    fetchJobPosts();
+    fetchDrafts();
+  }, [uid, pid]);
+
+  const handleNext = async () => {
     if (step === 1) {
-      if (title === "") {
+      if (postTitle === "") {
         setSnackBar((prev) => ({
           isSnackBarOpen: true,
           snackMessage: "Missing title.",
@@ -78,7 +267,7 @@ function EditJobs({ pid }) {
         return;
       }
 
-      if (description === "") {
+      if (postDescription === "") {
         setSnackBar((prev) => ({
           isSnackBarOpen: true,
           snackMessage: "Missing description.",
@@ -86,45 +275,6 @@ function EditJobs({ pid }) {
         return;
       }
     }
-
-    // if (step === 2) {
-    // 	if (guestCount === 0) {
-    // 		setSnackBar((prev) => ({
-    // 			isSnackBarOpen: true,
-    // 			snackMessage: "Number of guests required.",
-    // 		}));
-    // 		return;
-    // 	}
-
-    // 	if (bedroomCount === 0) {
-    // 		setSnackBar((prev) => ({
-    // 			isSnackBarOpen: true,
-    // 			snackMessage: "Number of bedrooms required.",
-    // 		}));
-    // 		return;
-    // 	}
-    // }
-
-    // if (step === 3) {
-    // 	if (priceOption === "exact") {
-    // 		if (exactPrice.price === "") {
-    // 			setSnackBar((prev) => ({
-    // 				isSnackBarOpen: true,
-    // 				snackMessage: "Please enter a price.",
-    // 			}));
-    // 			return;
-    // 		}
-    // 	}
-    // 	if (priceOption === "range") {
-    // 		if (priceRange.minPrice === "" || priceRange.maxPrice === "") {
-    // 			setSnackBar((prev) => ({
-    // 				isSnackBarOpen: true,
-    // 				snackMessage: "Please enter a price range.",
-    // 			}));
-    // 			return;
-    // 		}
-    // 	}
-    // }
 
     if (step === 4) {
       if (minPrice === "" || maxPrice === "") {
@@ -137,11 +287,212 @@ function EditJobs({ pid }) {
     }
 
     if (step === 6) {
-      setIsPublish(true);
+      setIsLoading(true);
+      await publishPost();
+      setIsLoading(false);
       return;
     }
 
     setStep((prev) => (prev += 1));
+  };
+
+  const publishPost = async () => {
+    const jobPostData = await structureJobPostData();
+
+    if (isDraft) {
+      const { success, error, postId } = await publishDraftBusinessjobPost(
+        jobPostData,
+        uid,
+        bizId
+      );
+
+      if (success) {
+        setIsPublish(true);
+        setPostId(postId);
+      }
+    } else {
+      const { success, error, postId } = await updateJobBusinessPost(
+        jobPostData,
+        uid,
+        bizId
+      );
+      console.log("success", success);
+      console.log("error", error);
+
+      if (success) {
+        setIsPublish(true);
+        setPostId(postId);
+      }
+    }
+
+    // TODO: handle housing post error
+  };
+
+  const getLatLngFromAddress = (address) => {
+    return Geocode.fromAddress(address).then(
+      (response) => {
+        const { lat, lng } = response.results[0].geometry.location;
+
+        return { lat, lng };
+      },
+      (error) => {
+        console.error(error);
+        // return { error };
+      }
+    );
+  };
+
+  const structureJobPostData = async () => {
+    const { addressDetails } = userData;
+    const { addy1, addy2, city, state, zip } = addressDetails;
+    let postAddress = "";
+    let lat = "";
+    let lng = "";
+    let geohash = "";
+
+    if (addy1 !== "" && city !== "" && state !== "" && zip !== "") {
+      postAddress = addy1 + " " + addy2 + " " + city + " " + state + " " + zip;
+      try {
+        const { lat: latitude, lng: longitude } = await getLatLngFromAddress(
+          postAddress
+        );
+        lat = latitude;
+        lng = longitude;
+      } catch (error) {
+        console.log("getAddylatlng", error);
+      }
+    }
+
+    if (lat !== "" && lng !== "") {
+      try {
+        const geoHash = await createGeoHash(lat, lng);
+        geohash = geoHash;
+      } catch (error) {
+        console.log("geohash", error);
+      }
+    }
+
+    const jobInt =
+      jobType === "Full-time"
+        ? 0
+        : jobType === "Part-time"
+        ? 1
+        : jobType === "Internship"
+        ? 2
+        : jobType === "On-demand"
+        ? 3
+        : jobType === "Seasonal"
+        ? 4
+        : jobType === "Volunteer"
+        ? 5
+        : 6;
+
+    const jobSiteInt =
+      jobLocation === "On-site" ? 0 : jobLocation === "Remote-accepted" ? 1 : 2;
+
+    const experience =
+      workExperience === "No experience"
+        ? 0
+        : workExperience === "1-2 years"
+        ? 1
+        : workExperience === "3-5 years"
+        ? 2
+        : 3;
+
+    // capitalize interval first letter
+    const intervalFirstLetter = interval.charAt(0).toUpperCase();
+    const intervalRestLower = interval.slice(1);
+    const newInterval = intervalFirstLetter + intervalRestLower;
+    const salaryStart = parseFloat(parseFloat(minPrice).toFixed(2));
+    const salaryEnd = parseFloat(parseFloat(maxPrice).toFixed(2));
+    const salaryBasisIndex =
+      interval === "hour" ? 0 : interval === "month" ? 2 : 1;
+    const salaryDisplay = `$${parseFloat(minPrice).toFixed(2)} - $${parseFloat(
+      maxPrice
+    ).toFixed(2)} per ${newInterval}`;
+
+    const submission = [];
+
+    if (jobContactMethodEmail) submission.push(0);
+    if (jobContactMethodPhone) submission.push(1);
+    if (jobContactMethodInPerson) submission.push(2);
+
+    const jobPostData = {
+      postId,
+      postTitle,
+      postDescription,
+      createdAt: Timestamp.now(),
+      postAddress,
+      postAddressDetails: {
+        addy1,
+        addy2,
+        city,
+        state,
+        zip,
+      },
+      postCoord: {
+        lat,
+        lng,
+      },
+      geohash,
+      userId: uid,
+      userName: displayName,
+      bizUserId: bizId,
+      bizName,
+      bizProfPic,
+      posterType: 1,
+      jobTypeDisplay: jobType,
+      jobType: jobInt, // 0: Full-time, 1: Part-time, 2: Internship, 3: On-demand, 4: Seasonal, 5: Volunteer, 6: Freelance
+      jobSite: jobSiteInt, // 0: On-site, 1: Remote-accepted, 2: Remote-only
+      jobSiteDisplay: jobLocation,
+      experience, // 0: No experience, 1: 1-2 years, 2: 3-5 years, 3: +5 years
+      experienceDisplay: workExperience,
+      skills,
+      requireVisa: !hasJobVisa,
+      salaryStart,
+      salaryEnd,
+      salaryDisplay,
+      salaryBasis: newInterval,
+      salaryBasisIndex, // 0: hour, 1: annual, 2: month
+      submission, //array of submission methods 0: email, 1: phone, 2: in-person
+      rating: 0,
+      postType: 0, // postType | 0: jobs, 1: deals, 2: marketplace, 3: housing
+      reviewNum: 0,
+      newAddedPhotos,
+      oldPhotos,
+      removedPhotos,
+    };
+
+    return jobPostData;
+  };
+
+  const handleSaveAndExit = async () => {
+    setIsLoading(true);
+    const jobPostData = await structureJobPostData();
+    // 0: jobs 1:deals, 2:marketplace, 3:housing
+    if (isDraft) {
+      const { success, error } = await updateJobBusinessDraft(
+        jobPostData,
+        uid,
+        bizId
+      );
+
+      if (success) {
+        setIsLoading(false);
+        push("/business-center/business");
+      }
+    } else {
+      const { success, error } = await saveJobsBusinessDraft(
+        jobPostData,
+        uid,
+        bizId
+      );
+      console.log("done", success, error);
+      if (success) {
+        push("/business-center/business");
+        setIsLoading(false);
+      }
+    }
   };
 
   const closeModal = () => {
@@ -172,12 +523,34 @@ function EditJobs({ pid }) {
 
   const handlePhotoFileChange = (e) => {
     const selectedImage = e.target.files[0];
+
+    if (!selectedImage) return;
+
     const fileName = selectedImage.name;
     const imgUrl = URL.createObjectURL(selectedImage);
-    const imgData = { imgUrl, fileName };
+    const imgData = { imgUrl, fileName, imageFile: selectedImage };
 
-    if (!uploadedPhotos.includes(imgData))
+    if (!uploadedPhotos.includes(imgData)) {
       setUploadedPhotos((prev) => [...prev, imgData]);
+      setNewAddedPhotos((prev) => [...prev, imgData]);
+    }
+  };
+
+  const handleRemoveImage = (file, fileName) => () => {
+    const { imgUrl } = file;
+    const filteredPhotos = uploadedPhotos.filter(
+      (photo) => photo.fileName != fileName
+    );
+
+    const existedFileToRemove = oldPhotos.find(
+      (photo) => photo.fileName != fileName
+    );
+    setUploadedPhotos(filteredPhotos);
+    setOldPhotos(filteredPhotos);
+
+    if (existedFileToRemove) {
+      setRemovedPhotos((prev) => [...prev, existedFileToRemove]);
+    }
   };
 
   const handleSalaryRangeChange = (e) => {
@@ -208,6 +581,7 @@ function EditJobs({ pid }) {
           uploadedPhotos={uploadedPhotos}
           handleJobValueChange={handleJobValueChange}
           jobValues={jobValues}
+          handleRemoveImage={handleRemoveImage}
         />
       );
     if (step === 2)
@@ -242,6 +616,7 @@ function EditJobs({ pid }) {
           handleContactEmailChange={handleContactEmailChange}
           handleContactInPersonChange={handleContactInPersonChange}
           handleContactPhoneChange={handleContactPhoneChange}
+          userData={userData}
         />
       );
     if (step === 6)
@@ -256,6 +631,10 @@ function EditJobs({ pid }) {
           jobContactMethodEmail={jobContactMethodEmail}
           jobContactMethodInPerson={jobContactMethodInPerson}
           jobContactMethodPhone={jobContactMethodPhone}
+          isBusinessUser={true}
+          userData={userData}
+          authUser={authUser}
+          postId={postId}
         />
       );
   };
@@ -275,7 +654,7 @@ function EditJobs({ pid }) {
           {snackMessage}
         </Alert>
       </Snackbar>
-      <div className="pb-28">
+      <div className="pb-28 lg:pt-20">
         <button
           onClick={handleBack}
           className="flex items-center gap-1 bg-transparent pl-4 pt-4"
@@ -328,17 +707,26 @@ function EditJobs({ pid }) {
             }`}
           ></span>
         </div>
-        <div className="flex gap-4 p-4">
-          <button className="rounded w-1/2 text-[color:var(--deals-primary-med)] border border-[color:var(--deals-primary-med)]">
-            Save & Exit
-          </button>
-          <button
-            onClick={handleNext}
-            className="rounded w-1/2 text-white bg-[color:var(--secondary)] py-2"
-          >
-            {step === 6 ? "Publish" : "Next"}
-          </button>
-        </div>
+        {isLoading ? (
+          <div className="w-full p-4 flex justify-center items-center ">
+            <CircularProgress color="warning" />
+          </div>
+        ) : (
+          <div className="flex gap-4 p-4 lg:justify-between lg:px-16">
+            <button
+              onClick={handleSaveAndExit}
+              className="rounded w-1/2 text-[color:var(--deals-primary-med)] border border-[color:var(--deals-primary-med)] lg:w-fit lg:px-4"
+            >
+              Save & Exit
+            </button>
+            <button
+              onClick={handleNext}
+              className="rounded w-1/2 text-white bg-[color:var(--secondary)] py-2 lg:w-fit lg:px-8"
+            >
+              {step === 6 ? "Publish" : "Next"}
+            </button>
+          </div>
+        )}
       </div>
     </React.Fragment>
   );

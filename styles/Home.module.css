@@ -1,205 +1,210 @@
 .main {
-	margin-top: unset;
+  margin-top: unset;
 }
 
 .right_arrow_button {
-	display: none;
+  display: none;
 }
 
 .flexRow {
-	display: flex;
+  display: flex;
 }
 
 .flexCol {
-	display: flex;
-	flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 /* * Banner Section */
 .banner_section {
-	position: relative;
+  position: relative;
 }
 
 .banner_image_desktop {
-	width: 100vw;
-	height: fit-content;
-	object-fit: scale-down;
+  width: 100vw;
+  height: fit-content;
+  object-fit: scale-down;
 }
 
 .banner_image_mobile {
-	display: none;
+  display: none;
 }
 
 .banner_image {
-	width: 100vw;
-	height: fit-content;
-	object-fit: scale-down;
+  width: 100vw;
+  height: fit-content;
+  object-fit: scale-down;
 }
 
 /* * Nav Options Section */
 .navigation_options_section {
-	margin: 0 auto;
+  margin: 0 auto;
 }
 
 .navgation_options_container {
-	text-align: center;
-	margin: 3rem auto;
-	padding: 0 16px;
+  text-align: center;
+  margin: 3rem auto;
+  padding: 0 16px;
 }
 
 .main h3 {
-	color: var(--login-button-color);
-	font-weight: 800;
+  color: var(--login-button-color);
+  font-weight: 800;
 }
 
 .navgation_options_container p {
-	color: var(--text-body-color);
+  color: var(--text-body-color);
 }
 
 .navigation_subheading_break {
-	display: none;
+  display: none;
 }
 
 /* * Deals of the week Section */
 .offers_section {
-	display: block;
-	background-color: #eceffa;
-	width: 100%;
-	padding: 40px 0;
+  display: block;
+  /* background-color: #eceffa; */
+  width: 100%;
+  padding: 1rem 0;
 }
 
 /* * News Section */
 .news_section {
-	width: 100%;
-	padding-top: 30px;
+  width: 100%;
+  padding-top: 30px;
 }
 
 .news_header {
-	justify-content: space-between;
-	align-items: center;
-	margin-bottom: 1rem;
-	padding: 0 10%;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0 10%;
 }
 
 .news_card_container {
-	box-sizing: border-box;
-	gap: 1rem;
-	overflow: scroll;
-	padding: 0 10% 30px;
+  box-sizing: border-box;
+  gap: 1rem;
+  overflow: scroll;
+  padding: 0 10% 30px;
 }
 
 /* * First Ad Section */
 .ad_section {
-	padding-bottom: 20px;
+  padding: 0 10%;
 }
 
 /* * Guide Book Section */
 .guide_book_section {
-	width: 100%;
-	padding-bottom: 30px;
+  width: 100%;
+  padding-bottom: 30px;
 }
 
 .guide_book_header {
-	justify-content: space-between;
-	padding: 0 10% 15px;
+  justify-content: space-between;
+  padding: 0 10% 15px;
 }
 
 /* * Second Ad Section */
 
 /* * Trips Section */
 .trips_section {
-	width: 100%;
+  width: 100%;
 }
 
 .trips_header {
-	justify-content: space-between;
-	align-items: center;
-	padding: 0 10%;
-	margin-bottom: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10%;
+  margin-bottom: 1rem;
 }
 
 .trips_container {
-	width: 100%;
-	padding-left: 10%;
-	padding-bottom: 30px;
-	gap: 20px;
-	overflow: scroll;
+  width: 100%;
+  padding-left: 10%;
+  padding-bottom: 30px;
+  gap: 20px;
+  overflow: scroll;
 }
 
 @media screen and (max-width: 768px) {
-	.main {
-		margin: unset;
-	}
-	.right_arrow_button {
-		padding-right: 10px;
-		display: block;
-	}
+  .main {
+    margin: unset;
+  }
 
-	.banner_section {
-		width: 100%;
-	}
+  .ad_section {
+    padding: 0 1rem;
+  }
 
-	.banner_image_desktop {
-		display: none;
-	}
+  .right_arrow_button {
+    padding-right: 10px;
+    display: block;
+  }
 
-	.banner_image_mobile {
-		display: block;
-		width: 100%;
-		height: fit-content;
-		object-fit: contain;
-	}
+  .banner_section {
+    width: 100%;
+  }
 
-	.navigation_subheading_break {
-		display: block;
-	}
+  .banner_image_desktop {
+    display: none;
+  }
 
-	.offers_section {
-		display: block;
-		background-color: #eceffa;
-		padding-left: 20px;
-	}
+  .banner_image_mobile {
+    display: block;
+    width: 100%;
+    height: fit-content;
+    object-fit: contain;
+  }
 
-	.news_card_container,
-	.news_header {
-		padding: unset;
-		padding-left: 20px;
-	}
+  .navigation_subheading_break {
+    display: block;
+  }
 
-	.news_header {
-		margin: unset;
-	}
+  .offers_section {
+    display: block;
+    /* background-color: #eceffa; */
+    padding-left: 20px;
+  }
 
-	.news_card_container {
-		padding-right: 10px;
-		padding-bottom: 30px;
-	}
+  .news_card_container,
+  .news_header {
+    padding: unset;
+    padding-left: 20px;
+  }
 
-	.guide_book_section {
-		padding-bottom: unset;
-	}
+  .news_header {
+    margin: unset;
+  }
 
-	.guide_book_header {
-		padding: unset;
-		padding-left: 20px;
-		align-items: center;
-	}
+  .news_card_container {
+    padding-right: 10px;
+    padding-bottom: 30px;
+  }
 
-	.trips_section {
-		width: 100%;
-	}
+  .guide_book_section {
+    padding-bottom: unset;
+  }
 
-	.trips_header {
-		padding: unset;
-		padding-left: 20px;
-	}
+  .guide_book_header {
+    padding: unset;
+    padding-left: 20px;
+    align-items: center;
+  }
 
-	.trips_container {
-		/* width: 100%; */
-		padding: unset;
-		padding-bottom: 30px;
-		padding-left: 20px;
-		padding-right: 20px;
-		gap: 1rem;
-	}
+  .trips_section {
+    width: 100%;
+  }
+
+  .trips_header {
+    padding: unset;
+    padding-left: 20px;
+  }
+
+  .trips_container {
+    /* width: 100%; */
+    padding: unset;
+    padding-bottom: 30px;
+    padding-left: 20px;
+    padding-right: 20px;
+    gap: 1rem;
+  }
 }

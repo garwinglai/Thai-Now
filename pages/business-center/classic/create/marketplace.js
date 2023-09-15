@@ -207,7 +207,9 @@ function MarketPlacePost() {
     let geohash = "";
 
     if (addy1 !== "" && city !== "" && state !== "" && zip !== "") {
-      postAddress = addy1 + " " + addy2 + " " + city + " " + state + " " + zip;
+      postAddress = addy2
+        ? addy1 + " " + addy2 + " " + city + " " + state + " " + zip
+        : addy1 + " " + city + " " + state + " " + zip;
       try {
         const { lat: latitude, lng: longitude } = await getLatLngFromAddress(
           postAddress

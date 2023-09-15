@@ -102,9 +102,9 @@ function HousingCard({
     if (isDraft) {
       if (isBusinessUser) {
         if (photoKeysLen > 0) {
-          await deleteBizFirestoreDraftPost(photos);
+          await removeImagesFromStorage(photos);
         }
-        await deleteFirestoreDraftPost();
+        await deleteBizFirestoreDraftPost();
       } else {
         if (photoKeysLen > 0) {
           await removeImagesFromStorage(photos);
@@ -224,7 +224,7 @@ function HousingCard({
         }}`}
       >
         {defaultImage ? (
-          <div className=" w-1/3 aspect-square relative md:h-[25vw] md:w-1/4 lg:w-1/3 lg:h-[14vw]">
+          <div className="min-w-[25%] aspect-square relative md:h-[25vw]  lg:min-w-[33%] lg:h-[14vw]">``
             <Image
               src={defaultImage}
               alt="post image"

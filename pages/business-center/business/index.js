@@ -64,6 +64,7 @@ function BusinessCenterBusiness({ classicUser, bizUser }) {
   const [isLoading, setIsLoading] = useState(false);
   const [housingPosts, setHousingPosts] = useState([]);
   const [marketplacePosts, setMarketplacePosts] = useState([]);
+  const [jobPosts, setJobPosts] = useState([]);
   const [userData, setUserData] = useState({});
   const [drafts, setDrafts] = useState([]);
 
@@ -111,6 +112,15 @@ function BusinessCenterBusiness({ classicUser, bizUser }) {
       bizId,
       "marketPosts"
     );
+    const jobCollectionRef = collection(
+      db,
+      "users",
+      uid,
+      "biz",
+      bizId,
+      "jobPosts"
+    );
+
     const bizRef = doc(db, "users", uid, "biz", bizId);
     const draftsRef = collection(db, "users", uid, "biz", bizId, "drafts");
 
@@ -142,6 +152,17 @@ function BusinessCenterBusiness({ classicUser, bizUser }) {
       }
     );
 
+    const unsubJobListener = onSnapshot(jobCollectionRef, (snapshot) => {
+      const jobPostArr = [];
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        data.id = doc.id;
+        jobPostArr.push(data);
+      });
+      setJobPosts(jobPostArr);
+      setIsLoading(false);
+    });
+
     const unsubUserListener = onSnapshot(bizRef, (snapshot) => {
       const userData = snapshot.data();
       userData.bizId = bizId;
@@ -164,6 +185,7 @@ function BusinessCenterBusiness({ classicUser, bizUser }) {
     return () => {
       unsubHousingListener();
       unsubMarketplaceListener();
+      unsubJobListener();
       unsubUserListener();
       unsubDraftListener();
     };
@@ -196,16 +218,18 @@ function BusinessCenterBusiness({ classicUser, bizUser }) {
     return (
       <div className="px-4 mb-16 pb-8 lg:hidden">
         <TabPanel value={value} index={0}>
-          <JobsCard
-            isBusinessCenter={true}
-            isBusinessUser={true}
-            directory="jobs"
-          />
-          <JobsCard
-            isBusinessCenter={true}
-            isBusinessUser={true}
-            directory="jobs"
-          />
+          {jobPosts.length > 0 ? jobPosts.map((post) => (
+            <JobsCard
+              isBusinessUser={true}
+              key={post.id}
+              isBusinessCenter={true}
+              directory="housing"
+              post={post}
+              isDraft={false}
+              userData={userData}
+            />
+          )): 
+          <p className="text-center my-8 font-extralight">No posts</p>}
         </TabPanel>
         <TabPanel value={value} index={1}>
           {housingPosts.map((post) => (
@@ -236,6 +260,19 @@ function BusinessCenterBusiness({ classicUser, bizUser }) {
         <TabPanel value={value} index={3}>
           {drafts.map((post) => {
             const { postType, id } = post;
+            if (postType === 0) {
+              return (
+                <JobsCard
+                  isBusinessUser={true}
+                  key={post.id}
+                  isBusinessCenter={true}
+                  directory="housing"
+                  post={post}
+                  isDraft={true}
+                  userData={userData}
+                />
+              );
+            }
             if (postType === 2) {
               return (
                 <MarketplaceCard
@@ -315,24 +352,27 @@ function BusinessCenterBusiness({ classicUser, bizUser }) {
                 </tr>
               </thead>
 
-              {/* {housingPosts.length > 0 && (
+              {jobPosts.length > 0 && (
                 <tbody className="w-full">
-                  {housingPosts.map((post, index) => {
+                  {jobPosts.map((post, index) => {
                     const isEven = index % 2 === 0;
                     return (
                       <UserPostDesktopRow
                         key={post.id}
                         post={post}
                         even={isEven}
+                        postType={0}
+                        userType={1}
+                        userData={userData}
                       />
                     );
                   })}
                 </tbody>
-              )} */}
+              )}
             </table>
           </div>
 
-          {housingPosts.length === 0 ? (
+          {jobPosts.length === 0 ? (
             <div className="w-full">
               <p className=" font-extralight text-sm whitespace-nowrap text-center">
                 No posts
@@ -605,6 +645,19 @@ function BusinessCenterBusiness({ classicUser, bizUser }) {
                   {drafts.map((post, index) => {
                     const { id, postType } = post;
                     const isEven = index % 2 === 0;
+                    if (postType === 0) {
+                      return (
+                        <UserPostDesktopRow
+                          key={id}
+                          postType={postType}
+                          userType={1}
+                          post={post}
+                          even={isEven}
+                          isDraft={true}
+                          userData={userData}
+                        />
+                      );
+                    }
                     if (postType === 2) {
                       return (
                         <UserPostDesktopRow

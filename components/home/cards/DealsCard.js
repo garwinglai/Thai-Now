@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from "../../../styles/components/home/cards/deals-card.module.css";
-import gStyles from "../../../styles/global.module.css";
 import Image from "next/image";
 import StarIcon from "@mui/icons-material/Star";
 import { yellow } from "@mui/material/colors";

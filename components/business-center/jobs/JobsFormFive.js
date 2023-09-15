@@ -16,7 +16,9 @@ function JobsFormFive({
   handleContactEmailChange,
   handleContactInPersonChange,
   handleContactPhoneChange,
+  userData,
 }) {
+  const { email, fullAddress, phoneNum } = userData;
   return (
     <form className="p-4 lg:w-1/2 lg:mx-auto">
       <h4 className="pt-4">How do you get your customers to contact you?</h4>
@@ -37,7 +39,7 @@ function JobsFormFive({
                 Email
               </p>
               <p className=" text-[color:var(--deals-primary)] font-extralight ">
-                apopburger@gmail.com
+                {email}
               </p>
             </div>
           }
@@ -62,7 +64,7 @@ function JobsFormFive({
                 Phone / Appointment
               </p>
               <p className=" text-[color:var(--deals-primary)] font-extralight ">
-                (555) 555-5555
+                {phoneNum}
               </p>
             </div>
           }
@@ -87,7 +89,7 @@ function JobsFormFive({
                 Walk-in (in-person)
               </p>
               <p className=" text-[color:var(--deals-primary)] font-extralight ">
-                5910 W Sunset, Los Angeles, CA 90028
+                {fullAddress}
               </p>
             </div>
           }

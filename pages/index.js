@@ -15,7 +15,7 @@ import AdsBanner from "@/components/home/AdsBanner";
 import GuideBookSection from "@/components/home/GuideBookSection";
 import TripsCard from "@/components/home/cards/TripsCard";
 import DealsComponentMobile from "@/components/home/mobile/DealsComponentMobile";
-import DealsComponentDesktop from "@/components/home/desktop/DealsComponentDesktop";
+import JobsSectionHomePage from "@/components/home/desktop/JobsSectionHomePage";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import MainLayout from "@/components/layouts/MainLayout";
 import SearchDrawer from "@/components/search/page/SearchDrawer";
@@ -24,9 +24,11 @@ import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
 import thai_now_logo from "@/public/static/images/logos/thai_now_logo_blck.png";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
-import { deleteLocalStorage, getLocalStorage } from "@/utils/clientStorage";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/firebase/fireConfig";
+import DealsSectionHome from "@/components/home/desktop/DealsSectionHome";
+import StaffPickSectionHome from "@/components/home/desktop/StaffPickSectionHome";
+import HouseCard from "@/components/home/cards/HouseCard";
 
 const style = {
   position: "absolute",
@@ -40,7 +42,11 @@ const style = {
   p: 4,
 };
 
-export default function Home({ allHousingPosts }) {
+export default function Home({
+  allHousingPosts,
+  allMarketPosts,
+  allJobsPosts,
+}) {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [lastScrollYMobile, setLastScrollYMobile] = useState(0);
   // Search drawer state
@@ -114,8 +120,16 @@ export default function Home({ allHousingPosts }) {
     setOpenCompleteSignupModal(false);
 
   // * Displays
-  function offersSectionDesktop() {
-    return <DealsComponentDesktop allHousingPosts={allHousingPosts} />;
+  function jobSectionDesktop() {
+    return <JobsSectionHomePage allJobsPosts={allJobsPosts} />;
+  }
+
+  function dealsSectionDesktop() {
+    return <DealsSectionHome allMarketPosts={allMarketPosts} />;
+  }
+
+  function staffPickSectionDesktop() {
+    return <StaffPickSectionHome allHousingPosts={allHousingPosts} />;
   }
 
   function offersSectionMobile(offersMobileRef) {
@@ -213,9 +227,45 @@ export default function Home({ allHousingPosts }) {
             <NavOptions source="home" />
           </div>
         </section>
+        <section className={`${styles.ad_section}`}>
+          <AdsBanner />
+        </section>
         <section className={`${styles.offers_section}`}>
           {offersSectionMobile(offersMobileRef)}
-          {offersSectionDesktop()}
+          {jobSectionDesktop()}
+        </section>
+        <section className={`${styles.news_section}`}>
+          <div className={`${styles.flexRow} ${styles.news_header}`}>
+            <h3>Room For Rent</h3>
+            <LandingPagePagination />
+            <div className={`${styles.right_arrow_button}`}>
+              <IconButton>
+                <ChevronRightIcon fontSize="large" />
+              </IconButton>
+            </div>
+          </div>
+          <div className={`${styles.news_card_container} ${styles.flexRow}`}>
+            {allHousingPosts.map((deal, idx) => {
+              return <HouseCard key={idx} directory="housing" deal={deal} />;
+            })}
+          </div>
+        </section>
+        <section className={`${styles.ad_section}`}>
+          <AdsBanner />
+        </section>
+        <section className={`${styles.offers_section}`}>
+          {offersSectionMobile(offersMobileRef)}
+          {staffPickSectionDesktop()}
+        </section>
+        <section className={`${styles.offers_section}`}>
+          {offersSectionMobile(offersMobileRef)}
+          {dealsSectionDesktop()}
+        </section>
+        <section className={`${styles.ad_section}`}>
+          <AdsBanner />
+        </section>
+        <section className={`${styles.offers_section}`}>
+          {offersSectionMobile(offersMobileRef)}
         </section>
         <section className={`${styles.news_section}`}>
           <div className={`${styles.flexRow} ${styles.news_header}`}>
@@ -278,26 +328,61 @@ Home.getLayout = function getLayout(page) {
 
 export async function getServerSideProps(ctx) {
   const allHousingRef = collection(db, "allHousing");
-  const snapshot = await getDocs(allHousingRef).catch((error) => {
-    return { error };
-  });
-  const { error } = snapshot;
+  const allMarketRef = collection(db, "allMarketplace");
+  const allJobsRef = collection(db, "allJobs");
+  let serializedHousingPosts = [];
+  let serializedMarketPosts = [];
+  let serializedJobsPosts = [];
 
-  if (error) return;
+  const housingSnapshot = await getDocs(allHousingRef).catch((housingError) => {
+    return { housingError };
+  });
+
+  const allmarketSnaphot = await getDocs(allMarketRef).catch((marketError) => {
+    return { marketError };
+  });
+  const allJobsSnapshot = await getDocs(allJobsRef).catch((jobsError) => {
+    return { jobsError };
+  });
+  const { housingError } = housingSnapshot;
+  const { marketError } = allmarketSnaphot;
+  const { jobsError } = allJobsSnapshot;
+
+  if (housingError) serializedHousingPosts = null;
+  if (marketError) serializedMarketPosts = null;
+  if (jobsError) serializedJobsPosts = null;
 
   const housingPosts = [];
+  const marketPosts = [];
+  const jobPosts = [];
 
-  snapshot.forEach((doc) => {
+  housingSnapshot.forEach((doc) => {
     const data = doc.data();
     data.id = doc.id;
     housingPosts.push(data);
   });
 
-  const serializedHousingPosts = JSON.parse(JSON.stringify(housingPosts));
+  allmarketSnaphot.forEach((doc) => {
+    const data = doc.data();
+    data.id = doc.id;
+    marketPosts.push(data);
+  });
+
+  allJobsSnapshot.forEach((doc) => {
+    const data = doc.data();
+    data.id = doc.id;
+    jobPosts.push(data);
+  });
+
+  serializedHousingPosts = JSON.parse(JSON.stringify(housingPosts));
+  serializedMarketPosts = JSON.parse(JSON.stringify(marketPosts));
+  serializedJobsPosts = JSON.parse(JSON.stringify(jobPosts));
 
   return {
     props: {
       allHousingPosts: serializedHousingPosts,
+      allMarketPosts: serializedMarketPosts,
+      allJobsPosts: serializedJobsPosts,
     },
   };
 }

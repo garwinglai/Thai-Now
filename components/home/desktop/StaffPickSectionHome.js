@@ -1,25 +1,16 @@
 import React from "react";
-import styles from "../../../styles/components/home/desktop/deals-component-desktop.module.css";
+import styles from "../../../styles/components/home/desktop/jobs-component-desktop.module.css";
 import { IconButton } from "@mui/material";
 import LandingPagePagination from "../LandingPagePagination";
 import DealsCard from "../cards/DealsCard";
 import { dealsOfWeek } from "@/helper/db/staticData";
 
-function DealsComponentDesktop({ allHousingPosts }) {
-  
+function StaffPickSectionHome({ allHousingPosts }) {
   return (
     <div className={`${styles.deals_of_week_container}`}>
       <div className={`${styles.deals_of_week_heading}`}>
-        <h3>New this week</h3>
-        <div
-          className={`${styles.deals_of_week_links_container} ${styles.flexRow}`}
-        >
-          <div className={`${styles.deal_of_weeks_links}`}>
-            <IconButton>Deals</IconButton>
-            <IconButton>Jobs</IconButton>
-            <IconButton>Housing</IconButton>
-            <IconButton>Marketplace</IconButton>
-          </div>
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="font-light">Staff Pick Item</h3>
           <LandingPagePagination />
         </div>
       </div>
@@ -33,4 +24,4 @@ function DealsComponentDesktop({ allHousingPosts }) {
   );
 }
 
-export default DealsComponentDesktop;
+export default StaffPickSectionHome;

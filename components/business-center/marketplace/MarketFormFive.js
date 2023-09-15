@@ -75,6 +75,7 @@ function MarketFormFive({
 
     fetchUser();
   }, [authUser]);
+
   return (
     <form className="w-full lg:w-9/12 lg:mx-auto">
       <h4 className="pt-4 px-4">Finish up and publish.</h4>

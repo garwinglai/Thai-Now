@@ -1,0 +1,24 @@
+.deals_of_week_container {
+  display: none;
+}
+
+@media screen and (min-width: 769px) {
+  .flexRow {
+    display: flex;
+  }
+
+  .deals_of_week_container {
+    display: block;
+  }
+
+  .deals_of_week_heading {
+    padding: 0 10%;
+  }
+
+  .deals_card_container {
+    box-sizing: border-box;
+    gap: 1rem;
+    overflow: scroll;
+    padding: 0 10% 30px;
+  }
+}

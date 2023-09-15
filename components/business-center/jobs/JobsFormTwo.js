@@ -8,7 +8,7 @@ import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 
 function JobsFormTwo({ handleJobValueChange, jobValues }) {
   const { jobType, jobLocation } = jobValues;
-
+console.log("jobValues", jobValues);
   return (
     <form className="p-4 lg:w-1/2 lg:mx-auto">
       <h4 className="pt-4">Type of job position</h4>
@@ -125,7 +125,7 @@ function JobsFormTwo({ handleJobValueChange, jobValues }) {
 
         <RadioGroup
           aria-labelledby="job-location-radio-group"
-          name="controlled-radio-buttons-group"
+          name="jobLocation"
           sx={{ marginTop: "1rem" }}
           value={jobLocation}
           onChange={handleJobValueChange}
