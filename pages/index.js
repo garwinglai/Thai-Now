@@ -62,9 +62,9 @@ export default function Home({
     if (typeof window !== "undefined") {
       if (offersRef !== "undefined") {
         const offersYPosition = offersRef.current.offsetTop;
-        const offersYPositionMobile = offersMobileRef.current.offsetTop;
+        // const offersYPositionMobile = offersMobileRef.current.offsetTop;
         localStorage.setItem("offersYPosition", offersYPosition);
-        localStorage.setItem("offersYPositionMobile", offersYPositionMobile);
+        // localStorage.setItem("offersYPositionMobile", offersYPositionMobile);
       }
     }
   }, [lastScrollY, lastScrollYMobile]);
@@ -231,11 +231,11 @@ export default function Home({
           <AdsBanner />
         </section>
         <section className={`${styles.offers_section}`}>
-          {offersSectionMobile(offersMobileRef)}
+          {/* {offersSectionMobile(offersMobileRef)} */}
           {jobSectionDesktop()}
         </section>
-        <section className={`${styles.news_section}`}>
-          <div className={`${styles.flexRow} ${styles.news_header}`}>
+        <section className={`${styles.house_section}`}>
+          <div className={`${styles.flexRow} ${styles.house_header}`}>
             <h3>Room For Rent</h3>
             <LandingPagePagination />
             <div className={`${styles.right_arrow_button}`}>
@@ -244,7 +244,7 @@ export default function Home({
               </IconButton>
             </div>
           </div>
-          <div className={`${styles.news_card_container} ${styles.flexRow}`}>
+          <div className={`${styles.house_card_container} ${styles.flexRow}`}>
             {allHousingPosts.map((deal, idx) => {
               return <HouseCard key={idx} directory="housing" deal={deal} />;
             })}
@@ -254,19 +254,17 @@ export default function Home({
           <AdsBanner />
         </section>
         <section className={`${styles.offers_section}`}>
-          {offersSectionMobile(offersMobileRef)}
+          {/* {offersSectionMobile(offersMobileRef)} */}
           {staffPickSectionDesktop()}
         </section>
         <section className={`${styles.offers_section}`}>
-          {offersSectionMobile(offersMobileRef)}
+          {/* {offersSectionMobile(offersMobileRef)} */}
           {dealsSectionDesktop()}
         </section>
         <section className={`${styles.ad_section}`}>
           <AdsBanner />
         </section>
-        <section className={`${styles.offers_section}`}>
-          {offersSectionMobile(offersMobileRef)}
-        </section>
+
         <section className={`${styles.news_section}`}>
           <div className={`${styles.flexRow} ${styles.news_header}`}>
             <h3>Hot News</h3>

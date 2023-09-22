@@ -15,6 +15,7 @@ import StarOutlineOutlinedIcon from "@mui/icons-material/StarOutlineOutlined";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import { IconButton } from "@mui/material";
 import AboutBusiness from "../AboutBusiness";
+import PrimaryButtonLink from "@/components/buttons/PrimaryButtonLink";
 
 function JobsFormSix({
   jobValues,
@@ -35,6 +36,8 @@ function JobsFormSix({
     jobValues;
   const { minPrice, maxPrice, interval } = salaryRange;
   const values = { jobValues, salaryRange, hasJobVisa };
+
+  console.log("userData", userData);
 
   return (
     <form className="w-full lg:w-9/12 lg:mx-auto">
@@ -133,11 +136,11 @@ function JobsFormSix({
         <div className="flex flex-col items-center text-center gap-4">
           <Image src={complete_post} alt="complete post image" />
           <h4>Complete</h4>
-          <p className="font-light">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. A officiis
-            laborum labore quaerat beatae similique.
-          </p>
-          <PrimaryButton name="View your Post" />
+          <p className="font-light">Your post has been created.</p>
+          <PrimaryButtonLink
+            route={`/jobs/${postId}`}
+            name="View your Post"
+          />{" "}
           <Link
             href="/business-center/business"
             className="underline font-light text-[color:var(--deals-primary)] "

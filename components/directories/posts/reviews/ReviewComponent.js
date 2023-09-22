@@ -8,7 +8,18 @@ import { IconButton } from "@mui/material";
 // TODO: need reviewer image and display name.
 
 function ReviewComponent({ reviewData }) {
-  const { review, rating, reviewerName, createdAt } = reviewData;
+  const {
+    reviewText,
+    stars,
+    userFName,
+    userId,
+    userLName,
+    userProf,
+    createdAt,
+  } = reviewData;
+
+  const reviewerName = `${userFName} ${userLName}`;
+
   const { seconds, nanoseconds } = createdAt;
 
   const postDate = new Date(seconds * 1000 + nanoseconds / 1000000);
@@ -22,13 +33,21 @@ function ReviewComponent({ reviewData }) {
     <div className="pb-4 border-b border-[color:var(--border)]">
       <div className="flex justify-between items-center gap-4">
         <div className="flex gap-2 items-center my-4">
-          <Image src={avatar_image} alt="avatar image" className="w-14 h-14" />
+          <div className="w-14 h-14 relative">
+            <Image
+              src={userProf}
+              alt="avatar image"
+              className="object-cover rounded-full"
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+          </div>
           <div className="flex flex-col">
             <h4>{reviewerName}</h4>
             <div className="flex gap-2 items-center">
               <Rating
                 name="size-small"
-                value={rating}
+                value={stars}
                 sx={{ color: "var(--secondary)", fontSize: "10px" }}
                 readOnly
               />
@@ -44,7 +63,7 @@ function ReviewComponent({ reviewData }) {
           </IconButton>
         </div>
       </div>
-      <p className="font-extralight text-xs text-gray-600">{review}</p>
+      <p className="font-extralight text-xs text-gray-600">{reviewText}</p>
     </div>
   );
 }

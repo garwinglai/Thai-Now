@@ -10,20 +10,9 @@ import Link from "next/link";
 import { useAuth } from "../auth/AuthProvider";
 import { getLocalStorage } from "@/utils/clientStorage";
 
-function AccountPrivateMenu({ currentRoute }) {
+function AccountPrivateMenu({ currentRoute, bizUser }) {
   const { authUser, loading } = useAuth();
   const { uid, email } = authUser || {};
-
-  const [bizUser, setBizUser] = useState(null);
-
-  useEffect(() => {
-    const bizUser = getLocalStorage("bizUser");
-    const bizUserParsed = bizUser ? JSON.parse(bizUser) : null;
-
-    if (bizUserParsed) {
-      setBizUser(bizUserParsed);
-    }
-  }, [authUser]);
 
   return (
     <MenuList>

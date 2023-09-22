@@ -30,10 +30,10 @@ function MarketCard({ directory, deal }) {
   return (
     <Link
       href={`/${directory}/${id}`}
-      className="shadow-lg rounded-md min-w-[12rem]"
+      className="shadow-lg rounded-md w-[75%] md:w-[24%] flex-shrink-0 mb-8 md:mb-0"
     >
       {defaulImage ? (
-        <div className="w-full h-36 relative">
+        <div className="w-full aspect-[4/3] relative ">
           <Image
             src={defaulImage}
             alt="post image"
@@ -43,7 +43,7 @@ function MarketCard({ directory, deal }) {
           />
         </div>
       ) : (
-        <div className="w-full h-36 rounded bg-gray-200 text-xs font-extralight flex justify-center items-center">
+        <div className="w-full aspect-[4/3] rounded bg-gray-200 text-xs font-extralight flex justify-center items-center">
           .img
         </div>
       )}

@@ -7,12 +7,12 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 import OfferCards from "../home/cards2/OfferCards";
 
-function UserPosts({ groupPostTitle, housingPosts }) {
+function UserPosts({ groupPostTitle, posts, isBusinessUser }) {
   return (
     <div className="bg-white">
       <div className="flex justify-between items-center p-4 lg:pt-0 lg:px-0">
         <h4 className="text-[color:var(--deals-primary)]">
-          {groupPostTitle} posted by business
+          {groupPostTitle} posted by {isBusinessUser ? "business" : "user"}
         </h4>
         <div className="hidden lg:flex gap-4">
           <div className="shadow-md rounded-full">
@@ -39,11 +39,12 @@ function UserPosts({ groupPostTitle, housingPosts }) {
         </div>
       </div>
       <div className="flex px-4 pb-6 overflow-x-scroll gap-4 lg:px-0">
-        {housingPosts.map((post) => (
+        {posts.map((post) => (
           <OfferCards
+            isBusinessUser={isBusinessUser}
             key={post.id}
             groupPostTitle={groupPostTitle}
-            housingPost={post}
+            postDetails={post}
           />
         ))}
       </div>

@@ -24,6 +24,7 @@ function ClassicPublicPage() {
   const [userData, setUserData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [housingPosts, setHousingPosts] = useState([]);
+  const [marketplacePosts, setMarketplacePosts] = useState([]);
 
   // create this page similar to BusinessPublicPage
   const { back } = useRouter();
@@ -33,6 +34,8 @@ function ClassicPublicPage() {
 
     setIsLoading(true);
     const housingCollectionRef = collection(db, "users", uid, "housingPosts");
+    const marketplaceColectionRef = collection(db, "users", uid, "marketPosts");
+
     const unsubHousingListener = onSnapshot(
       housingCollectionRef,
       (snapshot) => {
@@ -47,6 +50,20 @@ function ClassicPublicPage() {
       }
     );
 
+    const unsubMarketplaceListener = onSnapshot(
+      marketplaceColectionRef,
+      (snapshot) => {
+        const marketplacePostsArr = [];
+        snapshot.forEach((doc) => {
+          const data = doc.data();
+          data.id = doc.id;
+          marketplacePostsArr.push(data);
+        });
+        setMarketplacePosts(marketplacePostsArr);
+        setIsLoading(false);
+      }
+    );
+
     const unsubUserListener = onSnapshot(doc(db, "users", uid), (snapshot) => {
       const userData = snapshot.data();
       setUserData(userData);
@@ -56,6 +73,7 @@ function ClassicPublicPage() {
 
     return () => {
       unsubHousingListener();
+      unsubMarketplaceListener();
       unsubUserListener();
     };
   }, [uid]);
@@ -86,7 +104,18 @@ function ClassicPublicPage() {
           </div>
           <div className="lg:w-2/3">
             {housingPosts.length > 0 && (
-              <UserPosts groupPostTitle="Housing" housingPosts={housingPosts} />
+              <UserPosts
+                groupPostTitle="Housing"
+                posts={housingPosts}
+                isBusinessUser={false}
+              />
+            )}
+            {marketplacePosts.length > 0 && (
+              <UserPosts
+                groupPostTitle="Marketplace"
+                posts={marketplacePosts}
+                isBusinessUser={false}
+              />
             )}
             <div className="bg-white p-4 lg:px-0">
               <h4 className="text-[color:var(--deals-primary)]">

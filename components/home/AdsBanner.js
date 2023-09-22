@@ -9,7 +9,7 @@ function AdsBanner() {
       <Image
         src={bannerImage}
         alt="ads banner"
-        className="object-cover"
+        className="object-cover rounded"
         priority={true}
         fill
       />

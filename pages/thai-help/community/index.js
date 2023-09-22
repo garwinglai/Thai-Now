@@ -23,7 +23,7 @@ function ThaiCommunity() {
         <section className="p-4 md:py-8 md:bg-[color:var(--input-bg-secondary)] md:px-[10%]">
           <div className="md:p-4 md:rounded-md md:shadow-lg md:bg-white">
             <CategorySearchResultHeader title="Trending Post" />
-            <div className="px-4">
+            <div className="">
               <SearchResultCard
                 directory="thai-help"
                 postType="housing"

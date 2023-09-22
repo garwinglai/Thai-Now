@@ -8,12 +8,15 @@ import AccountPrivateMenu from "@/components/menus/AccountPrivateMenu";
 import PrivateProfileBreadcrumbs from "@/components/menus/PrivateProfileBreadcrumbs";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/firebase/fireConfig";
+import { getLocalStorage } from "@/utils/clientStorage";
+import EditProfileBusiness from "@/components/profile/EditProfileBusiness";
 
 function Profile() {
   const { authUser, loading } = useAuth();
   const { uid } = authUser || {};
 
-  const [userProfile, setUserProfile] = useState(null);
+  const [bizUser, setBizUser] = useState(null);
+  const [bizId, setBizId] = useState("");
 
   const { back, push } = useRouter();
 
@@ -23,6 +26,17 @@ function Profile() {
     }
     // TODO: loading, show skeleton
   }, [authUser, loading]);
+
+  useEffect(() => {
+    const bizUser = getLocalStorage("bizUser");
+    const bizUserParsed = bizUser ? JSON.parse(bizUser) : null;
+    const { id, photos, profPic } = bizUser;
+
+    if (bizUserParsed) {
+      setBizUser(bizUserParsed);
+      setBizId(id);
+    }
+  }, [authUser]);
 
   const handleBack = () => {
     back();
@@ -43,11 +57,17 @@ function Profile() {
         </div>
         <div className="lg:flex lg:mx-auto  lg:gap-4 lg:w-[80%]">
           <div className="hidden lg:block lg:bg-white lg:rounded-md lg:shadow-md lg:h-fit lg:min-w-[11rem] ">
-            <AccountPrivateMenu currentRoute="profile" />
+            <AccountPrivateMenu currentRoute="profile" bizUser={bizUser} />
           </div>
-          <div className="lg:bg-white lg:rounded-md lg:shadow-md lg:flex-grow lg:pl-4 lg:pb-16 lg:pr-[20rem]">
-            <EditProfile uid={uid} userProfile={userProfile} />
-          </div>
+          {bizUser ? (
+            <div className="lg:bg-white lg:rounded-md lg:shadow-md lg:flex-grow lg:pb-16">
+              <EditProfileBusiness bizUser={bizUser} bId={bizId} />
+            </div>
+          ) : (
+            <div className="lg:bg-white lg:rounded-md lg:shadow-md lg:flex-grow lg:pl-4 lg:pb-16 lg:pr-[20rem]">
+              <EditProfile uid={uid} />
+            </div>
+          )}
         </div>
       </div>
     </div>

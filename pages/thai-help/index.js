@@ -4,23 +4,13 @@ import Image from "next/image";
 import bannerImageDesktop from "@/public/static/images/home/banner-picture-desktop.svg";
 import bannerImageMobile from "@/public/static/images/home/banner-picture-mobile.svg";
 import styles from "@/styles/Home.module.css";
-import LandingPagePagination from "@/components/home/LandingPagePagination";
 import GuideBookSection from "@/components/home/GuideBookSection";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import { IconButton } from "@mui/material";
-import GuidesCard from "@/components/home/cards/GuidesCard";
 import SearchResultCard from "@/components/directories/thai-help/SearchResultCard";
-import PrimaryButton from "@/components/buttons/PrimaryButton";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import AdsBanner from "@/components/home/AdsBanner";
 
 function ThaiHelp() {
-  const { push } = useRouter();
-
-  const handleCreateConversationClick = () => {
-    push("/thai-help/community/create");
-  };
-
   return (
     <div>
       <section className="relative lg:pt-28">
@@ -60,75 +50,35 @@ function ThaiHelp() {
         </div>
         <GuideBookSection isThaiHelpDirectory={true} />
       </section>
-      <section className="">
-        <div className={`${styles.flexRow} ${styles.trips_header}`}>
-          <h3 className="text-[color:var(--deals-primary)]">VDO</h3>
-          <div className={`${styles.right_arrow_button}`}>
-            <IconButton>
-              <ChevronRightIcon />
-            </IconButton>
-          </div>
-        </div>
-        <div className="flex w-full overflow-x-scroll px-4 gap-4 md:w-[80%] md:mx-auto md:p-0">
-          <GuidesCard
-            isThaiHelpDirectory={true}
-            postTitle="Basic living"
-            postType="video"
-            directory="thai-help"
-            slug="guide-book"
-            pid="1"
-            category="basic-living"
-          />
-          <GuidesCard
-            isThaiHelpDirectory={true}
-            postTitle="Basic living"
-            postType="video"
-            directory="thai-help"
-            slug="guide-book"
-            pid="1"
-            category="basic-living"
-          />
-          <GuidesCard
-            isThaiHelpDirectory={true}
-            postTitle="Basic living"
-            postType="video"
-            directory="thai-help"
-            slug="guide-book"
-            pid="1"
-            category="basic-living"
-          />
-          <GuidesCard
-            isThaiHelpDirectory={true}
-            postTitle="Basic living"
-            postType="video"
-            directory="thai-help"
-            slug="guide-book"
-            pid="1"
-            category="basic-living"
-          />
-        </div>
+      <section className="hidden md:block md:px-[10%] pb-8">
+        <AdsBanner />
       </section>
       <section className="p-4 md:py-8 md:bg-[color:var(--filter-bg)]">
         <div className="md:mx-[10%] md:p-8 md:rounded-md md:shadow-lg md:bg-white">
           <div className="md:flex md:justify-between md:items-center">
             <div className="">
-              <Link
-                href="/thai-help/community"
-                className="text-[color:var(--deals-primary)] mb-4"
-              >
-                <h3 className="">Thai Help Community</h3>
-              </Link>
-              <p className="font-light my-4">
+              <div className="flex justify-between items-center pb-2 pt-4">
+                <h3 className="text-[color:var(--deals-primary)]">
+                  Thai Help Community
+                </h3>
+                <div className={`${styles.right_arrow_button}`}>
+                  <Link href="/thai-help/community">
+                    <ChevronRightIcon />
+                  </Link>
+                </div>
+              </div>
+
+              <p className="font-light text-sm mb-4 mt-2 md:mt-0">
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus,
                 corrupti.
               </p>
             </div>
-            <div className="mt-4 h-10">
-              <PrimaryButton
-                handleClick={handleCreateConversationClick}
-                name="New Conversation"
-              />
-            </div>
+            <Link
+              href="/thai-help/community"
+              className="hidden md:block md:underline md:text-[color:var(--deals-primary)] md:text-xs md:font-light"
+            >
+              More in Thai Now Community &gt;
+            </Link>
           </div>
           <div className="mt-4">
             <SearchResultCard

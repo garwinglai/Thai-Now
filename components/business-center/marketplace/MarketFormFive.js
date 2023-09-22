@@ -37,7 +37,13 @@ function MarketFormFive({
   authUser,
   postId,
 }) {
-  const { postTitle, postDescription, postAddress } = productDetails;
+  const { postTitle, postDescription, addy1, addy2, city, state, zip } =
+    productDetails;
+
+  const postAddress = addy2
+    ? `${addy1}, ${addy2}, ${city}, ${state} ${zip}`
+    : `${addy1}, ${city}, ${state} ${zip}`;
+
   const marketValues = {
     marketPostType,
     isProductPhysical,
@@ -162,7 +168,7 @@ function MarketFormFive({
         <div className="flex flex-col items-center text-center gap-4">
           <Image src={complete_post} alt="complete post image" />
           <h4>Complete</h4>
-          <p className="font-light">Your post has been posted.</p>
+          <p className="font-light">Your post has been created.</p>
           <PrimaryButtonLink
             route={`/marketplace/${postId}`}
             name="View your Post"

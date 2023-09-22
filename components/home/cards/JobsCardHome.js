@@ -30,10 +30,10 @@ function JobsCardHome({ directory, deal }) {
   return (
     <Link
       href={`/${directory}/${id}`}
-      className="shadow-lg rounded-md min-w-[12rem]"
+      className="shadow-lg rounded-md w-[75%] md:w-[24%] flex-shrink-0"
     >
       {bizProfPic ? (
-        <div className="w-full h-36 relative">
+        <div className="w-full aspect-[4/3] relative">
           <Image
             src={bizProfPic}
             alt="post image"
@@ -56,14 +56,14 @@ function JobsCardHome({ directory, deal }) {
           </span>
         </div>
         <div>
-          <h5 className="text-sm font-normal">{postTitle}</h5>
+          <h2 className=" mt-2 font-semibold text-lg">{postTitle}</h2>
           <span className="flex items-center gap-1">
-            <p className="font-normal text-sm">{bizName}</p>
+            <p className="font-extralight text-sm">{bizName}</p>
             {city && <p className="font-extralight text-sm"> - {city}</p>}
           </span>
         </div>
         <div className="flex items-end">
-          <h4 className=" text-base mt-2 text-[color:var(--jobs-primary)]">
+          <h4 className=" text-base my-2 font-semibold text-[color:var(--jobs-primary)]">
             {salaryDisplay}
           </h4>
         </div>

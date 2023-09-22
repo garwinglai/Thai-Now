@@ -13,19 +13,7 @@ import GuidesCard from "@/components/home/cards/GuidesCard";
 import { useRouter } from "next/router";
 
 // Create an array of guide Topics, capitalize the first letter of each word: all, basic living, moving to US, living permanently, travel, learning, transfer, health, kids, thai pride, business and investment
-const guideTopics = [
-  "All",
-  "Basic living",
-  "Moving to US",
-  "Living permanently",
-  "Travel",
-  "Learning",
-  "Transfer",
-  "Health",
-  "Kids",
-  "Thai pride",
-  "Business and investment",
-];
+const guideTopics = ["All", "Popular", "Trending"];
 
 function ThaiGuideBook() {
   return (
@@ -42,12 +30,12 @@ function ThaiGuideBook() {
 
       <section className={`${styles.guide_book_section}`}>
         <div className="flex justify-between items-center px-4 pb-2 pt-4 md:px-[10%]">
-          <h3 className="text-[color:var(--deals-primary)]">Thai Guide Book</h3>
+          <h3 className="text-[color:var(--deals-primary)]">Latest</h3>
         </div>
         <GuideBookSection isThaiHelpDirectory={true} />
       </section>
-      <section className="bg-[color:var(--pride-bg)] pt-4">
-        <div className={`${styles.flexRow} ${styles.trips_header}`}>
+      {/* <section className="bg-[color:var(--pride-bg)] pt-4"> */}
+      {/* <div className={`${styles.flexRow} ${styles.trips_header}`}>
           <h3 className="text-[color:var(--deals-primary)]">VDO</h3>
           <LandingPagePagination />
           <div className={`${styles.right_arrow_button}`}>
@@ -93,8 +81,8 @@ function ThaiGuideBook() {
             pid="1"
             category="basic-living"
           />
-        </div>
-      </section>
+        </div> */}
+      {/* </section> */}
       <section className="p-4  md:px-[10%]">
         <h3 className="text-[color:var(--deals-primary)] mb-4">
           Thai Guide Book Topics

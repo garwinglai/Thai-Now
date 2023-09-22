@@ -27,6 +27,7 @@ function ThaiGuideCategories() {
           breadcrumbTitle={breadcrumbTitle}
         />
       </div>
+      <ThaiHelpCategory slug="guide-book" title="Thai Guide Book" />
       <div className="bg-[color:var(--divider)] h-2 md:hidden"></div>
       <div className="p-4 md:px-[10%]">
         <div>
@@ -82,7 +83,7 @@ function ThaiGuideCategories() {
             />
           </div>
         </div>
-        <div>
+        {/* <div>
           <div className="pb-4">
             <h3>VDO</h3>
             <p>20 posts in {category}</p>
@@ -116,12 +117,11 @@ function ThaiGuideCategories() {
               postTitle={breadcrumbTitle}
             />
           </div>
-        </div>
+        </div> */}
       </div>
       <div className="flex justify-center mt-4 mb-16">
         <Pagination count={10} />
       </div>
-      <ThaiHelpCategory slug="guide-book" title="Thai Guide Book" />
     </div>
   );
 }

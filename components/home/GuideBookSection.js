@@ -6,7 +6,7 @@ import GuidesCard from "./cards/GuidesCard";
 
 function GuideBookSection({ isThaiHelpDirectory }) {
   return (
-    <div className="md:px-[10%] md:flex md:items-start md:gap-4">
+    <div className="md:px-[12%] md:flex md:items-start md:gap-4">
       <Image
         src={guideVideo}
         alt="guide video image"

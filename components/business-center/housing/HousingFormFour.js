@@ -36,7 +36,13 @@ function HousingFormFour({
   postId,
   authUser,
 }) {
-  const { postTitle, postDescription, postAddress } = housingPostValues;
+  const { postTitle, postDescription, addy1, addy2, city, state, zip } =
+    housingPostValues;
+
+  const postAddress = addy2
+    ? `${addy1}, ${addy2}, ${city}, ${state} ${zip}`
+    : `${addy1}, ${city}, ${state} ${zip}`;
+
   const houseValues = {
     housingType,
     housingPrice,
@@ -154,7 +160,7 @@ function HousingFormFour({
         <div className="flex flex-col items-center text-center gap-4">
           <Image src={complete_post} alt="complete post image" />
           <h4>Complete</h4>
-          <p className="font-light">Your post has been posted.</p>
+          <p className="font-light">Your post has been created.</p>
           <PrimaryButtonLink
             route={`/housing/${postId}`}
             name="View your Post"

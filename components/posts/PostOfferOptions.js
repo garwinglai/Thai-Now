@@ -241,9 +241,17 @@ function PostOfferOptions({
     }
 
     if (postType === "jobs") {
-      const { jobValues, salaryRange, hasJobVisa } = values;
-      const { postTitle, jobLocation, workExperience, skills } = jobValues;
-      const { minPrice, maxPrice, interval } = salaryRange;
+      // const { jobValues, salaryRange, hasJobVisa } = values;
+      const {
+        postTitle,
+        jobSiteDisplay,
+        experienceDisplay,
+        skills,
+        salaryDisplay,
+        requireVisa,
+      } = postData;
+      console.log("postData", postData);
+      // const { minPrice, maxPrice, interval } = salaryRange;
       return (
         <div className="flex flex-col gap-2">
           <span className="flex items-center gap-2">
@@ -254,31 +262,29 @@ function PostOfferOptions({
           <span className="flex items-center gap-2">
             <PersonIcon sx={{ color: "var(--secondary)" }} />
             <h6 className="text-sm">Job location :</h6>
-            <p className="font-extralight text-sm">{jobLocation}</p>
+            <p className="font-extralight text-sm">{jobSiteDisplay}</p>
           </span>
           <span className="flex items-center gap-2">
             <BedIcon sx={{ color: "var(--secondary)" }} />
             <h6 className="text-sm">Experience :</h6>
-            <p className="font-extralight text-sm">{workExperience}</p>
+            <p className="font-extralight text-sm">{experienceDisplay}</p>
           </span>
           <span className="flex items-center gap-2">
             <BedIcon sx={{ color: "var(--secondary)" }} />
             <h6 className="text-sm">Skills :</h6>
-            <p className="font-extralight text-sm">{skills}</p>
+            <p className="font-extralight text-sm">{skills ? skills : "n/a"}</p>
           </span>
           <span className="flex items-center gap-2">
             <BedIcon sx={{ color: "var(--secondary)" }} />
             <h6 className="text-sm">Visa (US only) :</h6>
             <p className="font-extralight text-sm">
-              {hasJobVisa ? `not required` : `required`}
+              {requireVisa ? `required` : `not required`}
             </p>
           </span>
 
           <span className="flex mt-2">
             <h4 className="text-[color:var(--jobs-primary)] ">
-              ${minPrice}
-              <span className="font-extralight"> - </span>${maxPrice}
-              <span className="font-extralight">/{interval}</span>
+              {salaryDisplay}
             </h4>
           </span>
         </div>

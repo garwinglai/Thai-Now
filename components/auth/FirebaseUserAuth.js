@@ -6,6 +6,7 @@ const formatAuthUser = (user) => ({
   uid: user.uid,
   email: user.email,
   displayName: user.displayName,
+  profPic: user.photoURL,
 });
 
 export default function useFirebaseAuth() {

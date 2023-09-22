@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import temp_image from "@/public/static/images/business_temp_img.png";
 import Image from "next/image";
 import PostProfile from "@/components/posts/PostProfile";
@@ -12,36 +12,56 @@ import StarOutlineOutlinedIcon from "@mui/icons-material/StarOutlineOutlined";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import { IconButton } from "@mui/material";
 import OutlinedFlagSharpIcon from "@mui/icons-material/OutlinedFlagSharp";
+import Skeleton from "@mui/material/Skeleton";
 
-function JobPostDetail() {
+function JobPostDetail({
+  authUser,
+  postData,
+  userData,
+  pid,
+  isBusinessUser,
+  allPostsInCategory,
+}) {
+  console.log("allPostsInCategory", allPostsInCategory);
   const isLoggedIn = true;
 
-  const values = {
-    jobValues: {
-      title: "Full-time",
-      jobLocation: "On-site",
-      experience: "No experience",
-      skills: "Sales, communication",
-    },
-    salaryRange: {
-      minPrice: "30",
-      maxPrice: "35",
-      interval: "Hour",
-    },
-    hasJobVisa: "No",
-  };
+  const {
+    postTitle,
+    postDescription,
+    postAddressDetails,
+    postAddress,
+    photos,
+    amenitiesDisplay,
+    userId,
+    id,
+  } = postData ? postData : {};
 
-  const description =
-    "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Culpa quibusdam, natus laborum aliquid laboriosam placeat. Minima dolores voluptates debitis voluptas quis voluptatibus iure fuga!";
+  const { city } = postAddressDetails ? postAddressDetails : {};
 
-  const location = "123 W Adams Blvd, Los Angeles";
+  const [defaultImage, setDefaultImage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (photos) {
+      setIsLoading(true);
+      // loop through photos object to find the first< photo
+      for (const key in photos) {
+        if (photos.hasOwnProperty(key)) {
+          const defaultImage = photos[key];
+          setDefaultImage(defaultImage);
+          break;
+        }
+      }
+      setIsLoading(false);
+    }
+  }, [photos]);
 
   return (
     <div>
       <div className=" w-full lg:w-9/12 lg:mx-auto">
         <div className="lg:flex lg:justify-between">
           <h4 className="px-4 text-[color:var(--deals-primary)] lg:px-0">
-            Title of the post is written here.
+            {postTitle}
           </h4>
           <span className={`flex lg:gap-2`}>
             <div className="flex items-center">
@@ -75,43 +95,62 @@ function JobPostDetail() {
             </div>
           </span>
         </div>
-        <div className="relative w-full h-80 inline-block">
-          <Image
-            src={temp_image}
-            alt="images of the post"
-            fill={true}
-            className=" object-cover "
-          />
-          <button
-            type="button"
-            className="absolute z-10 bg-opacity-50 bg-black text-white border border-white rounded px-4 py-2 right-4 bottom-4 "
-          >
-            + 20 Photos
-          </button>
-        </div>
+        {!defaultImage ? (
+          <div className="relative w-full h-80 inline-block">
+            <Skeleton
+              variant="rounded"
+              sx={{ width: "100%", height: "20rem" }}
+            />
+          </div>
+        ) : (
+          <div className="relative w-full h-80 inline-block">
+            <div className="relative w-full h-full">
+              <Image
+                priority
+                src={defaultImage}
+                alt="banner image"
+                fill
+                className="object-cover rounded"
+              />
+            </div>
+            <button
+              type="button"
+              className="absolute z-10 bg-opacity-50 bg-black text-white border border-white rounded px-4 py-2 right-4 bottom-4 "
+            >
+              + 20 Photos
+            </button>
+          </div>
+        )}
         <div className="flex flex-col gap-[1px] bg-[color:var(--border)] lg:flex-row-reverse lg:bg-white lg:pt-4 lg:gap-4">
           <div className="lg:w-1/3 lg:border lg:h-fit lg:rounded-md lg:shadow-sm ">
             <div className="lg:mx-4 lg:border-b">
-              <PostProfile isCreatePostDesktop={true} />
+              <PostProfile
+                isCreatePostDesktop={false}
+                userData={userData}
+                city={city}
+              />
             </div>
             <div className="hidden lg:block lg:mx-4 lg:py-4">
-              <AboutBusiness isBusinessUser={true} />
+              <AboutBusiness isBusinessUser={true} userData={userData} />
             </div>
-            <PostContactInfo />
+            <PostContactInfo userData={userData} isBusinessUser={true} />
           </div>
           <div className="lg:w-2/3">
-            <PostOfferOptions postType="jobs" values={values} />
+            <PostOfferOptions postType="jobs" postData={postData} />
             <PostDescription
-              description={description}
-              isLoggedIn={isLoggedIn}
+              description={postDescription}
+              authUser={authUser}
+              postData={postData}
             />
-            {isLoggedIn && <PostLocation location={location} />}
+            {isLoggedIn && <PostLocation location={postAddress} />}
             <span></span>
           </div>
         </div>
       </div>
-
-      <RecommendedPosts postType="Jobs" />
+      <RecommendedPosts
+        postType="Jobs"
+        allPostsInCategory={allPostsInCategory}
+      />
     </div>
   );
 }

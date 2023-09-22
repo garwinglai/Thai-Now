@@ -14,9 +14,18 @@ function DealsCard({ deal, title }) {
     bizName,
     location,
     postTitle,
+    price,
+    pricePerDisplay,
     photos,
+    createdAt,
     id,
   } = deal;
+
+  const { seconds, nanoseconds } = createdAt ? createdAt : {};
+
+  const postDate = new Date(seconds * 1000 + nanoseconds / 1000000);
+  const today = new Date();
+  const daysAgo = Math.floor((today - postDate) / (1000 * 60 * 60 * 24));
 
   const footerTag = () => {
     switch (title) {
@@ -46,7 +55,7 @@ function DealsCard({ deal, title }) {
         break;
       case "Staff pick item":
         return (
-          <p className={`${styles.biz_type}`}>
+          <p className="text-xs font-extralight mt-4">
             <span className={`${styles.bullet_point_bit_type}`}>•</span> Los
             Angeles, CA
           </p>
@@ -59,9 +68,12 @@ function DealsCard({ deal, title }) {
   };
 
   return (
-    <Link href={`/housing/${id}`} className={`${styles.deals_card}`}>
+    <Link
+      href={`/housing/${id}`}
+      className="shadow-lg rounded-md w-[75%] md:w-[24%] flex-shrink-0"
+    >
       {photos && (
-        <div className="relative w-full h-40">
+        <div className="w-full aspect-[4/3] relative ">
           <Image
             src={photos["0-1"]}
             alt="business image"
@@ -79,11 +91,17 @@ function DealsCard({ deal, title }) {
             <p className="text-xs font-light">({reviewNum} Reviews)</p>
           </span>
         </div>
-        <h5>{postTitle}</h5>
-        <p className={`${styles.biz_name_location}`}>
+        <h5 className="mt-2 font-semibold text-base">{postTitle}</h5>
+        <p className="font-extralight text-sm">
           {bizName} - {location}
         </p>
-        {footerTag()}
+        <div className="flex items-end">
+          <h5 className=" text-sm my-2 font-semibold  text-[color:var(--secondary)]">
+            {price} {pricePerDisplay}
+          </h5>
+        </div>
+        <p className="text-xs font-extralight">{daysAgo} days ago</p>
+        {/* {footerTag()} */}
       </div>
     </Link>
   );

@@ -13,7 +13,8 @@ function HouseCard({ directory, deal }) {
     postTitle,
     rating,
     reviewNum,
-    salaryDisplay,
+    price,
+    pricePerDisplay,
     createdAt,
   } = deal;
 
@@ -30,10 +31,10 @@ function HouseCard({ directory, deal }) {
   return (
     <Link
       href={`/${directory}/${id}`}
-      className="shadow-lg rounded-md min-w-[12rem]"
+      className="shadow-lg rounded-md w-[75%] md:w-[24%] flex-shrink-0"
     >
       {defaulImage ? (
-        <div className="w-full h-36 relative">
+        <div className="w-full aspect-[4/3] relative">
           <Image
             src={defaulImage}
             alt="post image"
@@ -43,7 +44,7 @@ function HouseCard({ directory, deal }) {
           />
         </div>
       ) : (
-        <div className="w-full h-36 rounded bg-gray-200 text-xs font-extralight flex justify-center items-center">
+        <div className="w-full aspect-[4/3] rounded bg-gray-200 text-xs font-extralight flex justify-center items-center">
           .img
         </div>
       )}
@@ -56,7 +57,7 @@ function HouseCard({ directory, deal }) {
           </span>
         </div>
         <div>
-          <h5 className="text-sm font-normal">{postTitle}</h5>
+          <h5 className="mt-2 font-semibold text-base">{postTitle}</h5>
           <span className="flex items-center gap-1">
             {city && (
               <p className="font-extralight text-sm">
@@ -66,9 +67,9 @@ function HouseCard({ directory, deal }) {
           </span>
         </div>
         <div className="flex items-end">
-          <h4 className=" text-base mt-2 text-[color:var(--jobs-primary)]">
-            {salaryDisplay}
-          </h4>
+          <h5 className=" text-sm my-2 font-semibold  text-[color:var(--secondary)]">
+            {price} {pricePerDisplay}
+          </h5>
         </div>
         <p className="text-xs font-extralight">{daysAgo} days ago</p>
       </div>

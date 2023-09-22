@@ -9,10 +9,8 @@ import ThaiHelpDetail from "@/components/directories/posts/ThaiHelpDetail";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useRouter } from "next/router";
 import { db } from "@/firebase/fireConfig";
-import { doc, onSnapshot } from "firebase/firestore";
+import { collection, doc, getDocs, onSnapshot } from "firebase/firestore";
 import { getLocalStorage } from "@/utils/clientStorage";
-
-// TODO: get post from fetch post
 
 function PostDetail() {
   const { authUser, loading } = useAuth();
@@ -20,6 +18,7 @@ function PostDetail() {
 
   const [userData, setUserData] = useState(null);
   const [postData, setPostData] = useState({});
+  const [allPostsInCategory, setAllPostsInCategory] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isBusinessUser, setIsBusinessUser] = useState(false);
 
@@ -32,6 +31,7 @@ function PostDetail() {
     setIsLoading(true);
 
     const unsubPostListener = fetchPosts(uid, directory, pid);
+    fetchAllPosts(uid, directory, pid);
     const unsubUserListener = fetchUsers(uid);
 
     setIsLoading(false);
@@ -40,7 +40,7 @@ function PostDetail() {
       unsubPostListener();
       unsubUserListener();
     };
-  }, [uid, pid]);
+  }, [authUser, uid, pid]);
 
   const fetchPosts = (uid, directory, pid) => {
     const postCollection =
@@ -59,12 +59,37 @@ function PostDetail() {
     // const housingDocRef = doc(db, "users", uid, postCollection, pid);
     const unsubPostListener = onSnapshot(allPostRef, (doc) => {
       const postData = doc.data();
-      console.log("postDat", postData);
+
       setPostData(postData);
       setIsLoading(false);
     });
 
     return unsubPostListener;
+  };
+
+  const fetchAllPosts = async (uid, directory, pid) => {
+    const postCollection =
+      directory === "housing"
+        ? "allHousing"
+        : directory === "jobs"
+        ? "allJobs"
+        : directory === "marketplace"
+        ? "allMarketplace"
+        : directory === "thai-help"
+        ? "thaiHelpPosts"
+        : null;
+
+    const allPostRef = collection(db, postCollection);
+    const query = await getDocs(allPostRef);
+    let allPostsArr = [];
+    query.forEach((doc) => {
+      const postData = doc.data();
+      postData.id = doc.id;
+
+      allPostsArr.push(postData);
+    });
+
+    setAllPostsInCategory(allPostsArr);
   };
 
   const fetchUsers = (uid) => {
@@ -85,7 +110,6 @@ function PostDetail() {
 
     return userListener;
   };
-  console.log("userData", userData);
 
   const breadcrumbs = [
     <Link
@@ -112,7 +136,17 @@ function PostDetail() {
   ];
 
   function displayPostDetail(directory, pid) {
-    if (directory === "jobs") return <JobPostDetail />;
+    if (directory === "jobs")
+      return (
+        <JobPostDetail
+          postData={postData}
+          pid={pid}
+          userData={userData}
+          isBusinessUser={isBusinessUser}
+          authUser={authUser}
+          allPostsInCategory={allPostsInCategory}
+        />
+      );
     if (directory === "marketplace")
       return (
         <MarketplacePostDetail
@@ -121,6 +155,7 @@ function PostDetail() {
           userData={userData}
           authUser={authUser}
           isBusinessUser={isBusinessUser}
+          allPostsInCategory={allPostsInCategory}
         />
       );
     if (directory === "housing")
@@ -130,6 +165,8 @@ function PostDetail() {
           postData={postData}
           userData={userData}
           authUser={authUser}
+          allPostsInCategory={allPostsInCategory}
+          isBusinessUser={isBusinessUser}
         />
       );
     if (directory === "thai-help") return <ThaiHelpDetail />;

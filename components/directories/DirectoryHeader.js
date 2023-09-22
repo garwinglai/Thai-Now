@@ -322,7 +322,7 @@ function DirectoryHeader({
                 (!breadcrumbTitle || breadcrumbTitle === "My Conversation")) ||
                 directory) && (
                 <h4
-                  className={`text-[color:var(--deals-primary)] ${
+                  className={`text-[color:var(--deals-primary)]  ${
                     slug === "community" && "md:hidden"
                   } ${breadcrumbTitle && "hidden"}`}
                 >
@@ -334,7 +334,7 @@ function DirectoryHeader({
             {slug === "community" && !breadcrumbTitle && (
               <Link
                 href="/thai-help/community/my-conversation"
-                className="border px-2 py-1 border-[color:var(--deals-primary)] font-light text-[color:var(--deals-primary)] rounded md:hidden"
+                className="border px-2 py-1 border-[color:var(--deals-primary)] font-light text-[color:var(--deals-primary)] text-xs rounded md:hidden"
               >
                 My Conversation
               </Link>

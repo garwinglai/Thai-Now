@@ -11,6 +11,7 @@ function PostDescription({
   jobContactMethodEmail,
   jobContactMethodInPerson,
   jobContactMethodPhone,
+  postData,
 }) {
   const { push } = useRouter();
 
@@ -28,7 +29,7 @@ function PostDescription({
               ? "Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio obcaecati id tenetur magni deleniti sint libero voluptate ut quis officia blanditiis, amet, iusto ex."
               : description}
           </p>
-          <h5 className="mt-4">To submit interest for this position:</h5>
+          {/* <h5 className="mt-4">To submit interest for this position:</h5>
           {jobContactMethodEmail && (
             <p className="font-extralight mt-2 whitespace-pre-line text-sm">
               Send us an email.
@@ -43,7 +44,7 @@ function PostDescription({
             <p className="font-extralight mt-2 whitespace-pre-line text-sm">
               Visit us at our location.
             </p>
-          )}
+          )} */}
         </div>
       ) : (
         <div className="w-ful">

@@ -1,35 +1,46 @@
 import React, { useEffect, useState, useRef } from "react";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import MainLayout from "@/components/layouts/MainLayout";
+import avatar_image from "@/public/static/images/temp_avatar.png";
 import Image from "next/image";
 import CameraAltOutlinedIcon from "@mui/icons-material/CameraAltOutlined";
 import { useRouter } from "next/router";
 import PhotoSizeSelectActualIcon from "@mui/icons-material/PhotoSizeSelectActual";
 import CustomModal from "@/components/layouts/CustomModal";
 import complete_post from "@/public/static/images/complete_post.png";
+import PrimaryButton from "@/components/buttons/PrimaryButton";
 import Link from "next/link";
 import { CircularProgress, IconButton } from "@mui/material";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { db, storage } from "@/firebase/fireConfig";
-import { doc, writeBatch } from "firebase/firestore";
+import {
+  doc,
+  getDocs,
+  collection,
+  setDoc,
+  updateDoc,
+  writeBatch,
+} from "firebase/firestore";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import { createGeoHash } from "@/firebase/fireConfig";
 import Geocode from "react-geocode";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import {
+  getDownloadURL,
+  ref,
+  uploadBytes,
+  listAll,
+  deleteObject,
+} from "firebase/storage";
 import PrimaryButtonLink from "@/components/buttons/PrimaryButtonLink";
 import { getLocalStorage } from "@/utils/clientStorage";
 
 Geocode.setApiKey(process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY);
 Geocode.setLanguage("en");
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
-
-function BusinessProfile() {
+function EditProfileBusiness({ bizUser, bId }) {
   const { authUser, loading } = useAuth();
   const { uid } = authUser || {};
 
@@ -37,20 +48,20 @@ function BusinessProfile() {
   const [isPublish, setIsPublish] = useState(false);
   const [bizData, setBizData] = useState({
     addressDetails: {
-      addy1: "",
-      addy2: "",
-      city: "",
-      country: "",
-      state: "",
-      zip: "",
+      addy1: bizUser?.addressDetails?.addy1 || "",
+      addy2: bizUser?.addressDetails?.addy2 || "",
+      city: bizUser?.addressDetails?.city || "",
+      country: bizUser?.addressDetails?.country || "",
+      state: bizUser?.addressDetails?.state || "",
+      zip: bizUser?.addressDetails?.zip || "",
     },
-    name: "",
-    phoneNum: "",
-    email: "",
-    website: "",
-    bizAboutUs: "",
+    name: bizUser?.name || "",
+    phoneNum: bizUser?.phoneNum || "",
+    email: bizUser?.email || "",
+    website: bizUser?.website || "",
+    bizAboutUs: bizUser?.bizAboutUs || "",
   });
-  const [bizId, setBizId] = useState("");
+  const [bizId, setBizId] = useState(bId);
   const [profilePicValues, setProfilePicValues] = useState({
     imgUrl: "",
     imageFile: "",
@@ -77,13 +88,6 @@ function BusinessProfile() {
   const profilePicRef = useRef(null);
 
   useEffect(() => {
-    if (!authUser && !loading) {
-      push("/auth/signin");
-    }
-    // TODO: loading, show skeleton
-  }, [authUser, loading]);
-
-  useEffect(() => {
     generateTimeOptions();
   }, [uid]);
 
@@ -103,28 +107,6 @@ function BusinessProfile() {
     }
 
     setTimeOptions(options);
-  };
-
-  useEffect(() => {
-    if (!uid) return;
-
-    const fetchUser = async () => {
-      const bizFromLocalStorage = getLocalStorage("bizUser");
-      const bizUser = JSON.parse(bizFromLocalStorage);
-      const { id, photos, profPic } = bizUser;
-
-      //TODO: does biz My Profile nav here? if so, control photos & profPic
-
-      setBizData(bizUser);
-      setBizId(id);
-    };
-
-    fetchUser();
-  }, [uid]);
-
-  const handleBack = () => {
-    // back();
-    push("/business-center/business");
   };
 
   const handleSubmit = async (e) => {
@@ -495,28 +477,15 @@ function BusinessProfile() {
   };
 
   return (
-    <div className=" lg:pt-20">
-      <Snackbar open={openAlert} autoHideDuration={2000} onClose={handleClose}>
-        <Alert severity="warning" sx={{ width: "100%" }}>
-          {alertMessage}
-        </Alert>
-      </Snackbar>
-      <div className="flex items-center gap-1 lg:gap-2 lg:pt-8 lg:pl-16">
-        <div className="lg:border  lg:rounded-full">
-          <IconButton onClick={handleBack}>
-            <ChevronLeftIcon />
-          </IconButton>
+    <div>
+      <form onSubmit={handleSubmit} className="pb-32 lg:w-3/4">
+        <div className="p-4">
+          <h4 className="">Business info</h4>
+          <p className="font-light text-xs">
+            People visiting your profile will see the following info
+          </p>
         </div>
-        <button
-          onClick={handleBack}
-          className="text-[color:var(--deals-primary)]"
-        >
-          Back
-        </button>
-      </div>
-      <form onSubmit={handleSubmit} className="pb-32 lg:w-6/12 lg:mx-auto">
-        <h4 className="pb-4 pt-2 pl-4">Basic information</h4>
-        <div className="relative text-center mb-4">
+        <div className="relative mr-auto mb-4">
           {imgUrl !== "" ? (
             <div className="relative w-40 h-40 mx-auto">
               <Image
@@ -878,19 +847,19 @@ function BusinessProfile() {
             </span>
           </label>
           {/* {uploadedPhotos.length !== 0 && (
-					<div className="flex w-full gap-4 pt-4">
-						{uploadedPhotos.map((file, idx) => (
-							<div key={idx} className=" w-14 h-14 relative">
-								<Image
-									src={file.imgUrl}
-									alt={file.fileName}
-									fill={true}
-									className=" object-cover w-full rounded"
-								/>
-							</div>
-						))}
-					</div>
-				)} */}
+    <div className="flex w-full gap-4 pt-4">
+      {uploadedPhotos.map((file, idx) => (
+        <div key={idx} className=" w-14 h-14 relative">
+          <Image
+            src={file.imgUrl}
+            alt={file.fileName}
+            fill={true}
+            className=" object-cover w-full rounded"
+          />
+        </div>
+      ))}
+    </div>
+  )} */}
           <p className="text-[color:var(--label-color)]  text-sm pt-4 ">
             <span className="text-[color:var(--secondary)] ">* </span>
             Notes
@@ -914,47 +883,24 @@ function BusinessProfile() {
             </li>
           </ul>
         </div>
-        <div className="fixed bottom-0 w-full bg-white p-4 border-t border-gray-100 lg:left-0 lg:text-center">
-          {isLoading ? (
-            <div className="flex justify-center items-center">
-              <CircularProgress color="warning" />
-            </div>
-          ) : (
+
+        {isLoading ? (
+          <div className="flex justify-center items-center">
+            <CircularProgress color="warning" />
+          </div>
+        ) : (
+          <div className="p-4 mt-8">
             <button
               type="submit"
-              className="rounded w-full text-white bg-[color:var(--secondary)] py-2 lg:w-2/5"
+              className="bg-[color:var(--secondary)] text-white py-3 rounded text-sm w-full"
             >
               Save
             </button>
-          )}
-        </div>
+          </div>
+        )}
       </form>
-      <CustomModal isPublish={isPublish} onClose={closeModal}>
-        <div className="flex flex-col items-center text-center gap-4">
-          <Image src={complete_post} alt="complete post image" />
-          <h4>Complete</h4>
-          <p className="font-light">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. A officiis
-            laborum labore quaerat beatae similique.
-          </p>
-          <PrimaryButtonLink
-            route="/business-center/business/create"
-            name="Create your Post"
-          />
-          <Link
-            href="/business-center/business"
-            className="underline font-light text-[color:var(--deals-primary)] "
-          >
-            Go to Business Center
-          </Link>
-        </div>
-      </CustomModal>
     </div>
   );
 }
 
-export default BusinessProfile;
-
-BusinessProfile.getLayout = function getLayout(page) {
-  return <MainLayout route="business-profile">{page}</MainLayout>;
-};
+export default EditProfileBusiness;

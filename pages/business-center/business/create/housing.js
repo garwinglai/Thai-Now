@@ -173,6 +173,7 @@ function HousingPostBusinessUser() {
   };
 
   const handleBack = () => {
+    setIsLoading(false);
     if (step === 1) {
       back();
     } else {

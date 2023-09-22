@@ -21,6 +21,7 @@ function MarketplacePostDetail({
   userData,
   pid,
   isBusinessUser,
+  allPostsInCategory,
 }) {
   const { email, fName, lName, profileImgUrl } = userData ? userData : {};
 
@@ -32,7 +33,6 @@ function MarketplacePostDetail({
     photos,
     amenitiesDisplay,
     userId,
-
     id,
   } = postData ? postData : {};
 
@@ -153,7 +153,10 @@ function MarketplacePostDetail({
           </div>
         </div>
       </div>
-      <RecommendedPosts postType="Marketplace" />
+      <RecommendedPosts
+        postType="Marketplace"
+        allPostsInCategory={allPostsInCategory}
+      />
     </div>
   );
 }

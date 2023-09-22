@@ -6,14 +6,29 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { db } from "@/firebase/fireConfig";
 import { doc, onSnapshot, collection } from "firebase/firestore";
 
-function PostReview({ userId, pid }) {
+function PostReview({
+  userId,
+  pid,
+  postType,
+  userData,
+  isBusinessUser,
+  photos,
+  postTitle,
+}) {
   const { authUser, loading } = useAuth();
   const { uid } = authUser || {};
 
   const [allReviews, setAllReviews] = useState([]);
 
   useEffect(() => {
-    const allReviewsRef = collection(db, "allReviews");
+    const firestorePath =
+      postType === "housing"
+        ? "allHousing"
+        : postType === "marketplace"
+        ? "allMarketplace"
+        : "allJobs";
+
+    const allReviewsRef = collection(db, firestorePath, pid, "reviews");
     const unsubListenAllReviews = onSnapshot(allReviewsRef, (querySnapshot) => {
       const allData = [];
       querySnapshot.forEach((doc) => {
@@ -33,10 +48,21 @@ function PostReview({ userId, pid }) {
   return (
     <div className="bg-white p-4">
       <h4 className="my-4">Customer Reviews</h4>
-      {uid && uid !== userId && <LeaveReview userId={userId} pid={pid} />}
+      {uid && (
+        <LeaveReview
+          userId={userId}
+          pid={pid}
+          userData={userData}
+          isBusinessUser={isBusinessUser}
+          postType={postType}
+          postTitle={postTitle}
+          photos={photos}
+        />
+      )}
       <ReviewStats />
       {allReviews.map((reviewData) => {
         const { id } = reviewData;
+
         return <ReviewComponent key={id} reviewData={reviewData} />;
       })}
 

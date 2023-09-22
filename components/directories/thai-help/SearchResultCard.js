@@ -43,7 +43,16 @@ function SearchResultCard({
   };
 
   return (
-    <div className="flex justify-between items-end border-b py-4 w-full">
+    <div className="flex justify-between items-start gap-4 border-b py-4 w-full">
+      <div className="hidden relative w-14 h-14 md:block">
+        <Image
+          fill
+          src={thai_now_logo}
+          alt="business logo"
+          className="object-contain border rounded-full "
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        />
+      </div>
       <div className="flex flex-col gap-2 relative flex-grow">
         <button
           onClick={handleRouteClickTitle}
@@ -90,12 +99,16 @@ function SearchResultCard({
         </Link>
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <Image
-              src={thai_now_logo}
-              alt="business logo"
-              className="w-10 h-10 object-contain border rounded-full p-1 "
-            />
-            <button className="font-extralight text-sm underline">
+            <div className="relative w-10 h-10 md:hidden">
+              <Image
+                src={thai_now_logo}
+                alt="business logo"
+                fill
+                className="object-contain border rounded-full"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              />
+            </div>
+            <button className="text-sm underline">
               Thai Now
             </button>
             <p className="font-extralight text-sm"> - 23m ago</p>

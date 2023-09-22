@@ -6,12 +6,16 @@ import DealsCard from "../cards/DealsCard";
 import { dealsOfWeek } from "@/helper/db/staticData";
 import MarketCard from "../cards/MarketCard";
 
-function DealsSectionHome({ allMarketPosts }) {
+function DealsSectionHome({ isRecommended, postType, allMarketPosts }) {
   return (
     <div className={`${styles.deals_of_week_container}`}>
       <div className={`${styles.deals_of_week_heading}`}>
         <div className="flex justify-between items-center mb-4">
-          <h3 className="font-light">Deal of the Week</h3>
+          {isRecommended ? (
+            <h4 className="">More {postType} posted by ThaiNow</h4>
+          ) : (
+            <h3 className="font-light pl-[20px] md:pl-0">Deal of the week</h3>
+          )}
           <LandingPagePagination />
         </div>
       </div>

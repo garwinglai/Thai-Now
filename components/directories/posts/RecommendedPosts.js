@@ -2,8 +2,11 @@ import React from "react";
 import JobsCard from "../cards/JobsCard";
 import DealsCard from "@/components/home/cards/DealsCard";
 import tripsImage from "@/public/static/images/home/trips-image.svg";
+import JobsSectionHomePage from "@/components/home/desktop/JobsSectionHomePage";
+import HousingSectionHome from "@/components/home/desktop/HousingSectionHome";
+import DealsSectionHome from "@/components/home/desktop/DealsSectionHome";
 
-function RecommendedPosts({ postType }) {
+function RecommendedPosts({ postType, allPostsInCategory }) {
   const deal = {
     reviewScore: "2.93",
     reviewCount: "24",
@@ -16,40 +19,42 @@ function RecommendedPosts({ postType }) {
   function displayDealCard(postType) {
     if (postType === "Jobs") {
       return (
-        <>
-          <DealsCard title="Deals of the week" deal={deal} />
-          <DealsCard title="Deals of the week" deal={deal} />
-          <DealsCard title="Deals of the week" deal={deal} />
-          <DealsCard title="Deals of the week" deal={deal} />
-        </>
+        <div className="w-full">
+          <JobsSectionHomePage
+            postType={postType}
+            isRecommended={true}
+            allJobsPosts={allPostsInCategory}
+          />
+        </div>
       );
     }
 
     if (postType === "Housing")
       return (
-        <>
-          <DealsCard deal={deal} title="Room for rent" />
-          <DealsCard deal={deal} title="Room for rent" />
-          <DealsCard deal={deal} title="Room for rent" />
-          <DealsCard deal={deal} title="Room for rent" />
-        </>
+        <div className="w-full">
+          <HousingSectionHome
+            postType={postType}
+            isRecommended={true}
+            allHousingPosts={allPostsInCategory}
+          />
+        </div>
       );
 
     if (postType === "Marketplace")
       return (
-        <>
-          <DealsCard deal={deal} title="Deals of the week" />
-          <DealsCard deal={deal} title="Deals of the week" />
-          <DealsCard deal={deal} title="Deals of the week" />
-          <DealsCard deal={deal} title="Deals of the week" />
-        </>
+        <div className="w-full">
+          <DealsSectionHome
+            postType={postType}
+            isRecommended={true}
+            allMarketPosts={allPostsInCategory}
+          />
+        </div>
       );
   }
 
   return (
     <div className="bg-white text-[color:var(--deals-primary)]  pt-8">
-      <h4 className="px-4 pt-4 lg:pl-[12.5%]">More {postType} posted by ThaiNow</h4>
-      <div className="flex overflow-x-scroll gap-4 px-4 pt-4 pb-16 lg:px-[12.5%]">
+      <div className="flex overflow-x-scroll gap-4 pt-4 pb-16 ">
         {displayDealCard(postType)}
       </div>
     </div>

@@ -10,14 +10,14 @@ function StaffPickSectionHome({ allHousingPosts }) {
     <div className={`${styles.deals_of_week_container}`}>
       <div className={`${styles.deals_of_week_heading}`}>
         <div className="flex justify-between items-center mb-4">
-          <h3 className="font-light">Staff Pick Item</h3>
+          <h3 className="font-light pl-[20px] md:pl-0">Staff Pick Item</h3>
           <LandingPagePagination />
         </div>
       </div>
       <div className={`${styles.deals_card_container} ${styles.flexRow}`}>
         {allHousingPosts.map((deal, idx) => {
           const { id } = deal;
-          return <DealsCard key={id} deal={deal} />;
+          return <DealsCard key={id} deal={deal} title="Staff pick item" />;
         })}
       </div>
     </div>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import loader from "@/utils/mapLoader";
 
-function Map({ address }) {
+function DirectoryMap({ address, directory, housingCoords }) {
   const [map, setMap] = useState(null);
 
   useEffect(() => {
@@ -17,17 +17,22 @@ function Map({ address }) {
             document.getElementById("map"),
             mapOptions
           );
-          const marker = new window.google.maps.Marker({
-            position: results[0].geometry.location,
-            map: newMap,
-          });
+
+          for (let i = 0; i < housingCoords.length; i++) {
+            const coord = housingCoords[i];
+            const marker = new window.google.maps.Marker({
+              position: coord,
+              map: newMap,
+            });
+          }
+
           setMap(newMap);
         }
       });
     });
   }, [address]);
 
-  return <div id="map" className="h-[calc(100vh-565px)]"></div>;
+  return <div id="map" className="h-[calc(100vh-165px)]"></div>;
 }
 
-export default Map;
+export default DirectoryMap;

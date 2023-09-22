@@ -16,6 +16,10 @@ import {
 } from "firebase/storage";
 
 export async function createHousingBusiness(housingData, uid, bizId) {
+  console.log("here")
+  console.log("housingData", housingData);
+  console.log("uid", uid);
+  console.log("bizId", bizId);
   const { newAddedPhotos } = housingData;
   const housingRef = doc(
     collection(db, "users", uid, "biz", bizId, "housingPosts")

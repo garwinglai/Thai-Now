@@ -15,18 +15,22 @@ import { IconButton } from "@mui/material";
 import OutlinedFlagSharpIcon from "@mui/icons-material/OutlinedFlagSharp";
 import Skeleton from "@mui/material/Skeleton";
 import PostAmenities from "@/components/posts/PostAmenities";
+import ClickAwayListener from "react-click-away-listener";
 
-function HousingPostDetail({ postData, userData, authUser, pid }) {
-  const isLoggedIn = true;
-
-  const { email, fName, lName, profileImgUrl } = userData ? userData : {};
-
+function HousingPostDetail({
+  postData,
+  userData,
+  authUser,
+  pid,
+  allPostsInCategory,
+  isBusinessUser,
+}) {
   const {
     postTitle,
+    photos,
     postDescription,
     postAddressDetails,
     postAddress,
-    photos,
     amenitiesDisplay,
     userId,
     id,
@@ -36,6 +40,9 @@ function HousingPostDetail({ postData, userData, authUser, pid }) {
 
   const [defaultImage, setDefaultImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [viewMorePhotos, setViewMorePhotos] = useState(false);
+  const [numPhotos, setNumPhotos] = useState(0);
+  const [allPhotos, setAllPhotos] = useState([]);
 
   useEffect(() => {
     if (photos) {
@@ -45,12 +52,41 @@ function HousingPostDetail({ postData, userData, authUser, pid }) {
         if (photos.hasOwnProperty(key)) {
           const defaultImage = photos[key];
           setDefaultImage(defaultImage);
+
           break;
         }
       }
+
+      let keyIndex = 0;
+      const keyIndexes = [];
+      for (const key in photos) {
+        if (photos.hasOwnProperty(key)) {
+          const keyIndex = key.split("-")[1];
+
+          if (!keyIndexes.includes(keyIndex)) {
+            keyIndexes.push(keyIndex);
+          }
+        }
+      }
+
+      const photoArr = [];
+      for (let i = 0; i < keyIndexes.length; i++) {
+        const photoIndex = keyIndexes[i];
+
+        const photo = photos[`${photoIndex}-1`];
+        photoArr.push(photo);
+      }
+
+      setNumPhotos(photoArr.length);
+      setAllPhotos(photoArr);
+
       setIsLoading(false);
     }
   }, [photos]);
+
+  const handleViewMorePhotos = () => {
+    setViewMorePhotos((prev) => !prev);
+  };
 
   return (
     <div>
@@ -110,10 +146,11 @@ function HousingPostDetail({ postData, userData, authUser, pid }) {
               />
             </div>
             <button
+              onClick={handleViewMorePhotos}
               type="button"
               className="absolute z-10 bg-opacity-50 bg-black text-white border border-white rounded px-4 py-2 right-4 bottom-4 "
             >
-              + 20 Photos
+              {numPhotos} Photos
             </button>
           </div>
         )}
@@ -140,12 +177,23 @@ function HousingPostDetail({ postData, userData, authUser, pid }) {
             />
             {amenitiesDisplay && <PostAmenities amenities={amenitiesDisplay} />}
             {authUser && <PostLocation location={postAddress} />}
-            <PostReview userId={userId} pid={pid} />
+            <PostReview
+              userId={userId}
+              pid={pid}
+              postType="housing"
+              userData={userData}
+              isBusinessUser={isBusinessUser}
+              photos={photos}
+              postTitle={postTitle}
+            />
             {/* <span className="h-32 bg-white"></span> */}
           </div>
         </div>
       </div>
-      <RecommendedPosts postType="Housing" />
+      <RecommendedPosts
+        postType="Housing"
+        allPostsInCategory={allPostsInCategory}
+      />
     </div>
   );
 }
