@@ -16,19 +16,18 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import DirectoryMap from "@/components/directories/DirectoryMap";
 
 const tempCount = [1, 2, 3, 4, 5];
-const address = "603 W camino real ave arcadia ca 91007";
+// const address = "603 W camino real ave arcadia ca 91007";
 
 function Directory({ directory }) {
   const { authUser, loading } = useAuth();
   const { uid } = authUser || {};
 
   const [isLoading, setIsLoading] = useState(false);
+  const [address, setAddress] = useState("");
   const [housingPosts, setHousingPosts] = useState([]);
   const [marketPosts, setMarketPosts] = useState([]);
   const [jobPosts, setJobPosts] = useState([]);
-  const [housingCoords, setHousingCoords] = useState([]);
-  const [allMarketAddress, setAllMarketAddress] = useState([]);
-  const [allJobsAddress, setAllJobsAddress] = useState([]);
+  const [allCoords, setAllCoords] = useState([]);
 
   const [mensen, setMensen] = useState([]);
   const [userLocation, setUserLocation] = useState();
@@ -36,12 +35,13 @@ function Directory({ directory }) {
   useEffect(() => {
     if ("geolocation" in navigator) {
       // Retrieve latitude & longitude coordinates from `navigator.geolocation` Web API
-      navigator.geolocation.getCurrentPosition(({ coords }) => {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const { coords } = position;
         const { latitude, longitude } = coords;
-        setUserLocation({ latitude, longitude });
+        setUserLocation({ lat: latitude, lng: longitude });
       });
     }
-  }, []);
+  }, [directory]);
 
   // const fetchApiData = async ({ latitude, longitude }) => {
   //   const res = await fetch(
@@ -60,13 +60,16 @@ function Directory({ directory }) {
 
   useEffect(() => {
     setIsLoading(true);
+
     const housingCollectionRef = collection(db, "allHousing");
     const marketCollectionRef = collection(db, "allMarketplace");
     const jobsCollectionRef = collection(db, "allJobs");
+    let unsubHousingListener;
+    let unsubMarketListener;
+    let unsubJobsListener;
 
-    const unsubHousingListener = onSnapshot(
-      housingCollectionRef,
-      (snapshot) => {
+    if (directory === "housing") {
+      unsubHousingListener = onSnapshot(housingCollectionRef, (snapshot) => {
         const housingPostsArr = [];
         const housingCoordsArr = [];
         snapshot.forEach((doc) => {
@@ -77,47 +80,58 @@ function Directory({ directory }) {
           housingCoordsArr.push(postCoord);
           housingPostsArr.push(data);
         });
-        setHousingCoords(housingCoordsArr);
+
+        if (directory === "housing") setAllCoords(housingCoordsArr);
         setHousingPosts(housingPostsArr);
         setIsLoading(false);
-      }
-    );
-
-    const unsubMarketListener = onSnapshot(marketCollectionRef, (snapshot) => {
-      const marketPostsArr = [];
-      const marketAddressArr = [];
-      snapshot.forEach((doc) => {
-        const data = doc.data();
-        const { postAddress } = data;
-        data.id = doc.id;
-
-        marketAddressArr.push(postAddress);
-        marketPostsArr.push(data);
       });
-      setAllMarketAddress(marketAddressArr);
-      setMarketPosts(marketPostsArr);
-      setIsLoading(false);
-    });
+    }
 
-    const unsubJobsListener = onSnapshot(jobsCollectionRef, (snapshot) => {
-      const jobsPostsArr = [];
-      snapshot.forEach((doc) => {
-        const data = doc.data();
-        data.id = doc.id;
-        jobsPostsArr.push(data);
+    if (directory === "marketplace") {
+      unsubMarketListener = onSnapshot(marketCollectionRef, (snapshot) => {
+        const marketPostsArr = [];
+        const marketPostCoord = [];
+        snapshot.forEach((doc) => {
+          const data = doc.data();
+          const { postCoord } = data;
+          data.id = doc.id;
+
+          marketPostCoord.push(postCoord);
+          marketPostsArr.push(data);
+        });
+
+        if (directory === "marketplace") setAllCoords(marketPostCoord);
+        setMarketPosts(marketPostsArr);
+        setIsLoading(false);
       });
-      setJobPosts(jobsPostsArr);
-      setIsLoading(false);
-    });
+    }
+
+    if (directory === "jobs") {
+      unsubJobsListener = onSnapshot(jobsCollectionRef, (snapshot) => {
+        const jobsPostsArr = [];
+        const jobsCoordArr = [];
+        snapshot.forEach((doc) => {
+          const data = doc.data();
+          const { postCoord } = data;
+          data.id = doc.id;
+
+          jobsPostsArr.push(data);
+          jobsCoordArr.push(postCoord);
+        });
+        if (directory === "jobs") setAllCoords(jobsCoordArr);
+        setJobPosts(jobsPostsArr);
+        setIsLoading(false);
+      });
+    }
 
     setIsLoading(false);
 
     return () => {
-      unsubHousingListener();
-      unsubMarketListener();
-      unsubJobsListener();
+      if (directory === "housing") unsubHousingListener();
+      if (directory === "marketplace") unsubMarketListener();
+      if (directory === "jobs") unsubJobsListener();
     };
-  }, [uid]);
+  }, [uid, directory]);
 
   function cardType(directory) {
     if (directory == "jobs") {
@@ -195,9 +209,10 @@ function Directory({ directory }) {
       </div>
       <div className="hidden lg:block lg:w-2/5">
         <DirectoryMap
+          userLocation={userLocation}
           address={address}
           directory={directory}
-          housingCoords={housingCoords}
+          allCoords={allCoords}
         />
       </div>
     </div>

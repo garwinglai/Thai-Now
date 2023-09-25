@@ -28,13 +28,25 @@ function Profile() {
   }, [authUser, loading]);
 
   useEffect(() => {
-    const bizUser = getLocalStorage("bizUser");
-    const bizUserParsed = bizUser ? JSON.parse(bizUser) : null;
-    const { id, photos, profPic } = bizUser;
+    if (uid) {
+      const bizUser = JSON.parse(getLocalStorage("bizUser"));
 
-    if (bizUserParsed) {
-      setBizUser(bizUserParsed);
-      setBizId(id);
+      if (bizUser) {
+        const { id: bizId } = bizUser;
+
+        const fetchBusinessUser = async () => {
+          const bizUser = doc(db, "users", uid, "biz", bizId);
+          const bizSnap = await getDoc(bizUser);
+          if (bizSnap.exists()) {
+            const data = bizSnap.data();
+            const id = bizSnap.id;
+            setBizUser(bizSnap.data());
+            setBizId(id);
+          }
+        };
+
+        fetchBusinessUser();
+      }
     }
   }, [authUser]);
 

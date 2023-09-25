@@ -22,7 +22,6 @@ function JobsCard({
   isDraft,
   userData,
 }) {
-  console.log("post", post);
   const { authUser, loading } = useAuth();
   const { uid } = authUser || {};
   const { bizId } = userData || {};

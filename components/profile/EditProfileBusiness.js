@@ -1,50 +1,33 @@
 import React, { useEffect, useState, useRef } from "react";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import MainLayout from "@/components/layouts/MainLayout";
-import avatar_image from "@/public/static/images/temp_avatar.png";
 import Image from "next/image";
 import CameraAltOutlinedIcon from "@mui/icons-material/CameraAltOutlined";
 import { useRouter } from "next/router";
 import PhotoSizeSelectActualIcon from "@mui/icons-material/PhotoSizeSelectActual";
-import CustomModal from "@/components/layouts/CustomModal";
-import complete_post from "@/public/static/images/complete_post.png";
-import PrimaryButton from "@/components/buttons/PrimaryButton";
-import Link from "next/link";
 import { CircularProgress, IconButton } from "@mui/material";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { db, storage } from "@/firebase/fireConfig";
-import {
-  doc,
-  getDocs,
-  collection,
-  setDoc,
-  updateDoc,
-  writeBatch,
-} from "firebase/firestore";
+import { doc, writeBatch } from "firebase/firestore";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import { createGeoHash } from "@/firebase/fireConfig";
 import Geocode from "react-geocode";
-import {
-  getDownloadURL,
-  ref,
-  uploadBytes,
-  listAll,
-  deleteObject,
-} from "firebase/storage";
-import PrimaryButtonLink from "@/components/buttons/PrimaryButtonLink";
-import { getLocalStorage } from "@/utils/clientStorage";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 Geocode.setApiKey(process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY);
 Geocode.setLanguage("en");
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 function EditProfileBusiness({ bizUser, bId }) {
   const { authUser, loading } = useAuth();
   const { uid } = authUser || {};
 
   const [uploadedBusinessPhotos, setUploadedBusinessPhotos] = useState([]);
+
   const [isPublish, setIsPublish] = useState(false);
   const [bizData, setBizData] = useState({
     addressDetails: {
@@ -61,15 +44,15 @@ function EditProfileBusiness({ bizUser, bId }) {
     website: bizUser?.website || "",
     bizAboutUs: bizUser?.bizAboutUs || "",
   });
-  const [bizId, setBizId] = useState(bId);
+  const [bizId, setBizId] = useState(bId || "");
   const [profilePicValues, setProfilePicValues] = useState({
-    imgUrl: "",
+    imgUrl: bizUser?.profPic?.["0-1"] || "",
     imageFile: "",
     fileName: "",
   });
   const [timeOptions, setTimeOptions] = useState([]);
   const [currBizHourValues, setCurrBizHourValues] = useState({
-    day: "Tues",
+    day: "Mon",
     startTime: "8:00 AM",
     endTime: "5:00 PM",
   });
@@ -86,6 +69,69 @@ function EditProfileBusiness({ bizUser, bId }) {
 
   const { back, push } = useRouter();
   const profilePicRef = useRef(null);
+
+  useEffect(() => {
+    formatBusinessPhotos();
+  }, []);
+
+  const formatBusinessPhotos = () => {
+    const photos = bizUser?.photos;
+    const photosArr = [];
+
+    for (const [key, value] of Object.entries(photos)) {
+      const imgUrl = value;
+      const fileName = key + ".jpg";
+
+      const photoData = {
+        imgUrl,
+        fileName,
+      };
+
+      photosArr.push(photoData);
+    }
+
+    setUploadedBusinessPhotos(photosArr);
+  };
+
+  useEffect(() => {
+    formatBusinessHoursValues();
+  }, []);
+
+  const formatBusinessHoursValues = () => {
+    const bizHours = bizUser.bizHours;
+    const bizHourValues = [];
+
+    for (const [key, value] of Object.entries(bizHours)) {
+      const dayInt = parseInt(key);
+      const day =
+        dayInt === 0
+          ? "Sun"
+          : dayInt === 1
+          ? "Mon"
+          : dayInt === 2
+          ? "Tues"
+          : dayInt === 3
+          ? "Wed"
+          : dayInt === 4
+          ? "Thurs"
+          : dayInt === 5
+          ? "Fri"
+          : "Sat";
+      const startTime = value[0];
+      const endTime = value[1];
+
+      const bizHourData = {
+        day,
+        dayInt,
+        startTime,
+        endTime,
+      };
+
+      bizHourValues.push(bizHourData);
+    }
+
+    setBizHourValues(bizHourValues);
+  };
 
   useEffect(() => {
     generateTimeOptions();
@@ -113,7 +159,7 @@ function EditProfileBusiness({ bizUser, bId }) {
     e.preventDefault();
     setIsLoading(true);
 
-    if (imgUrl === "" || imageFile === "" || fileName === "") {
+    if (imgUrl === "") {
       setOpenAlert(true);
       setAlertMessage("Missing profile photo.");
       setIsLoading(false);
@@ -196,11 +242,7 @@ function EditProfileBusiness({ bizUser, bId }) {
     }
   };
 
-  const storePhotosToFirebaseStorageBusiness = async (
-    photos,
-    uid,
-    housingRefId
-  ) => {
+  const storePhotosToFirebaseStorageBusiness = async (photos, uid, bizId) => {
     let photosFromStorage = {};
 
     let j = 1;
@@ -352,7 +394,10 @@ function EditProfileBusiness({ bizUser, bId }) {
 
   const handleChangeAddress = (e) => {
     const { name, value } = e.target;
-    setBizData((prev) => ({ ...prev, addressDetails: { [name]: value } }));
+    setBizData((prev) => ({
+      ...prev,
+      addressDetails: { ...prev.addressDetails, [name]: value },
+    }));
   };
 
   const handleProfilPhotoFileChange = (e) => {
@@ -478,6 +523,11 @@ function EditProfileBusiness({ bizUser, bId }) {
 
   return (
     <div>
+      <Snackbar open={openAlert} autoHideDuration={2000} onClose={handleClose}>
+        <Alert severity="warning" sx={{ width: "100%" }}>
+          {alertMessage}
+        </Alert>
+      </Snackbar>
       <form onSubmit={handleSubmit} className="pb-32 lg:w-3/4">
         <div className="p-4">
           <h4 className="">Business info</h4>
@@ -485,9 +535,9 @@ function EditProfileBusiness({ bizUser, bId }) {
             People visiting your profile will see the following info
           </p>
         </div>
-        <div className="relative mr-auto mb-4">
+        <div className="relative mb-4">
           {imgUrl !== "" ? (
-            <div className="relative w-40 h-40 mx-auto">
+            <div className="relative w-40 h-40 mx-auto  text-left">
               <Image
                 className="rounded-full object-cover"
                 src={imgUrl}

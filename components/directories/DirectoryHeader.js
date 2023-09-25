@@ -289,7 +289,7 @@ function DirectoryHeader({
       {breadcrumbTitle}
     </p>,
   ];
-  console.log("directory", directory);
+
   return (
     <div
       className={`pt-6 pb-4 px-4 ${
